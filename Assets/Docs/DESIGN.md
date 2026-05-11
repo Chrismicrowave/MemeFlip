@@ -59,8 +59,8 @@ Each turn, a player flips two of their own reels face-up from a shared 3x4 board
 
 - Purpose: houses all game states — main menu, settings, and the battle board
 - Load-bearing entities:
-  - `Board` — 12 position markers (GridLayout), arranged 3x4
-  - `Reels` — 12 reel GameObjects, 6 tagged PlayerSet, 6 tagged NPCSet
+  - `Board` — 12 position markers (GridLayout), arranged 4×3 (4 rows × 3 columns)
+  - `Reels` — 12 reel GameObjects, 6 Player + 6 NPC, **fully intermixed** randomly on the 4×3 grid
   - `CameraRig` — rotates around a pivot point; positions mapped for Menu, Settings, and Battle angles
   - `UI/StartScreen` — canvas group, visible at menu camera angle
   - `UI/SettingsScreen` — canvas group, visible at settings camera angle
