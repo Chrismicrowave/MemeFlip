@@ -16,7 +16,7 @@ public class Reel : MonoBehaviour
     [Header("Colors")]
     public Color playerColor = new(0.2f, 0.33f, 1f);
     public Color npcColor = new(1f, 0.2f, 0.33f);
-    public Color faceUpColor = new(0.85f, 0.85f, 0.85f);
+    public Color faceDownColor = new(0.5f, 0.5f, 0.5f);
     public Color destroyedColor = new(0.3f, 0.3f, 0.3f);
 
     private Renderer _renderer;
@@ -66,9 +66,9 @@ public class Reel : MonoBehaviour
         if (isDestroyed)
             col = destroyedColor;
         else if (isFaceDown)
-            col = owner == Owner.Player ? playerColor : npcColor;
+            col = faceDownColor; // neutral grey — all reels look the same
         else
-            col = faceUpColor;
+            col = owner == Owner.Player ? playerColor : npcColor; // reveal owner on flip
 
         _renderer.GetPropertyBlock(_propBlock);
         _propBlock.SetColor(BaseColor, col);

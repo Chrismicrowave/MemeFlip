@@ -21,20 +21,21 @@ public class ReelHoverPopup : MonoBehaviour
         Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
         string colorTag = $"#{(byte)(c.r * 255):X2}{(byte)(c.g * 255):X2}{(byte)(c.b * 255):X2}";
 
-        ownerText.text = $"<color={colorTag}>{reel.owner}</color>";
-
         if (reel.isDestroyed)
         {
+            ownerText.text = "";
             statsText.text = "DESTROYED";
             statusText.text = "";
         }
         else if (reel.isFaceDown)
         {
-            statsText.text = "HP ?  ATK ?  DEF ?";
+            ownerText.text = "???";
+            statsText.text = "???";
             statusText.text = "Face Down";
         }
         else
         {
+            ownerText.text = $"<color={colorTag}>{reel.owner}</color>";
             statsText.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
             statusText.text = "Face Up";
         }
