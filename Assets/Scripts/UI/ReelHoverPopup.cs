@@ -10,6 +10,10 @@ public class ReelHoverPopup : MonoBehaviour
 
     void Start()
     {
+        if (panel == null) panel = GameObject.Find("HoverCanvas/HoverPanel");
+        if (ownerText == null) ownerText = GameObject.Find("HoverCanvas/HoverPanel/OwnerText")?.GetComponent<TextMeshProUGUI>();
+        if (statsText == null) statsText = GameObject.Find("HoverCanvas/HoverPanel/StatsText")?.GetComponent<TextMeshProUGUI>();
+        if (statusText == null) statusText = GameObject.Find("HoverCanvas/HoverPanel/FaceStatus")?.GetComponent<TextMeshProUGUI>();
         if (panel != null) panel.SetActive(false);
     }
 
@@ -29,9 +33,9 @@ public class ReelHoverPopup : MonoBehaviour
         }
         else if (reel.isFaceDown)
         {
-            ownerText.text = "???";
-            statsText.text = "???";
-            statusText.text = "Face Down";
+            ownerText.text = "";
+            statsText.text = "Flip";
+            statusText.text = "";
         }
         else
         {

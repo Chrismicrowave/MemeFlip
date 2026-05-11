@@ -7,6 +7,7 @@ public class Reel : MonoBehaviour
     [Header("Config")]
     public Owner owner;
     public ReelStats stats;
+    public ReelStatsSO statsSO;
 
     [Header("State")]
     public bool isFaceDown = true;
@@ -29,13 +30,28 @@ public class Reel : MonoBehaviour
         _propBlock = new MaterialPropertyBlock();
     }
 
-    public void Init(Owner owner, ReelStats stats, Vector2Int pos)
+    public void Init(Owner owner, Vector2Int pos)
     {
         this.owner = owner;
-        this.stats = stats.Clone();
         boardPosition = pos;
         isFaceDown = true;
         isDestroyed = false;
+
+        if (statsSO != null)
+        {
+            stats = new ReelStats
+            {
+                maxHP = statsSO.maxHP,
+                currentHP = statsSO.maxHP,
+                atk = statsSO.atk,
+                def = statsSO.def
+            };
+        }
+        else
+        {
+            stats = new ReelStats { maxHP = 5, currentHP = 5, atk = 3, def = 2 };
+        }
+
         ApplyVisual();
     }
 
@@ -66,28 +82,28 @@ public class Reel : MonoBehaviour
         if (isDestroyed)
             col = destroyedColor;
         else if (isFaceDown)
-            col = faceDownColor; // neutral grey — all reels look the same
+            col = faceDownColor;
         else
-            col = owner == Owner.Player ? playerColor : npcColor; // reveal owner on flip
+            col = owner == Owner.Player ? playerColor : npcColor;
 
         _renderer.GetPropertyBlock(_propBlock);
         _propBlock.SetColor(BaseColor, col);
         _renderer.SetPropertyBlock(_propBlock);
     }
 
-    void OnMouseDown()
+    public void OnClick()
     {
         if (isDestroyed) return;
         GameManager.Instance.OnReelClicked(this);
     }
 
-    void OnMouseEnter()
+    public void OnHoverEnter()
     {
         if (isDestroyed) return;
         GameManager.Instance.hoverPopup.Show(this);
     }
 
-    void OnMouseExit()
+    public void OnHoverExit()
     {
         GameManager.Instance.hoverPopup.Hide();
     }

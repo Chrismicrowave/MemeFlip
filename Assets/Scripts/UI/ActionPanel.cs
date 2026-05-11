@@ -4,15 +4,21 @@ using UnityEngine.UI;
 
 public class ActionPanel : MonoBehaviour
 {
-    [Header("Slot 1 (Attacker)")]
-    public GameObject slot1Panel;
-    public TextMeshProUGUI slot1Owner;
-    public TextMeshProUGUI slot1Stats;
+    [Header("Player Slots")]
+    public GameObject playerSlot1;
+    public TextMeshProUGUI playerSlot1Owner;
+    public TextMeshProUGUI playerSlot1Stats;
+    public GameObject playerSlot2;
+    public TextMeshProUGUI playerSlot2Owner;
+    public TextMeshProUGUI playerSlot2Stats;
 
-    [Header("Slot 2 (Target)")]
-    public GameObject slot2Panel;
-    public TextMeshProUGUI slot2Owner;
-    public TextMeshProUGUI slot2Stats;
+    [Header("NPC Slots")]
+    public GameObject npcSlot1;
+    public TextMeshProUGUI npcSlot1Owner;
+    public TextMeshProUGUI npcSlot1Stats;
+    public GameObject npcSlot2;
+    public TextMeshProUGUI npcSlot2Owner;
+    public TextMeshProUGUI npcSlot2Stats;
 
     [Header("Buttons")]
     public Button attackButton;
@@ -38,58 +44,131 @@ public class ActionPanel : MonoBehaviour
 
     void Start()
     {
+        Transform c = transform;
+
+        if (turnText == null) turnText = c.Find("TurnText")?.GetComponent<TextMeshProUGUI>();
+        if (instructionText == null) instructionText = c.Find("InstructionText")?.GetComponent<TextMeshProUGUI>();
+        if (playerHpLabel == null) playerHpLabel = c.Find("PlayerHp")?.GetComponent<TextMeshProUGUI>();
+        if (npcHpLabel == null) npcHpLabel = c.Find("NpcHp")?.GetComponent<TextMeshProUGUI>();
+
+        if (playerSlot1 == null) playerSlot1 = c.Find("PlayerSlotPanel1")?.gameObject;
+        if (playerSlot1Owner == null) playerSlot1Owner = c.Find("PlayerSlotPanel1/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot1Stats == null) playerSlot1Stats = c.Find("PlayerSlotPanel1/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2 == null) playerSlot2 = c.Find("PlayerSlotPanel2")?.gameObject;
+        if (playerSlot2Owner == null) playerSlot2Owner = c.Find("PlayerSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2Stats == null) playerSlot2Stats = c.Find("PlayerSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+
+        if (npcSlot1 == null) npcSlot1 = c.Find("NPCSlotPanel1")?.gameObject;
+        if (npcSlot1Owner == null) npcSlot1Owner = c.Find("NPCSlotPanel1/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
+        if (npcSlot1Stats == null) npcSlot1Stats = c.Find("NPCSlotPanel1/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (npcSlot2 == null) npcSlot2 = c.Find("NPCSlotPanel2")?.gameObject;
+        if (npcSlot2Owner == null) npcSlot2Owner = c.Find("NPCSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
+        if (npcSlot2Stats == null) npcSlot2Stats = c.Find("NPCSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+
+        if (attackButton == null) attackButton = c.Find("AttackButton")?.GetComponent<Button>();
+        if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
+        if (shuffleLabel == null) shuffleLabel = c.Find("ShuffleButton/Label")?.GetComponent<TextMeshProUGUI>();
+
+        if (messageRoot == null) messageRoot = c.Find("MessageRoot")?.gameObject;
+        if (messageText == null) messageText = c.Find("MessageRoot/MessageText")?.GetComponent<TextMeshProUGUI>();
+
+        if (gameOverRoot == null) gameOverRoot = c.Find("GameOverRoot")?.gameObject;
+        if (gameOverLabel == null) gameOverLabel = c.Find("GameOverRoot/GameOverLabel")?.GetComponent<TextMeshProUGUI>();
+        if (restartButton == null) restartButton = c.Find("GameOverRoot/RestartButton")?.GetComponent<Button>();
+
         ClearSlots();
         ShowAttackButton(false);
         ShowShuffleButton(false);
-        gameOverRoot.SetActive(false);
-        messageRoot.SetActive(false);
-        if (restartButton != null)
-            restartButton.onClick.AddListener(RestartGame);
+        if (messageRoot != null) messageRoot.SetActive(false);
+        if (gameOverRoot != null) gameOverRoot.SetActive(false);
+        if (restartButton != null) restartButton.onClick.AddListener(RestartGame);
     }
 
-    public void ShowFirstSlot(Reel reel)
+    static string ColorTag(Color c)
     {
-        slot1Panel.SetActive(true);
-        Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
-        slot1Owner.text = $"<color=#{(byte)(c.r*255):X2}{(byte)(c.g*255):X2}{(byte)(c.b*255):X2}>{reel.owner}</color>";
-        slot1Stats.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
+        return $"#{(byte)(c.r * 255):X2}{(byte)(c.g * 255):X2}{(byte)(c.b * 255):X2}";
     }
 
-    public void ShowSecondSlot(Reel reel)
+    static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI statsLabel, Reel reel)
     {
-        slot2Panel.SetActive(true);
+        panel.SetActive(true);
         Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
-        slot2Owner.text = $"<color=#{(byte)(c.r*255):X2}{(byte)(c.g*255):X2}{(byte)(c.b*255):X2}>{reel.owner}</color>";
-        slot2Stats.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
+        ownerLabel.text = $"<color={ColorTag(c)}>{reel.owner}</color>";
+        statsLabel.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
+    }
+
+    public void ShowAttackerSlot(Reel reel)
+    {
+        if (reel.owner == Owner.Player)
+            FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, reel);
+        else
+            FillSlot(npcSlot1, npcSlot1Owner, npcSlot1Stats, reel);
+    }
+
+    public void ShowTargetSlot(Reel target, Reel attacker)
+    {
+        if (target.owner == Owner.Player)
+        {
+            if (attacker.owner == Owner.Player)
+                FillSlot(playerSlot2, playerSlot2Owner, playerSlot2Stats, target);
+            else
+                FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, target);
+        }
+        else
+        {
+            if (attacker.owner == Owner.NPC)
+                FillSlot(npcSlot2, npcSlot2Owner, npcSlot2Stats, target);
+            else
+                FillSlot(npcSlot1, npcSlot1Owner, npcSlot1Stats, target);
+        }
     }
 
     public void ClearSlots()
     {
-        slot1Panel.SetActive(false);
-        slot2Panel.SetActive(false);
+        if (playerSlot1 != null) playerSlot1.SetActive(false);
+        if (playerSlot2 != null) playerSlot2.SetActive(false);
+        if (npcSlot1 != null) npcSlot1.SetActive(false);
+        if (npcSlot2 != null) npcSlot2.SetActive(false);
     }
 
-    public void ShowAttackButton(bool show) => attackButton.gameObject.SetActive(show);
-    public void ShowShuffleButton(bool show) => shuffleButton.gameObject.SetActive(show);
+    public void ShowAttackButton(bool show)
+    {
+        if (attackButton != null) attackButton.gameObject.SetActive(show);
+    }
+
+    public void ShowShuffleButton(bool show)
+    {
+        if (shuffleButton != null) shuffleButton.gameObject.SetActive(show);
+    }
 
     public void SetShuffleCharges(int charges)
     {
-        shuffleLabel.text = $"Shuffle ({charges})";
-        shuffleButton.interactable = charges > 0;
+        if (shuffleLabel != null) shuffleLabel.text = $"Shuffle ({charges})";
+        if (shuffleButton != null) shuffleButton.interactable = charges > 0;
     }
 
-    public void SetTurnText(string text) => turnText.text = text;
-    public void SetInstructionText(string text) => instructionText.text = text;
+    public void SetTurnText(string text)
+    {
+        if (turnText != null) turnText.text = text;
+    }
+
+    public void SetInstructionText(string text)
+    {
+        if (instructionText != null) instructionText.text = text;
+    }
 
     public void ShowMessage(string msg)
     {
-        messageRoot.SetActive(true);
-        messageText.text = msg;
+        if (messageRoot != null) messageRoot.SetActive(true);
+        if (messageText != null) messageText.text = msg;
         CancelInvoke(nameof(HideMessage));
         Invoke(nameof(HideMessage), 2.5f);
     }
 
-    void HideMessage() => messageRoot.SetActive(false);
+    void HideMessage()
+    {
+        if (messageRoot != null) messageRoot.SetActive(false);
+    }
 
     public void UpdateHpBars()
     {
@@ -102,8 +181,8 @@ public class ActionPanel : MonoBehaviour
 
     public void ShowGameOver(string text)
     {
-        gameOverRoot.SetActive(true);
-        gameOverLabel.text = text;
+        if (gameOverRoot != null) gameOverRoot.SetActive(true);
+        if (gameOverLabel != null) gameOverLabel.text = text;
     }
 
     void RestartGame()

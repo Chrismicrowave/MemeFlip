@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,9 +16,14 @@ public class GameManager : MonoBehaviour
 
     Reel _firstSelected;
     Reel _secondSelected;
+    Reel _hoveredReel;
     int _playerShuffleCharges = 2;
+    bool _resultFromNpcTurn;
 
-    void Awake() => Instance = this;
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -24,8 +31,69 @@ public class GameManager : MonoBehaviour
         actionPanel.gameObject.SetActive(true);
         hoverPopup.gameObject.SetActive(true);
         hoverPopup.Hide();
+        WireButtons();
         RefreshUI();
         actionPanel.SetTurnText("Your Turn");
+    }
+
+    void WireButtons()
+    {
+        var shfBtn = UnityEngine.GameObject.Find("GameCanvas/ShuffleButton")?.GetComponent<UnityEngine.UI.Button>();
+        if (shfBtn != null)
+        {
+            shfBtn.onClick.RemoveAllListeners();
+            shfBtn.onClick.AddListener(OnShuffleClicked);
+        }
+    }
+
+    void Update()
+    {
+        bool clicked = Mouse.current.leftButton.wasPressedThisFrame;
+
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = cam.ScreenPointToRay(mousePos);
+
+        Reel hitReel = null;
+        bool hitSomething = Physics.Raycast(ray, out RaycastHit hit);
+        if (hitSomething)
+            hitReel = hit.collider.GetComponentInParent<Reel>();
+
+        // Hover enter/exit
+        if (hitReel != _hoveredReel)
+        {
+            if (_hoveredReel != null)
+                _hoveredReel.OnHoverExit();
+            _hoveredReel = hitReel;
+            if (_hoveredReel != null)
+                _hoveredReel.OnHoverEnter();
+        }
+
+        // Click
+        if (clicked)
+        {
+            string objName = hitSomething ? hit.collider.name : "nothing";
+            bool isReel = hitReel != null;
+            bool faceDown = isReel && hitReel.isFaceDown;
+            bool destroyed = isReel && hitReel.isDestroyed;
+            Debug.Log($"[Input] Click — overUI:{overUI} | hit:{objName} | isReel:{isReel} | faceDown:{faceDown} | destroyed:{destroyed} | phase:{currentPhase}");
+        }
+
+        if (clicked && hitReel != null)
+            hitReel.OnClick();
+
+        // ShowResult — click outside board to dismiss
+        if (currentPhase == TurnPhase.ShowResult && clicked && hitReel == null && !overUI)
+        {
+            if (_resultFromNpcTurn)
+                FinishNPCTurn();
+            else
+                FinishPlayerTurn();
+        }
     }
 
     public void OnReelClicked(Reel reel)
@@ -43,54 +111,33 @@ public class GameManager : MonoBehaviour
 
     void HandleSelectFirst(Reel reel)
     {
-        if (!reel.isFaceDown) return;
+        if (!reel.isFaceDown) { Debug.Log($"[GM] Reject — not faceDown"); return; }
 
-        if (reel.owner != Owner.Player)
-        {
-            actionPanel.ShowMessage("Pick one of your own reels first!");
-            return;
-        }
-
+        Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
         _firstSelected.FlipUp();
-        currentPhase = TurnPhase.PlayerActionChoice;
+        currentPhase = TurnPhase.PlayerSelectSecond;
         RefreshUI();
-        actionPanel.ShowAttackButton(true);
-        actionPanel.ShowShuffleButton(true);
-        actionPanel.SetInstructionText("Attack or Shuffle?");
+        actionPanel.ShowAttackerSlot(_firstSelected);
+        actionPanel.SetInstructionText("Select a face-down reel as target");
     }
 
     void HandleSelectSecond(Reel reel)
     {
-        if (!reel.isFaceDown || reel == _firstSelected) return;
+        if (!reel.isFaceDown || reel == _firstSelected) { Debug.Log($"[GM] Reject target — faceDown:{reel.isFaceDown} sameAsFirst:{reel == _firstSelected}"); return; }
 
-        if (reel.owner != Owner.NPC)
-        {
-            actionPanel.ShowMessage("Pick an opponent's reel as target!");
-            return;
-        }
-
+        Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
         currentPhase = TurnPhase.Resolving;
-        actionPanel.ShowAttackButton(false);
         actionPanel.ShowShuffleButton(false);
-        actionPanel.ShowSecondSlot(_secondSelected);
+        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
         ResolveAttack(_firstSelected, _secondSelected);
-    }
-
-    public void OnAttackClicked()
-    {
-        if (currentPhase != TurnPhase.PlayerActionChoice) return;
-        currentPhase = TurnPhase.PlayerSelectSecond;
-        actionPanel.ShowAttackButton(false);
-        actionPanel.ShowShuffleButton(false);
-        actionPanel.SetInstructionText("Select an opponent's reel as target");
     }
 
     public void OnShuffleClicked()
     {
-        if (currentPhase != TurnPhase.PlayerActionChoice || _playerShuffleCharges <= 0) return;
+        if (currentPhase != TurnPhase.PlayerSelectFirst || _playerShuffleCharges <= 0) return;
 
         _playerShuffleCharges--;
 
@@ -101,7 +148,6 @@ public class GameManager : MonoBehaviour
         board.ShuffleOwnerReels(Owner.Player);
         RefreshUI();
         actionPanel.ShowMessage($"Shuffle! {_playerShuffleCharges} charges left");
-        actionPanel.ShowAttackButton(false);
         actionPanel.ShowShuffleButton(false);
 
         StartNPCTurn();
@@ -141,11 +187,14 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Invoke(nameof(FinishPlayerTurn), 1.5f);
+        currentPhase = TurnPhase.ShowResult;
+        actionPanel.SetInstructionText("Click anywhere outside the board to proceed");
     }
 
     void FinishPlayerTurn()
     {
+        if (currentPhase != TurnPhase.ShowResult) return;
+        _resultFromNpcTurn = false;
         FlipBackSelections();
         currentPhase = TurnPhase.NPCTurn;
         RefreshUI();
@@ -164,29 +213,29 @@ public class GameManager : MonoBehaviour
     void ExecuteNPCTurn()
     {
         var npcAttackers = board.GetAliveFaceDown(Owner.NPC);
-        var playerTargets = board.GetAliveFaceDown(Owner.Player);
+        var allTargets = board.GetAliveFaceDownAll();
 
-        if (npcAttackers.Count == 0 || playerTargets.Count == 0)
+        if (npcAttackers.Count == 0 || allTargets.Count == 0)
         {
             CheckWinCondition();
             return;
         }
 
         Reel npcPick = npcAttackers[Random.Range(0, npcAttackers.Count)];
-        Reel targetPick = playerTargets[Random.Range(0, playerTargets.Count)];
+        Reel targetPick = allTargets[Random.Range(0, allTargets.Count)];
 
         _firstSelected = npcPick;
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        actionPanel.ShowFirstSlot(_firstSelected);
+        actionPanel.ShowAttackerSlot(_firstSelected);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
 
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        actionPanel.ShowSecondSlot(_secondSelected);
+        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
         Invoke(nameof(NPCResolve), 0.6f);
     }
 
@@ -205,11 +254,14 @@ public class GameManager : MonoBehaviour
         actionPanel.ShowMessage(msg);
         actionPanel.UpdateHpBars();
 
-        Invoke(nameof(FinishNPCTurn), 1.5f);
+        _resultFromNpcTurn = true;
+        currentPhase = TurnPhase.ShowResult;
+        actionPanel.SetInstructionText("Click anywhere outside the board to proceed");
     }
 
     void FinishNPCTurn()
     {
+        _resultFromNpcTurn = false;
         FlipBackSelections();
 
         if (!board.HasAliveReels(Owner.Player))
@@ -251,9 +303,9 @@ public class GameManager : MonoBehaviour
 public enum TurnPhase
 {
     PlayerSelectFirst,
-    PlayerActionChoice,
     PlayerSelectSecond,
     Resolving,
+    ShowResult,
     NPCTurn,
     GameOver
 }
