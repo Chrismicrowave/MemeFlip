@@ -27,13 +27,21 @@ public class ReelHoverPopup : MonoBehaviour
         panel.SetActive(true);
         UpdateStats(reel);
 
-        // Show meme image preview on hover (only for face-up reels)
-        if (previewImage != null && reel.memeData != null && !reel.isFaceDown && !reel.isDestroyed)
+        // Show preview image only for face-up reels; hide for face-down ("Flip" text only)
+        if (previewImage != null)
         {
-            if (reel.memeData.memeImage != null)
-                previewImage.texture = reel.memeData.memeImage;
+            if (!reel.isFaceDown && !reel.isDestroyed && reel.memeData != null)
+            {
+                previewImage.gameObject.SetActive(true);
+                if (reel.memeData.memeImage != null)
+                    previewImage.texture = reel.memeData.memeImage;
+                else
+                    previewImage.texture = null;
+            }
             else
-                previewImage.texture = null;
+            {
+                previewImage.gameObject.SetActive(false);
+            }
         }
 
         // Position popup near the reel
@@ -50,8 +58,10 @@ public class ReelHoverPopup : MonoBehaviour
         _pinnedPos = screenPos;
         if (panel == null) return;
         panel.SetActive(true);
-        // Update stats only, don't touch preview texture (MemePlayer handles it)
         UpdateStats(reel);
+        // Ensure preview is visible when pinned (reel is always face-up at this point)
+        if (previewImage != null)
+            previewImage.gameObject.SetActive(true);
         panel.transform.position = screenPos;
     }
 
