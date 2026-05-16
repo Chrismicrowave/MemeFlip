@@ -100,7 +100,7 @@ public class Reel : MonoBehaviour
 
     public void OnHoverEnter()
     {
-        if (isDestroyed) return;
+        if (isDestroyed || isFaceDown) return;
         GameManager.Instance.hoverPopup.Show(this);
     }
 
