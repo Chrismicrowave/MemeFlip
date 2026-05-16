@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum Owner { Player, NPC }
 
@@ -34,21 +35,22 @@ public class Reel : MonoBehaviour
     [Header("Face")]
     public Texture cardBack;
 
-    private Renderer _faceRenderer;
-    private MaterialPropertyBlock _propBlock;
-    private static readonly int BaseMap = Shader.PropertyToID("_BaseMap");
-    private UnityEngine.UI.Image _borderImage;
+    private RawImage _faceImage;
+    private Image _borderImage;
 
     void Awake()
     {
-        _propBlock = new MaterialPropertyBlock();
-        var faceTf = transform.Find("Face");
-        if (faceTf != null)
-            _faceRenderer = faceTf.GetComponent<Renderer>();
+        var canvas = transform.Find("Canvas");
+        if (canvas != null)
+        {
+            var faceTf = canvas.Find("FaceImage");
+            if (faceTf != null)
+                _faceImage = faceTf.GetComponent<RawImage>();
 
-        var borderTf = transform.Find("Canvas/Border");
-        if (borderTf != null)
-            _borderImage = borderTf.GetComponent<UnityEngine.UI.Image>();
+            var borderTf = canvas.Find("Border");
+            if (borderTf != null)
+                _borderImage = borderTf.GetComponent<Image>();
+        }
     }
 
     public void Init(Owner owner, Vector2Int pos)
@@ -88,21 +90,20 @@ public class Reel : MonoBehaviour
 
     void ApplyVisual()
     {
-        if (_faceRenderer == null || isDestroyed) return;
+        if (isDestroyed) return;
 
         if (isFaceDown)
         {
-            // material already has card-back as default — leave it
-            _faceRenderer.SetPropertyBlock(null);
+            if (_faceImage != null) _faceImage.texture = cardBack;
             if (_borderImage != null) _borderImage.enabled = false;
         }
         else
         {
-            _faceRenderer.GetPropertyBlock(_propBlock);
-            Texture tex = memeData?.memeImage;
-            if (tex != null)
-                _propBlock.SetTexture(BaseMap, tex);
-            _faceRenderer.SetPropertyBlock(_propBlock);
+            if (_faceImage != null)
+            {
+                Texture tex = memeData?.memeImage;
+                _faceImage.texture = tex ?? cardBack;
+            }
 
             if (_borderImage != null)
             {
