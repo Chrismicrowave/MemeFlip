@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MemeSlotClickHandler : MonoBehaviour, IPointerClickHandler
 {
@@ -9,13 +10,12 @@ public class MemeSlotClickHandler : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         var gm = GameManager.Instance;
-        if (gm == null || gm.memePlayer == null) return;
+        if (gm == null || gm.memePlayer == null || gm.actionPanel == null) return;
 
         Reel reel = slotIndex == 0 ? gm.FirstSelected : gm.SecondSelected;
-        if (reel != null)
-        {
-            gm.memePlayer.PlayFull(reel);
-            gm.hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
-        }
+        if (reel == null) return;
+
+        RawImage target = slotIndex == 0 ? gm.actionPanel.playerSlot1Image : gm.actionPanel.playerSlot2Image;
+        gm.memePlayer.PlaySlot(target, reel, true);
     }
 }

@@ -71,16 +71,14 @@ public class GameManager : MonoBehaviour
             {
                 _hoveredReel.OnHoverExit();
                 hoverPopup.Hide();
-                // Only stop preview when not in selection phase (hover panel pinned)
-                if (currentPhase != TurnPhase.PlayerSelectSecond && currentPhase != TurnPhase.Resolving && currentPhase != TurnPhase.ShowResult)
-                    memePlayer?.Stop();
+                memePlayer?.StopHover();
             }
             _hoveredReel = hitReel;
             if (_hoveredReel != null)
             {
                 _hoveredReel.OnHoverEnter();
                 hoverPopup.Show(_hoveredReel);
-                memePlayer?.PlayMuted(_hoveredReel);
+                memePlayer?.PlayHover(hoverPopup.previewImage, _hoveredReel);
             }
         }
 
@@ -109,6 +107,22 @@ public class GameManager : MonoBehaviour
 
     public void OnReelClicked(Reel reel)
     {
+        // Replay in slot when clicking an already-flipped selected reel
+        if (!reel.isFaceDown && !reel.isDestroyed)
+        {
+            if (reel == _firstSelected)
+            {
+                memePlayer?.PlaySlot(actionPanel.playerSlot1Image, reel, true);
+                return;
+            }
+            if (reel == _secondSelected)
+            {
+                memePlayer?.PlaySlot(actionPanel.playerSlot2Image, reel, true);
+                return;
+            }
+            // Face-down unselected reels fall through to selection logic
+        }
+
         switch (currentPhase)
         {
             case TurnPhase.PlayerSelectFirst:
@@ -127,12 +141,12 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
         _firstSelected.FlipUp();
-        memePlayer?.PlayFull(_firstSelected);
         currentPhase = TurnPhase.PlayerSelectSecond;
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
+        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         actionPanel.SetInstructionText("Select a face-down reel as target");
-        hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
+        RefreshHoverForReel(reel);
     }
 
     void HandleSelectSecond(Reel reel)
@@ -142,12 +156,21 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-        memePlayer?.PlayFull(_secondSelected);
         currentPhase = TurnPhase.Resolving;
         actionPanel.ShowShuffleButton(false);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
-        hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
+        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
+        RefreshHoverForReel(reel);
         ResolveAttack(_firstSelected, _secondSelected);
+    }
+
+    void RefreshHoverForReel(Reel reel)
+    {
+        if (_hoveredReel == reel)
+        {
+            hoverPopup.Show(reel);
+            memePlayer?.PlayHover(hoverPopup.previewImage, reel);
+        }
     }
 
     public void OnShuffleClicked()
@@ -243,18 +266,16 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        memePlayer?.PlayFull(_firstSelected);
         actionPanel.ShowAttackerSlot(_firstSelected);
-        hoverPopup.Pin(_firstSelected, new Vector2(Screen.width / 2f, 200f));
+        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
 
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        memePlayer?.PlayFull(_secondSelected);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
-        hoverPopup.Pin(_secondSelected, new Vector2(Screen.width / 2f, 200f));
+        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
     }
 

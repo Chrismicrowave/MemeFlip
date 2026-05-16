@@ -229,6 +229,70 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
   m_PrefabInstance: {fileID: 4661254}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &29624443 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+  m_PrefabInstance: {fileID: 2130911694}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &29624447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29624443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!1 &101911447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+  m_PrefabInstance: {fileID: 411697329}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &101911451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101911447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1001 &269818721
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -509,13 +573,17 @@ PrefabInstance:
       propertyPath: m_TextStyleHashCode
       value: -1183493901
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4110654967526458624, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1949923531275494722, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       insertIndex: -1
       addedObject: {fileID: 411697332}
+    - targetCorrespondingSourceObject: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 101911451}
   m_SourcePrefab: {fileID: 100100000, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
 --- !u!224 &411697330 stripped
 RectTransform:
@@ -3232,9 +3300,11 @@ MonoBehaviour:
   playerSlot1: {fileID: 0}
   playerSlot1Owner: {fileID: 0}
   playerSlot1Stats: {fileID: 0}
+  playerSlot1Image: {fileID: 0}
   playerSlot2: {fileID: 0}
   playerSlot2Owner: {fileID: 0}
   playerSlot2Stats: {fileID: 0}
+  playerSlot2Image: {fileID: 0}
   attackButton: {fileID: 0}
   shuffleButton: {fileID: 0}
   shuffleLabel: {fileID: 0}
@@ -3413,13 +3483,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4110654967526458624, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1949923531275494722, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2130911697}
+    - targetCorrespondingSourceObject: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 29624447}
   m_SourcePrefab: {fileID: 100100000, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
 --- !u!224 &2130911695 stripped
 RectTransform:

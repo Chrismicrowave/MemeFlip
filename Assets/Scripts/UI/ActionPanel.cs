@@ -8,9 +8,11 @@ public class ActionPanel : MonoBehaviour
     public GameObject playerSlot1;
     public TextMeshProUGUI playerSlot1Owner;
     public TextMeshProUGUI playerSlot1Stats;
+    public RawImage playerSlot1Image;
     public GameObject playerSlot2;
     public TextMeshProUGUI playerSlot2Owner;
     public TextMeshProUGUI playerSlot2Stats;
+    public RawImage playerSlot2Image;
 
     [Header("Buttons")]
     public Button attackButton;
@@ -46,9 +48,11 @@ public class ActionPanel : MonoBehaviour
         if (playerSlot1 == null) playerSlot1 = c.Find("PlayerSlotPanel1")?.gameObject;
         if (playerSlot1Owner == null) playerSlot1Owner = c.Find("PlayerSlotPanel1/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
         if (playerSlot1Stats == null) playerSlot1Stats = c.Find("PlayerSlotPanel1/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot1Image == null) playerSlot1Image = c.Find("PlayerSlotPanel1/Image")?.GetComponent<RawImage>();
         if (playerSlot2 == null) playerSlot2 = c.Find("PlayerSlotPanel2")?.gameObject;
         if (playerSlot2Owner == null) playerSlot2Owner = c.Find("PlayerSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
         if (playerSlot2Stats == null) playerSlot2Stats = c.Find("PlayerSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2Image == null) playerSlot2Image = c.Find("PlayerSlotPanel2/Image")?.GetComponent<RawImage>();
 
         if (attackButton == null) attackButton = c.Find("AttackButton")?.GetComponent<Button>();
         if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
@@ -85,17 +89,29 @@ public class ActionPanel : MonoBehaviour
     public void ShowAttackerSlot(Reel reel)
     {
         FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, reel);
+        SetSlotImage(playerSlot1Image, reel);
     }
 
     public void ShowTargetSlot(Reel target, Reel attacker)
     {
         FillSlot(playerSlot2, playerSlot2Owner, playerSlot2Stats, target);
+        SetSlotImage(playerSlot2Image, target);
+    }
+
+    void SetSlotImage(RawImage target, Reel reel)
+    {
+        if (target == null || reel?.memeData == null) return;
+        // Set static image preview (video will be routed by MemePlayer if available)
+        if (reel.memeData.memeImage != null)
+            target.texture = reel.memeData.memeImage;
     }
 
     public void ClearSlots()
     {
         if (playerSlot1 != null) playerSlot1.SetActive(false);
         if (playerSlot2 != null) playerSlot2.SetActive(false);
+        if (playerSlot1Image != null) playerSlot1Image.texture = null;
+        if (playerSlot2Image != null) playerSlot2Image.texture = null;
     }
 
     public void ShowAttackButton(bool show)

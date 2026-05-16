@@ -31,22 +31,9 @@ public class ReelHoverPopup : MonoBehaviour
         panel.SetActive(true);
         UpdateStats(reel);
 
-        // Show preview image only for face-up reels; hide for face-down ("Flip" text only)
+        // Preview texture is set by MemePlayer.PlayHover (handles video + image)
         if (previewImage != null)
-        {
-            if (!reel.isFaceDown && !reel.isDestroyed && reel.memeData != null)
-            {
-                previewImage.gameObject.SetActive(true);
-                if (reel.memeData.memeImage != null)
-                    previewImage.texture = reel.memeData.memeImage;
-                else
-                    previewImage.texture = null;
-            }
-            else
-            {
-                previewImage.gameObject.SetActive(false);
-            }
-        }
+            previewImage.gameObject.SetActive(!reel.isFaceDown && !reel.isDestroyed);
 
         // Position at reel's upper-right; flip to upper-left if off-screen
         Vector3 reelScreenPos = Camera.main.WorldToScreenPoint(reel.transform.position);
