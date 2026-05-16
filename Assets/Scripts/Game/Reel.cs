@@ -37,6 +37,7 @@ public class Reel : MonoBehaviour
     private Renderer _faceRenderer;
     private MaterialPropertyBlock _propBlock;
     private static readonly int BaseMap = Shader.PropertyToID("_BaseMap");
+    private UnityEngine.UI.Image _borderImage;
 
     void Awake()
     {
@@ -44,6 +45,10 @@ public class Reel : MonoBehaviour
         var faceTf = transform.Find("Face");
         if (faceTf != null)
             _faceRenderer = faceTf.GetComponent<Renderer>();
+
+        var borderTf = transform.Find("Canvas/Border");
+        if (borderTf != null)
+            _borderImage = borderTf.GetComponent<UnityEngine.UI.Image>();
     }
 
     public void Init(Owner owner, Vector2Int pos)
@@ -53,8 +58,8 @@ public class Reel : MonoBehaviour
         isFaceDown = true;
         isDestroyed = false;
 
-        // All reels start at 5/5 HP — override any SO values
-        stats = new ReelStats { maxHP = 5, currentHP = 5, atk = 3 };
+        int hp = Random.Range(4, 9);
+        stats = new ReelStats { maxHP = hp, currentHP = hp, atk = Random.Range(2, 5) };
 
         ApplyVisual();
     }
@@ -77,6 +82,7 @@ public class Reel : MonoBehaviour
     {
         isDestroyed = true;
         isFaceDown = false;
+        if (_borderImage != null) _borderImage.enabled = false;
         gameObject.SetActive(false);
     }
 
@@ -88,6 +94,7 @@ public class Reel : MonoBehaviour
         {
             // material already has card-back as default — leave it
             _faceRenderer.SetPropertyBlock(null);
+            if (_borderImage != null) _borderImage.enabled = false;
         }
         else
         {
@@ -96,6 +103,12 @@ public class Reel : MonoBehaviour
             if (tex != null)
                 _propBlock.SetTexture(BaseMap, tex);
             _faceRenderer.SetPropertyBlock(_propBlock);
+
+            if (_borderImage != null)
+            {
+                _borderImage.enabled = true;
+                _borderImage.color = owner == Owner.Player ? playerColor : npcColor;
+            }
         }
     }
 

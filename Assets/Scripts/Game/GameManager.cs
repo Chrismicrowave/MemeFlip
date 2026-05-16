@@ -328,6 +328,15 @@ public class GameManager : MonoBehaviour
         }
 
         Reel npcPick = npcAttackers[Random.Range(0, npcAttackers.Count)];
+
+        // Exclude the attacker from possible targets
+        allTargets.Remove(npcPick);
+        if (allTargets.Count == 0)
+        {
+            CheckWinCondition();
+            return;
+        }
+
         Reel targetPick = allTargets[Random.Range(0, allTargets.Count)];
 
         _firstSelected = npcPick;
