@@ -167,11 +167,8 @@ public class GameManager : MonoBehaviour
 
     void RefreshHoverForReel(Reel reel)
     {
-        if (_hoveredReel == reel)
-        {
-            hoverPopup.Show(reel);
-            memePlayer?.PlayHover(hoverPopup.previewImage, reel);
-        }
+        hoverPopup.Show(reel);
+        memePlayer?.PlayHover(hoverPopup.previewImage, reel);
     }
 
     public void OnShuffleClicked()
@@ -194,10 +191,10 @@ public class GameManager : MonoBehaviour
 
     void ResolveAttack(Reel attacker, Reel target)
     {
-        int damage = Mathf.Max(1, attacker.stats.atk - target.stats.def);
+        int damage = Mathf.Max(1, attacker.stats.atk);
         target.stats.currentHP -= damage;
 
-        string msg = $"{attacker.owner} ATK({attacker.stats.atk}) → {target.owner} DEF({target.stats.def}) = {damage} dmg!";
+        string msg = $"{attacker.owner} ATK({attacker.stats.atk}) = {damage} dmg!";
         if (target.stats.currentHP <= 0)
         {
             target.DestroyReel();
@@ -233,51 +230,71 @@ public class GameManager : MonoBehaviour
     IEnumerator PlayerAttackSequence()
     {
         yield return new WaitForSeconds(0.3f);
-        yield return DashAndBack(_firstSelected);
-        yield return Jitter(_secondSelected);
+        var slot1Rt = actionPanel.playerSlot1?.GetComponent<RectTransform>();
+        var slot2Rt = actionPanel.playerSlot2?.GetComponent<RectTransform>();
+        yield return DashAndBack(_firstSelected, slot1Rt);
+        yield return Jitter(_secondSelected, slot2Rt);
         ResolveAttack(_firstSelected, _secondSelected);
     }
 
-    IEnumerator DashAndBack(Reel reel)
+    IEnumerator DashAndBack(Reel reel, RectTransform slotRt)
     {
+        // Reel
         float width = reel.GetComponent<Renderer>().bounds.size.x;
         float distance = width * reel.attackDashDistancePercent;
         float halfDuration = reel.attackDashDuration * 0.5f;
         Vector3 startPos = reel.transform.position;
         Vector3 targetPos = startPos + Vector3.right * distance;
 
+        // Slot
+        Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
+        float slotDist = slotRt != null ? slotRt.rect.width * reel.attackDashDistancePercent : 0f;
+        Vector2 slotTarget = slotOrig + Vector2.right * slotDist;
+
+        // Dash out
         float elapsed = 0f;
         while (elapsed < halfDuration)
         {
-            reel.transform.position = Vector3.Lerp(startPos, targetPos, elapsed / halfDuration);
+            float t = elapsed / halfDuration;
+            reel.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            if (slotRt != null) slotRt.anchoredPosition = Vector2.Lerp(slotOrig, slotTarget, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
         reel.transform.position = targetPos;
+        if (slotRt != null) slotRt.anchoredPosition = slotTarget;
 
+        // Dash back
         elapsed = 0f;
         while (elapsed < halfDuration)
         {
-            reel.transform.position = Vector3.Lerp(targetPos, startPos, elapsed / halfDuration);
+            float t = elapsed / halfDuration;
+            reel.transform.position = Vector3.Lerp(targetPos, startPos, t);
+            if (slotRt != null) slotRt.anchoredPosition = Vector2.Lerp(slotTarget, slotOrig, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
         reel.transform.position = startPos;
+        if (slotRt != null) slotRt.anchoredPosition = slotOrig;
     }
 
-    IEnumerator Jitter(Reel reel)
+    IEnumerator Jitter(Reel reel, RectTransform slotRt)
     {
         Vector3 origPos = reel.transform.position;
+        Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
         float elapsed = 0f;
         while (elapsed < reel.jitterDuration)
         {
             float x = Mathf.Sin(elapsed * reel.jitterSpeed) * reel.jitterIntensity;
             float z = Mathf.Cos(elapsed * reel.jitterSpeed * 0.7f) * reel.jitterIntensity;
             reel.transform.position = origPos + new Vector3(x, 0f, z);
+            if (slotRt != null)
+                slotRt.anchoredPosition = slotOrig + new Vector2(x, 0f);
             elapsed += Time.deltaTime;
             yield return null;
         }
         reel.transform.position = origPos;
+        if (slotRt != null) slotRt.anchoredPosition = slotOrig;
     }
 
     void FinishPlayerTurn()
@@ -338,10 +355,12 @@ public class GameManager : MonoBehaviour
     IEnumerator NPCAttackSequence()
     {
         yield return new WaitForSeconds(0.3f);
-        yield return DashAndBack(_firstSelected);
-        yield return Jitter(_secondSelected);
+        var slot1Rt = actionPanel.playerSlot1?.GetComponent<RectTransform>();
+        var slot2Rt = actionPanel.playerSlot2?.GetComponent<RectTransform>();
+        yield return DashAndBack(_firstSelected, slot1Rt);
+        yield return Jitter(_secondSelected, slot2Rt);
 
-        int damage = Mathf.Max(1, _firstSelected.stats.atk - _secondSelected.stats.def);
+        int damage = Mathf.Max(1, _firstSelected.stats.atk);
         _secondSelected.stats.currentHP -= damage;
 
         string msg = $"NPC ATK({_firstSelected.stats.atk}) → {damage} dmg!";

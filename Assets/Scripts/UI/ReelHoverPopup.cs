@@ -82,7 +82,7 @@ public class ReelHoverPopup : MonoBehaviour
         else
         {
             ownerText.text = $"<color={colorTag}>{reel.owner}</color>";
-            statsText.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
+            statsText.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}";
             statusText.text = "Face Up";
         }
     }

@@ -31,7 +31,6 @@ public class Reel : MonoBehaviour
     public Color playerColor = new(0.2f, 0.33f, 1f);
     public Color npcColor = new(1f, 0.2f, 0.33f);
     public Color faceDownColor = new(0.5f, 0.5f, 0.5f);
-    public Color destroyedColor = new(0.3f, 0.3f, 0.3f);
 
     private Renderer _renderer;
     private MaterialPropertyBlock _propBlock;
@@ -51,7 +50,7 @@ public class Reel : MonoBehaviour
         isDestroyed = false;
 
         // All reels start at 5/5 HP — override any SO values
-        stats = new ReelStats { maxHP = 5, currentHP = 5, atk = 3, def = 1 };
+        stats = new ReelStats { maxHP = 5, currentHP = 5, atk = 3 };
 
         ApplyVisual();
     }
@@ -74,19 +73,12 @@ public class Reel : MonoBehaviour
     {
         isDestroyed = true;
         isFaceDown = false;
-        ApplyVisual();
+        gameObject.SetActive(false);
     }
 
     void ApplyVisual()
     {
-        Color col;
-        if (isDestroyed)
-            col = destroyedColor;
-        else if (isFaceDown)
-            col = faceDownColor;
-        else
-            col = owner == Owner.Player ? playerColor : npcColor;
-
+        Color col = isFaceDown ? faceDownColor : (owner == Owner.Player ? playerColor : npcColor);
         _renderer.GetPropertyBlock(_propBlock);
         _propBlock.SetColor(BaseColor, col);
         _renderer.SetPropertyBlock(_propBlock);

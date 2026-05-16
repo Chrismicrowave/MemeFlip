@@ -7,12 +7,18 @@ public class ActionPanel : MonoBehaviour
     [Header("Slots")]
     public GameObject playerSlot1;
     public TextMeshProUGUI playerSlot1Owner;
-    public TextMeshProUGUI playerSlot1Stats;
+    public TextMeshProUGUI playerSlot1HP;
+    public TextMeshProUGUI playerSlot1ATK;
     public RawImage playerSlot1Image;
+    public Scrollbar playerSlot1HPBar;
+    public Image playerSlot1OwnerColour;
     public GameObject playerSlot2;
     public TextMeshProUGUI playerSlot2Owner;
-    public TextMeshProUGUI playerSlot2Stats;
+    public TextMeshProUGUI playerSlot2HP;
+    public TextMeshProUGUI playerSlot2ATK;
     public RawImage playerSlot2Image;
+    public Scrollbar playerSlot2HPBar;
+    public Image playerSlot2OwnerColour;
 
     [Header("Buttons")]
     public Button attackButton;
@@ -46,13 +52,19 @@ public class ActionPanel : MonoBehaviour
         if (npcHpLabel == null) npcHpLabel = c.Find("NpcHp")?.GetComponent<TextMeshProUGUI>();
 
         if (playerSlot1 == null) playerSlot1 = c.Find("PlayerSlotPanel1")?.gameObject;
-        if (playerSlot1Owner == null) playerSlot1Owner = c.Find("PlayerSlotPanel1/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
-        if (playerSlot1Stats == null) playerSlot1Stats = c.Find("PlayerSlotPanel1/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot1Owner == null) playerSlot1Owner = c.Find("PlayerSlotPanel1/MemesName")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot1HP == null) playerSlot1HP = c.Find("PlayerSlotPanel1/HP")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot1ATK == null) playerSlot1ATK = c.Find("PlayerSlotPanel1/ATK")?.GetComponent<TextMeshProUGUI>();
         if (playerSlot1Image == null) playerSlot1Image = c.Find("PlayerSlotPanel1/Image")?.GetComponent<RawImage>();
+        if (playerSlot1HPBar == null) playerSlot1HPBar = c.Find("PlayerSlotPanel1/HPBar")?.GetComponent<Scrollbar>();
+        if (playerSlot1OwnerColour == null) playerSlot1OwnerColour = c.Find("PlayerSlotPanel1/OwnerColour")?.GetComponent<Image>();
         if (playerSlot2 == null) playerSlot2 = c.Find("PlayerSlotPanel2")?.gameObject;
-        if (playerSlot2Owner == null) playerSlot2Owner = c.Find("PlayerSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
-        if (playerSlot2Stats == null) playerSlot2Stats = c.Find("PlayerSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2Owner == null) playerSlot2Owner = c.Find("PlayerSlotPanel2/MemesName")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2HP == null) playerSlot2HP = c.Find("PlayerSlotPanel2/HP")?.GetComponent<TextMeshProUGUI>();
+        if (playerSlot2ATK == null) playerSlot2ATK = c.Find("PlayerSlotPanel2/ATK")?.GetComponent<TextMeshProUGUI>();
         if (playerSlot2Image == null) playerSlot2Image = c.Find("PlayerSlotPanel2/Image")?.GetComponent<RawImage>();
+        if (playerSlot2HPBar == null) playerSlot2HPBar = c.Find("PlayerSlotPanel2/HPBar")?.GetComponent<Scrollbar>();
+        if (playerSlot2OwnerColour == null) playerSlot2OwnerColour = c.Find("PlayerSlotPanel2/OwnerColour")?.GetComponent<Image>();
 
         if (attackButton == null) attackButton = c.Find("AttackButton")?.GetComponent<Button>();
         if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
@@ -78,23 +90,35 @@ public class ActionPanel : MonoBehaviour
         return $"#{(byte)(c.r * 255):X2}{(byte)(c.g * 255):X2}{(byte)(c.b * 255):X2}";
     }
 
-    static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI statsLabel, Reel reel)
+    static string MemeName(Reel reel)
+    {
+        var md = reel?.memeData;
+        if (md == null) return "???";
+        if (md.memeVideo != null) return md.memeVideo.name;
+        if (md.memeImage != null) return md.memeImage.name;
+        return "Unknown";
+    }
+
+    static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel, Scrollbar hpBar, Image ownerColour)
     {
         panel.SetActive(true);
+        ownerLabel.text = MemeName(reel);
+        if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
+        if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
+        if (hpBar != null) hpBar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
         Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
-        ownerLabel.text = $"<color={ColorTag(c)}>{reel.owner}</color>";
-        statsLabel.text = $"HP {reel.stats.currentHP}/{reel.stats.maxHP}  ATK {reel.stats.atk}  DEF {reel.stats.def}";
+        if (ownerColour != null) ownerColour.color = c;
     }
 
     public void ShowAttackerSlot(Reel reel)
     {
-        FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, reel);
+        FillSlot(playerSlot1, playerSlot1Owner, playerSlot1HP, playerSlot1ATK, reel, playerSlot1HPBar, playerSlot1OwnerColour);
         SetSlotImage(playerSlot1Image, reel);
     }
 
     public void ShowTargetSlot(Reel target, Reel attacker)
     {
-        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2Stats, target);
+        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2HP, playerSlot2ATK, target, playerSlot2HPBar, playerSlot2OwnerColour);
         SetSlotImage(playerSlot2Image, target);
     }
 
@@ -112,6 +136,14 @@ public class ActionPanel : MonoBehaviour
         if (playerSlot2 != null) playerSlot2.SetActive(false);
         if (playerSlot1Image != null) playerSlot1Image.texture = null;
         if (playerSlot2Image != null) playerSlot2Image.texture = null;
+        if (playerSlot1HPBar != null) playerSlot1HPBar.size = 0f;
+        if (playerSlot2HPBar != null) playerSlot2HPBar.size = 0f;
+        if (playerSlot1OwnerColour != null) playerSlot1OwnerColour.color = Color.gray;
+        if (playerSlot2OwnerColour != null) playerSlot2OwnerColour.color = Color.gray;
+        if (playerSlot1HP != null) playerSlot1HP.text = "";
+        if (playerSlot1ATK != null) playerSlot1ATK.text = "";
+        if (playerSlot2HP != null) playerSlot2HP.text = "";
+        if (playerSlot2ATK != null) playerSlot2ATK.text = "";
     }
 
     public void ShowAttackButton(bool show)
@@ -160,6 +192,21 @@ public class ActionPanel : MonoBehaviour
         int nAlive = board.AliveCount(Owner.NPC);
         playerHpLabel.text = $"Your reels: {pAlive}/6";
         npcHpLabel.text = $"NPC reels: {nAlive}/6";
+
+        UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, GameManager.Instance.FirstSelected);
+        UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, GameManager.Instance.SecondSelected);
+    }
+
+    static void UpdateSlotDisplay(Scrollbar bar, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel)
+    {
+        if (reel == null || reel.isDestroyed)
+        {
+            if (bar != null) bar.size = 0f;
+            return;
+        }
+        if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
+        if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
+        if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
     }
 
     public void ShowGameOver(string text)
