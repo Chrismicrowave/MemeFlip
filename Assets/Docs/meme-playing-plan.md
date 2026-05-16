@@ -89,15 +89,17 @@ SlotPanel click      ──► MemePlayer.PlayFull(currentSlotReel)
 
 ## Checklist
 
-- [ ] Step 1: MemeData + MemeLibrary + Reel/Board changes
-- [ ] Step 2: Create MemePlayer.cs
-- [ ] Step 3: Create MemeDisplay UI + RenderTexture + MemeLibrary asset in scene
-- [ ] Step 4: Wire hover → muted preview
-- [ ] Step 5: Wire click → full playback
-- [ ] Step 6: Wire slot panel clicks
-- [ ] Step 7: Populate MemeLibrary with assets
-- [ ] Test: hover shows muted preview
-- [ ] Test: click plays with sound
-- [ ] Test: slot panel click triggers replay
-- [ ] Test: image-only meme (static + sound) works
-- [ ] Commit and push branch
+- [x] Step 1: MemeData + MemeLibrary + Reel/Board changes
+- [x] Step 2: Create MemePlayer.cs
+- [x] Step 3: Create MemeDisplay UI + RenderTexture + MemeLibrary asset in scene
+- [x] Step 4: Wire hover → muted preview
+- [x] Step 5: Wire click → full playback
+- [x] Step 6: Wire slot panel clicks
+- [x] Step 7: Populate MemeLibrary with assets
+- [x] Test: hover shows muted preview (face-up only)
+- [x] Test: click plays with sound
+- [x] Test: slot panel click triggers replay
+- [x] Test: image-only meme (static + sound) works
+- [x] Test: face-down reel shows "Flip" only, no preview
+- [x] Test: one-slot-per-side (PlayerSlotPanel1, NPCSlotPanel1 only)
+- [x] Commit and push branch
