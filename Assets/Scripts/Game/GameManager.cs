@@ -70,7 +70,9 @@ public class GameManager : MonoBehaviour
             if (_hoveredReel != null)
             {
                 _hoveredReel.OnHoverExit();
-                memePlayer?.Stop();
+                // Only stop preview when not in selection phase (hover panel pinned)
+                if (currentPhase != TurnPhase.PlayerSelectSecond && currentPhase != TurnPhase.Resolving && currentPhase != TurnPhase.ShowResult)
+                    memePlayer?.Stop();
             }
             _hoveredReel = hitReel;
             if (_hoveredReel != null)
@@ -128,6 +130,7 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
         actionPanel.SetInstructionText("Select a face-down reel as target");
+        hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
     }
 
     void HandleSelectSecond(Reel reel)
@@ -141,6 +144,7 @@ public class GameManager : MonoBehaviour
         currentPhase = TurnPhase.Resolving;
         actionPanel.ShowShuffleButton(false);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
+        hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
         ResolveAttack(_firstSelected, _secondSelected);
     }
 
@@ -239,6 +243,7 @@ public class GameManager : MonoBehaviour
         _firstSelected.FlipUp();
         memePlayer?.PlayFull(_firstSelected);
         actionPanel.ShowAttackerSlot(_firstSelected);
+        hoverPopup.Pin(_firstSelected, new Vector2(Screen.width / 2f, 200f));
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
 
@@ -247,6 +252,7 @@ public class GameManager : MonoBehaviour
         _secondSelected.FlipUp();
         memePlayer?.PlayFull(_secondSelected);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
+        hoverPopup.Pin(_secondSelected, new Vector2(Screen.width / 2f, 200f));
         Invoke(nameof(NPCResolve), 0.6f);
     }
 
@@ -291,12 +297,14 @@ public class GameManager : MonoBehaviour
     void FlipBackSelections()
     {
         memePlayer?.Stop();
+        hoverPopup.Unpin();
         if (_firstSelected != null && !_firstSelected.isDestroyed)
             _firstSelected.FlipDown();
         if (_secondSelected != null && !_secondSelected.isDestroyed)
             _secondSelected.FlipDown();
         _firstSelected = null;
         _secondSelected = null;
+        hoverPopup.Hide();
     }
 
     void RefreshUI()

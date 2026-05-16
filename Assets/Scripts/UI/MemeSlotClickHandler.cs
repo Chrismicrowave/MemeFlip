@@ -13,6 +13,9 @@ public class MemeSlotClickHandler : MonoBehaviour, IPointerClickHandler
 
         Reel reel = slotIndex == 0 ? gm.FirstSelected : gm.SecondSelected;
         if (reel != null)
+        {
             gm.memePlayer.PlayFull(reel);
+            gm.hoverPopup.Pin(reel, new Vector2(Screen.width / 2f, 200f));
+        }
     }
 }
