@@ -44,16 +44,19 @@ public class ReelHoverPopup : MonoBehaviour
             }
         }
 
-        // Position at upper-right of screen; flip to upper-left if off-screen
+        // Position above-right of cursor; flip to above-left if off-screen
         RectTransform rt = panel.GetComponent<RectTransform>();
         if (rt != null)
         {
-            float w = rt.rect.width;
-            float h = rt.rect.height;
+            float hw = rt.rect.width * 0.5f;
+            float hh = rt.rect.height * 0.5f;
             float margin = 15f;
-            float x = Screen.width - w - margin;
-            float y = Screen.height - margin;
-            if (x < 0) x = margin; // flip to left
+            float x = screenPos.x + margin + hw;
+            float y = screenPos.y + margin + hh;
+            if (x + hw > Screen.width)
+                x = screenPos.x - margin - hw;
+            if (y + hh > Screen.height)
+                y = Screen.height - margin - hh;
             panel.transform.position = new Vector3(x, y, 0);
         }
     }
