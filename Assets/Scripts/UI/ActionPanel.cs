@@ -4,21 +4,13 @@ using UnityEngine.UI;
 
 public class ActionPanel : MonoBehaviour
 {
-    [Header("Player Slots")]
+    [Header("Slots")]
     public GameObject playerSlot1;
     public TextMeshProUGUI playerSlot1Owner;
     public TextMeshProUGUI playerSlot1Stats;
     public GameObject playerSlot2;
     public TextMeshProUGUI playerSlot2Owner;
     public TextMeshProUGUI playerSlot2Stats;
-
-    [Header("NPC Slots")]
-    public GameObject npcSlot1;
-    public TextMeshProUGUI npcSlot1Owner;
-    public TextMeshProUGUI npcSlot1Stats;
-    public GameObject npcSlot2;
-    public TextMeshProUGUI npcSlot2Owner;
-    public TextMeshProUGUI npcSlot2Stats;
 
     [Header("Buttons")]
     public Button attackButton;
@@ -58,13 +50,6 @@ public class ActionPanel : MonoBehaviour
         if (playerSlot2Owner == null) playerSlot2Owner = c.Find("PlayerSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
         if (playerSlot2Stats == null) playerSlot2Stats = c.Find("PlayerSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
 
-        if (npcSlot1 == null) npcSlot1 = c.Find("NPCSlotPanel1")?.gameObject;
-        if (npcSlot1Owner == null) npcSlot1Owner = c.Find("NPCSlotPanel1/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
-        if (npcSlot1Stats == null) npcSlot1Stats = c.Find("NPCSlotPanel1/StatsLabel")?.GetComponent<TextMeshProUGUI>();
-        if (npcSlot2 == null) npcSlot2 = c.Find("NPCSlotPanel2")?.gameObject;
-        if (npcSlot2Owner == null) npcSlot2Owner = c.Find("NPCSlotPanel2/OwnerLabel")?.GetComponent<TextMeshProUGUI>();
-        if (npcSlot2Stats == null) npcSlot2Stats = c.Find("NPCSlotPanel2/StatsLabel")?.GetComponent<TextMeshProUGUI>();
-
         if (attackButton == null) attackButton = c.Find("AttackButton")?.GetComponent<Button>();
         if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
         if (shuffleLabel == null) shuffleLabel = c.Find("ShuffleButton/Label")?.GetComponent<TextMeshProUGUI>();
@@ -99,36 +84,18 @@ public class ActionPanel : MonoBehaviour
 
     public void ShowAttackerSlot(Reel reel)
     {
-        if (reel.owner == Owner.Player)
-            FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, reel);
-        else
-            FillSlot(npcSlot1, npcSlot1Owner, npcSlot1Stats, reel);
+        FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, reel);
     }
 
     public void ShowTargetSlot(Reel target, Reel attacker)
     {
-        if (target.owner == Owner.Player)
-        {
-            if (attacker.owner == Owner.Player)
-                FillSlot(playerSlot2, playerSlot2Owner, playerSlot2Stats, target);
-            else
-                FillSlot(playerSlot1, playerSlot1Owner, playerSlot1Stats, target);
-        }
-        else
-        {
-            if (attacker.owner == Owner.NPC)
-                FillSlot(npcSlot2, npcSlot2Owner, npcSlot2Stats, target);
-            else
-                FillSlot(npcSlot1, npcSlot1Owner, npcSlot1Stats, target);
-        }
+        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2Stats, target);
     }
 
     public void ClearSlots()
     {
         if (playerSlot1 != null) playerSlot1.SetActive(false);
         if (playerSlot2 != null) playerSlot2.SetActive(false);
-        if (npcSlot1 != null) npcSlot1.SetActive(false);
-        if (npcSlot2 != null) npcSlot2.SetActive(false);
     }
 
     public void ShowAttackButton(bool show)
