@@ -24,7 +24,7 @@ public class ReelHoverPopup : MonoBehaviour
         }
     }
 
-    public void Show(Reel reel, Vector2 screenPos)
+    public void Show(Reel reel)
     {
         if (panel == null || _pinned) return;
 
@@ -48,13 +48,14 @@ public class ReelHoverPopup : MonoBehaviour
             }
         }
 
-        // Position above-right of cursor; flip to above-left if off-screen
+        // Position at reel's upper-right; flip to upper-left if off-screen
+        Vector3 reelScreenPos = Camera.main.WorldToScreenPoint(reel.transform.position);
         RectTransform rt = panel.GetComponent<RectTransform>();
         float margin = 15f;
-        float x = screenPos.x + margin;
-        float y = screenPos.y + margin;
+        float x = reelScreenPos.x + margin;
+        float y = reelScreenPos.y + margin;
         if (rt != null && x + rt.rect.width > Screen.width)
-            x = screenPos.x - rt.rect.width - margin;
+            x = reelScreenPos.x - rt.rect.width - margin;
         panel.transform.position = new Vector3(x, y, 0);
     }
 

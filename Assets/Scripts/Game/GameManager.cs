@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
             if (_hoveredReel != null)
             {
                 _hoveredReel.OnHoverEnter();
-                hoverPopup.Show(_hoveredReel, mousePos);
+                hoverPopup.Show(_hoveredReel);
                 memePlayer?.PlayMuted(_hoveredReel);
             }
         }
