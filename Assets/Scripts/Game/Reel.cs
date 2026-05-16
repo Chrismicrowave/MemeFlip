@@ -8,6 +8,7 @@ public class Reel : MonoBehaviour
     public Owner owner;
     public ReelStats stats;
     public ReelStatsSO statsSO;
+    public MemeData memeData;
 
     [Header("State")]
     public bool isFaceDown = true;

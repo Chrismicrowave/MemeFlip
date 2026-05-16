@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public Board board;
     public ActionPanel actionPanel;
     public ReelHoverPopup hoverPopup;
+    public MemePlayer memePlayer;
 
     [Header("State")]
     public TurnPhase currentPhase = TurnPhase.PlayerSelectFirst;
@@ -67,10 +68,16 @@ public class GameManager : MonoBehaviour
         if (hitReel != _hoveredReel)
         {
             if (_hoveredReel != null)
+            {
                 _hoveredReel.OnHoverExit();
+                memePlayer?.Stop();
+            }
             _hoveredReel = hitReel;
             if (_hoveredReel != null)
+            {
                 _hoveredReel.OnHoverEnter();
+                memePlayer?.PlayMuted(_hoveredReel);
+            }
         }
 
         // Click
@@ -116,6 +123,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
         _firstSelected.FlipUp();
+        memePlayer?.PlayFull(_firstSelected);
         currentPhase = TurnPhase.PlayerSelectSecond;
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
@@ -129,6 +137,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
+        memePlayer?.PlayFull(_secondSelected);
         currentPhase = TurnPhase.Resolving;
         actionPanel.ShowShuffleButton(false);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
@@ -228,6 +237,7 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
+        memePlayer?.PlayFull(_firstSelected);
         actionPanel.ShowAttackerSlot(_firstSelected);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
@@ -235,6 +245,7 @@ public class GameManager : MonoBehaviour
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
+        memePlayer?.PlayFull(_secondSelected);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
         Invoke(nameof(NPCResolve), 0.6f);
     }
@@ -279,6 +290,7 @@ public class GameManager : MonoBehaviour
 
     void FlipBackSelections()
     {
+        memePlayer?.Stop();
         if (_firstSelected != null && !_firstSelected.isDestroyed)
             _firstSelected.FlipDown();
         if (_secondSelected != null && !_secondSelected.isDestroyed)

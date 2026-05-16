@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb2fe2ba5872ce40b20538535c174cd, type: 3}
+  m_Name: MemeLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::MemeLibrary
+  memes:
+  - memeVideo: {fileID: 32900000, guid: 216fd0cdca49c2a4c92a12e72110fdfa, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: dd3ec9055b5ea784c9181327ca434916, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 9a10933b395ca0f4ca9d081929271ebe, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 324cba4f7e1136a43a462f769afa9982, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 272347daf2c122a42880110f57a17b9a, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 3ea3a9d74b1a15a4f972cf1b7d544289, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: fae7c052f2d32014cbae99d4fb44fc01, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: e8f67b1fd8507214e8207350b55b5116, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: a1482c59a5be64440bd251e5a2e73062, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 0c5b826781a05fd4288334ad24b8b14c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 0cd552b0b24c8c749891aaaf2c193491, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 668d158a2e554b0448aa0ffe3a342e0d, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 9cd4a301e16d0cc4c9c72b7001629033, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 775f58cec7933984a928ad458506c3ec, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: dd6433656c0461f4b93cf7589dd57851, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: f768660850887804cb8c2ae5ee558f36, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 37ec7c2299e92d84891821c347ebc99c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 4b88817bac03eb24eb7682ea0fd3a46c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 68fb6f5c903d3114997608972ea0c273, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 0a6ee762d97bdc64cadcf8d65d3e82fe, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: c48c082a7c2e8f542962a3e7a2d7d8b3, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 4f20083c7e40c29478555006a75688a3, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: a2fd0ccd3f7253d45ba913ea10610a4d, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 9de664b6c435fd44d91fd5f6e6cb864c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 7dbdb972397084543b0d1fb0675160eb, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: a8d58cc4ba4df4345b8b8bdc853b5bdf, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 5ff3f59dbe1151b42b2327f9f95ab18c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 9ec5f056c1272214aaf82ea2cacbcf2c, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 03b42f93505a3c54e8148f2531c110d4, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: c250b612482bc4c4bb448938a17b3c62, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 4dad6a25fbeede54b807ac897ef8c1e1, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: fa3d5281da3f94241a7af3372290252d, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 32900000, guid: 67a4a585de28c9f4a83026cc4fbd1726, type: 3}
+    memeImage: {fileID: 0}
+    memeSound: {fileID: 0}
+  - memeVideo: {fileID: 0}
+    memeImage: {fileID: 2800000, guid: d571dbf777b44d747a6884d456f086f8, type: 3}
+    memeSound: {fileID: 8300000, guid: e3707b27d7e31cf408e0fcbec189aa10, type: 3}
+  - memeVideo: {fileID: 0}
+    memeImage: {fileID: 2800000, guid: b1906a902aebee048ad0ea44123f8265, type: 3}
+    memeSound: {fileID: 8300000, guid: 062c59d4bfc381e49bd8564aeab81f90, type: 3}
+  - memeVideo: {fileID: 0}
+    memeImage: {fileID: 2800000, guid: ec913ec1b0e8bee48b7963cbcd86b01a, type: 3}
+    memeSound: {fileID: 8300000, guid: 062c59d4bfc381e49bd8564aeab81f90, type: 3}
+  - memeVideo: {fileID: 0}
+    memeImage: {fileID: 2800000, guid: 9ac6c96d2d8fe9e42b61dd8508d8d742, type: 3}
+    memeSound: {fileID: 8300000, guid: 062c59d4bfc381e49bd8564aeab81f90, type: 3}
+  - memeVideo: {fileID: 0}
+    memeImage: {fileID: 2800000, guid: 0ffcd9698ea91ad4aa9328fc20bb26eb, type: 3}
+    memeSound: {fileID: 8300000, guid: 39b020c3a5a77eb45970f64e31033a05, type: 3}

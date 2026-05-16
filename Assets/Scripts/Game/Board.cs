@@ -7,6 +7,9 @@ public class Board : MonoBehaviour
     public Vector2Int gridSize = new(4, 3); // rows, cols
     public float cellSpacing = 2f;
 
+    [Header("Memes")]
+    public MemeLibrary memeLibrary;
+
     public List<Reel> AllReels { get; private set; } = new();
 
     // Track grid by position for shuffle operations
@@ -63,6 +66,9 @@ public class Board : MonoBehaviour
             reel.name = $"{owner}_Reel_{pos.x}_{pos.y}";
             reel.transform.position = GridToWorld(pos);
             reel.Init(owner, pos);
+            reel.memeData = memeLibrary != null && memeLibrary.memes.Count > 0
+                ? memeLibrary.memes[Random.Range(0, memeLibrary.memes.Count)]
+                : null;
 
             AllReels.Add(reel);
             _positionMap[pos] = reel;
