@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -161,7 +162,7 @@ public class GameManager : MonoBehaviour
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         RefreshHoverForReel(reel);
-        ResolveAttack(_firstSelected, _secondSelected);
+        StartCoroutine(PlayerAttackSequence());
     }
 
     void RefreshHoverForReel(Reel reel)
@@ -229,6 +230,56 @@ public class GameManager : MonoBehaviour
         actionPanel.SetInstructionText("Click anywhere outside the board to proceed");
     }
 
+    IEnumerator PlayerAttackSequence()
+    {
+        yield return new WaitForSeconds(0.3f);
+        yield return DashAndBack(_firstSelected);
+        yield return Jitter(_secondSelected);
+        ResolveAttack(_firstSelected, _secondSelected);
+    }
+
+    IEnumerator DashAndBack(Reel reel)
+    {
+        float width = reel.GetComponent<Renderer>().bounds.size.x;
+        float distance = width * reel.attackDashDistancePercent;
+        float halfDuration = reel.attackDashDuration * 0.5f;
+        Vector3 startPos = reel.transform.position;
+        Vector3 targetPos = startPos + Vector3.right * distance;
+
+        float elapsed = 0f;
+        while (elapsed < halfDuration)
+        {
+            reel.transform.position = Vector3.Lerp(startPos, targetPos, elapsed / halfDuration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        reel.transform.position = targetPos;
+
+        elapsed = 0f;
+        while (elapsed < halfDuration)
+        {
+            reel.transform.position = Vector3.Lerp(targetPos, startPos, elapsed / halfDuration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        reel.transform.position = startPos;
+    }
+
+    IEnumerator Jitter(Reel reel)
+    {
+        Vector3 origPos = reel.transform.position;
+        float elapsed = 0f;
+        while (elapsed < reel.jitterDuration)
+        {
+            float x = Mathf.Sin(elapsed * reel.jitterSpeed) * reel.jitterIntensity;
+            float z = Mathf.Cos(elapsed * reel.jitterSpeed * 0.7f) * reel.jitterIntensity;
+            reel.transform.position = origPos + new Vector3(x, 0f, z);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        reel.transform.position = origPos;
+    }
+
     void FinishPlayerTurn()
     {
         if (currentPhase != TurnPhase.ShowResult) return;
@@ -281,6 +332,15 @@ public class GameManager : MonoBehaviour
 
     void NPCResolve()
     {
+        StartCoroutine(NPCAttackSequence());
+    }
+
+    IEnumerator NPCAttackSequence()
+    {
+        yield return new WaitForSeconds(0.3f);
+        yield return DashAndBack(_firstSelected);
+        yield return Jitter(_secondSelected);
+
         int damage = Mathf.Max(1, _firstSelected.stats.atk - _secondSelected.stats.def);
         _secondSelected.stats.currentHP -= damage;
 
