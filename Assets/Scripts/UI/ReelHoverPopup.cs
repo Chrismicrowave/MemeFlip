@@ -44,18 +44,18 @@ public class ReelHoverPopup : MonoBehaviour
             }
         }
 
-        // Position near cursor, offset so cursor doesn't cover content
-        Vector3 pos = screenPos + new Vector2(20, -20);
-        // Clamp to screen bounds
+        // Position at upper-right of screen; flip to upper-left if off-screen
         RectTransform rt = panel.GetComponent<RectTransform>();
         if (rt != null)
         {
-            float w = rt.rect.width * rt.lossyScale.x;
-            float h = rt.rect.height * rt.lossyScale.y;
-            pos.x = Mathf.Clamp(pos.x, 0, Screen.width - w);
-            pos.y = Mathf.Clamp(pos.y, h, Screen.height);
+            float w = rt.rect.width;
+            float h = rt.rect.height;
+            float margin = 15f;
+            float x = Screen.width - w - margin;
+            float y = Screen.height - margin;
+            if (x < 0) x = margin; // flip to left
+            panel.transform.position = new Vector3(x, y, 0);
         }
-        panel.transform.position = pos;
     }
 
     bool _pinned;
