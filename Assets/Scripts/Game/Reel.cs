@@ -30,16 +30,20 @@ public class Reel : MonoBehaviour
     [Header("Colors")]
     public Color playerColor = new(0.2f, 0.33f, 1f);
     public Color npcColor = new(1f, 0.2f, 0.33f);
-    public Color faceDownColor = new(0.5f, 0.5f, 0.5f);
 
-    private Renderer _renderer;
+    [Header("Face")]
+    public Texture cardBack;
+
+    private Renderer _faceRenderer;
     private MaterialPropertyBlock _propBlock;
-    private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+    private static readonly int BaseMap = Shader.PropertyToID("_BaseMap");
 
     void Awake()
     {
-        _renderer = GetComponent<Renderer>();
         _propBlock = new MaterialPropertyBlock();
+        var faceTf = transform.Find("Face");
+        if (faceTf != null)
+            _faceRenderer = faceTf.GetComponent<Renderer>();
     }
 
     public void Init(Owner owner, Vector2Int pos)
@@ -78,10 +82,21 @@ public class Reel : MonoBehaviour
 
     void ApplyVisual()
     {
-        Color col = isFaceDown ? faceDownColor : (owner == Owner.Player ? playerColor : npcColor);
-        _renderer.GetPropertyBlock(_propBlock);
-        _propBlock.SetColor(BaseColor, col);
-        _renderer.SetPropertyBlock(_propBlock);
+        if (_faceRenderer == null || isDestroyed) return;
+
+        if (isFaceDown)
+        {
+            // material already has card-back as default — leave it
+            _faceRenderer.SetPropertyBlock(null);
+        }
+        else
+        {
+            _faceRenderer.GetPropertyBlock(_propBlock);
+            Texture tex = memeData?.memeImage;
+            if (tex != null)
+                _propBlock.SetTexture(BaseMap, tex);
+            _faceRenderer.SetPropertyBlock(_propBlock);
+        }
     }
 
     public void OnClick()
