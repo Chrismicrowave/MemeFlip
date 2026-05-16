@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ReelHoverPopup : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class ReelHoverPopup : MonoBehaviour
     public TextMeshProUGUI ownerText;
     public TextMeshProUGUI statsText;
     public TextMeshProUGUI statusText;
+    public RawImage previewImage;
 
     void Start()
     {
@@ -14,6 +16,7 @@ public class ReelHoverPopup : MonoBehaviour
         if (ownerText == null) ownerText = GameObject.Find("HoverCanvas/HoverPanel/OwnerText")?.GetComponent<TextMeshProUGUI>();
         if (statsText == null) statsText = GameObject.Find("HoverCanvas/HoverPanel/StatsText")?.GetComponent<TextMeshProUGUI>();
         if (statusText == null) statusText = GameObject.Find("HoverCanvas/HoverPanel/FaceStatus")?.GetComponent<TextMeshProUGUI>();
+        if (previewImage == null) previewImage = GameObject.Find("HoverCanvas/HoverPanel/HoverPreview")?.GetComponent<RawImage>();
         if (panel != null) panel.SetActive(false);
     }
 
@@ -44,6 +47,15 @@ public class ReelHoverPopup : MonoBehaviour
             statusText.text = "Face Up";
         }
 
+        // Show meme image preview on hover
+        if (previewImage != null && reel.memeData != null)
+        {
+            if (reel.memeData.memeImage != null)
+                previewImage.texture = reel.memeData.memeImage;
+            else if (reel.memeData.memeVideo != null)
+                previewImage.texture = null;
+        }
+
         // Position popup near the reel
         Vector3 screenPos = Camera.main.WorldToScreenPoint(reel.transform.position + Vector3.up * 1.5f);
         panel.transform.position = screenPos + new Vector3(0, 80, 0);
@@ -51,6 +63,8 @@ public class ReelHoverPopup : MonoBehaviour
 
     public void Hide()
     {
+        if (previewImage != null)
+            previewImage.texture = null;
         if (panel != null) panel.SetActive(false);
     }
 }
