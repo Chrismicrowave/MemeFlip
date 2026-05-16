@@ -82,7 +82,11 @@ public class ActionPanel : MonoBehaviour
         ShowShuffleButton(false);
         if (messageRoot != null) messageRoot.SetActive(false);
         if (gameOverRoot != null) gameOverRoot.SetActive(false);
-        if (restartButton != null) restartButton.onClick.AddListener(RestartGame);
+        if (restartButton != null)
+        {
+            restartButton.onClick.RemoveAllListeners();
+            restartButton.onClick.AddListener(RestartGame);
+        }
     }
 
     static string ColorTag(Color c)

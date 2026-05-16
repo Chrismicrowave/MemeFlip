@@ -150,6 +150,11 @@ public class MemePlayer : MonoBehaviour
 
     void OnDestroy()
     {
+        if (_rt != null)
+        {
+            _rt.Release();
+            Destroy(_rt);
+        }
         if (_frozenFrame != null)
         {
             _frozenFrame.Release();
