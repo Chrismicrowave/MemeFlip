@@ -27,12 +27,12 @@ public class ReelHoverPopup : MonoBehaviour
         panel.SetActive(true);
         UpdateStats(reel);
 
-        // Show meme image preview on hover
-        if (previewImage != null && reel.memeData != null)
+        // Show meme image preview on hover (only for face-up reels)
+        if (previewImage != null && reel.memeData != null && !reel.isFaceDown && !reel.isDestroyed)
         {
             if (reel.memeData.memeImage != null)
                 previewImage.texture = reel.memeData.memeImage;
-            else if (reel.memeData.memeVideo != null)
+            else
                 previewImage.texture = null;
         }
 

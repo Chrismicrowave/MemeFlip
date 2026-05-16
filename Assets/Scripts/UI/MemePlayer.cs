@@ -31,6 +31,7 @@ public class MemePlayer : MonoBehaviour
     public void PlayMuted(Reel reel)
     {
         if (reel?.memeData == null) return;
+        if (reel.isFaceDown || reel.isDestroyed) return;
         _currentReel = reel;
 
         if (reel.memeData.memeVideo != null)
