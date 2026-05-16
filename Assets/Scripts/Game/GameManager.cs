@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
             if (_hoveredReel != null)
             {
                 _hoveredReel.OnHoverExit();
+                hoverPopup.Hide();
                 // Only stop preview when not in selection phase (hover panel pinned)
                 if (currentPhase != TurnPhase.PlayerSelectSecond && currentPhase != TurnPhase.Resolving && currentPhase != TurnPhase.ShowResult)
                     memePlayer?.Stop();
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
             if (_hoveredReel != null)
             {
                 _hoveredReel.OnHoverEnter();
+                hoverPopup.Show(_hoveredReel, mousePos);
                 memePlayer?.PlayMuted(_hoveredReel);
             }
         }

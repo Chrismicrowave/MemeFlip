@@ -100,12 +100,9 @@ public class Reel : MonoBehaviour
 
     public void OnHoverEnter()
     {
-        if (isDestroyed) return;
-        GameManager.Instance.hoverPopup.Show(this);
     }
 
     public void OnHoverExit()
     {
-        GameManager.Instance.hoverPopup.Hide();
     }
 }

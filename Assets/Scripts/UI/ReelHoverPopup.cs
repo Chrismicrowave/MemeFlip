@@ -20,9 +20,9 @@ public class ReelHoverPopup : MonoBehaviour
         if (panel != null) panel.SetActive(false);
     }
 
-    public void Show(Reel reel)
+    public void Show(Reel reel, Vector2 screenPos)
     {
-        if (panel == null) return;
+        if (panel == null || _pinned) return;
 
         panel.SetActive(true);
         UpdateStats(reel);
@@ -44,9 +44,18 @@ public class ReelHoverPopup : MonoBehaviour
             }
         }
 
-        // Position popup near the reel
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(reel.transform.position + Vector3.up * 1.5f);
-        panel.transform.position = screenPos + new Vector3(0, 80, 0);
+        // Position near cursor, offset so cursor doesn't cover content
+        Vector3 pos = screenPos + new Vector2(20, -20);
+        // Clamp to screen bounds
+        RectTransform rt = panel.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            float w = rt.rect.width * rt.lossyScale.x;
+            float h = rt.rect.height * rt.lossyScale.y;
+            pos.x = Mathf.Clamp(pos.x, 0, Screen.width - w);
+            pos.y = Mathf.Clamp(pos.y, h, Screen.height);
+        }
+        panel.transform.position = pos;
     }
 
     bool _pinned;
