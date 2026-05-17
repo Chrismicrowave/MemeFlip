@@ -160,7 +160,8 @@ public class ActionPanel : MonoBehaviour
     void SetSlotImage(RawImage target, Reel reel)
     {
         if (target == null || reel?.memeData == null) return;
-        // Set static image preview (video will be routed by MemePlayer if available)
+        // Only set static image for image-only memes — video memes are handled by PlaySlot
+        if (reel.memeData.memeVideo != null) return;
         if (reel.memeData.memeImage != null)
             target.texture = reel.memeData.memeImage;
     }

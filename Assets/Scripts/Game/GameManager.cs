@@ -175,6 +175,8 @@ public class GameManager : MonoBehaviour
 
     public void OnReelClicked(Reel reel)
     {
+        // Don't process reel clicks while showing result — prevents stale state interference
+        if (currentPhase == TurnPhase.ShowResult) return;
         // Replay in slot when clicking an already-flipped selected reel
         if (!reel.isFaceDown && !reel.isDestroyed)
         {
