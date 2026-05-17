@@ -10,6 +10,8 @@ public class Board : MonoBehaviour
     [Header("Dynamic Scaling")]
     public float dynamicScaleMax = 1.8f;
     public float dynamicScaleRadius = 3f;
+    [Tooltip("Higher = sharper falloff near cursor, more distinction between closest reels")]
+    public float dynamicScaleCurve = 2f;
 
     [Header("Memes")]
     public MemeLibrary memeLibrary;
@@ -189,6 +191,7 @@ public class Board : MonoBehaviour
             if (reel == null || reel.isDestroyed) continue;
             float dist = Vector3.Distance(mouseWorldPos, reel.transform.position);
             float t = 1f - Mathf.Clamp01(dist / dynamicScaleRadius);
+            t = Mathf.Pow(t, dynamicScaleCurve);
             float scale = Mathf.Lerp(1f, dynamicScaleMax, t);
             reel.transform.localScale = Vector3.one * scale;
         }
