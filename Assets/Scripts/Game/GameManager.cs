@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     Owner _currentPlayer = Owner.Player;
     Owner Opponent => _currentPlayer == Owner.Player ? Owner.NPC : Owner.Player;
     bool _resultFromNpcTurn;
+    bool _attackResolved;
 
     void Awake()
     {
@@ -171,13 +172,10 @@ public class GameManager : MonoBehaviour
         // Validate ownership: attacker must be current player's, target must be opponent's
         if (_firstSelected.owner != _currentPlayer || _secondSelected.owner != Opponent)
         {
+            _attackResolved = false;
             actionPanel.ShowMessage(actionPanel.msgInvalidAttack);
-            _firstSelected.FlipDown();
-            _secondSelected.FlipDown();
-            _firstSelected = null;
-            _secondSelected = null;
-            currentPhase = TurnPhase.PlayerSelectFirst;
-            RefreshUI();
+            actionPanel.SetInstructionText(actionPanel.msgInvalidAttack + "\n" + actionPanel.instructionClickOutside);
+            currentPhase = TurnPhase.ShowResult;
             return;
         }
 
@@ -244,6 +242,7 @@ public class GameManager : MonoBehaviour
 
     void ResolveAttack(Reel attacker, Reel target)
     {
+        _attackResolved = true;
         int damage = Mathf.Max(1, attacker.stats.atk);
         target.stats.currentHP -= damage;
 
@@ -255,6 +254,7 @@ public class GameManager : MonoBehaviour
         }
 
         actionPanel.ShowMessage(msg);
+        actionPanel.SetInstructionText(msg + "\n" + actionPanel.instructionClickOutside);
         actionPanel.UpdateHpBars();
 
         CheckWinCondition();
@@ -277,7 +277,6 @@ public class GameManager : MonoBehaviour
         }
 
         currentPhase = TurnPhase.ShowResult;
-        actionPanel.SetInstructionText(actionPanel.instructionClickOutside);
     }
 
     IEnumerator PlayerAttackSequence()
@@ -355,6 +354,15 @@ public class GameManager : MonoBehaviour
         if (currentPhase != TurnPhase.ShowResult) return;
         _resultFromNpcTurn = false;
         FlipBackSelections();
+
+        if (!_attackResolved)
+        {
+            currentPhase = TurnPhase.PlayerSelectFirst;
+            RefreshUI();
+            actionPanel.ShowShuffleButton(true);
+            return;
+        }
+
         currentPhase = TurnPhase.NPCTurn;
         RefreshUI();
         StartNPCTurn();
@@ -364,6 +372,14 @@ public class GameManager : MonoBehaviour
     {
         if (currentPhase != TurnPhase.ShowResult) return;
         FlipBackSelections();
+
+        if (!_attackResolved)
+        {
+            currentPhase = TurnPhase.PlayerSelectFirst;
+            RefreshUI();
+            actionPanel.ShowShuffleButton(true);
+            return;
+        }
 
         if (!board.HasAliveReels(Owner.NPC))
         {
@@ -458,11 +474,12 @@ public class GameManager : MonoBehaviour
         }
 
         actionPanel.ShowMessage(msg);
+        actionPanel.SetInstructionText(msg + "\n" + actionPanel.instructionClickOutside);
         actionPanel.UpdateHpBars();
 
+        _attackResolved = true;
         _resultFromNpcTurn = true;
         currentPhase = TurnPhase.ShowResult;
-        actionPanel.SetInstructionText(actionPanel.instructionClickOutside);
     }
 
     void FinishNPCTurn()
