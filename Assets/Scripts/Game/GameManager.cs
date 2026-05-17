@@ -175,9 +175,7 @@ public class GameManager : MonoBehaviour
 
     public void OnReelClicked(Reel reel)
     {
-        // Don't process reel clicks while showing result — prevents stale state interference
-        if (currentPhase == TurnPhase.ShowResult) return;
-        // Replay in slot when clicking an already-flipped selected reel
+        // Replay in slot when clicking an already-flipped selected reel (always allowed)
         if (!reel.isFaceDown && !reel.isDestroyed)
         {
             if (reel == _firstSelected)
@@ -194,8 +192,10 @@ public class GameManager : MonoBehaviour
                 memePlayer?.PlaySlot(si, img, reel, true);
                 return;
             }
-            // Face-down unselected reels fall through to selection logic
         }
+
+        // Don't process selection clicks while showing result
+        if (currentPhase == TurnPhase.ShowResult) return;
 
         switch (currentPhase)
         {
@@ -243,23 +243,26 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-        var targetSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1Image : actionPanel.playerSlot2Image;
-        int targetSlotIdx = _secondSelected.owner == Owner.Player ? 0 : 1;
-        memePlayer?.PlaySlot(targetSlotIdx, targetSlot, _secondSelected, false);
         RefreshHoverForReel(reel);
 
         if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
         {
-            // Show each reel in its owner's slot
+            // Ensure attacker slot panel visible (video already started in HandleSelectFirst)
             if (_firstSelected.owner == Owner.Player)
                 actionPanel.ShowP1Slot(_firstSelected);
             else
                 actionPanel.ShowP2Slot(_firstSelected);
+            // Show target in its owner's slot with full video + sound
             if (_secondSelected.owner == Owner.Player)
+            {
                 actionPanel.ShowP1Slot(_secondSelected);
+                memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _secondSelected, true);
+            }
             else
+            {
                 actionPanel.ShowP2Slot(_secondSelected);
-            memePlayer?.PlaySlotSound(targetSlotIdx, _secondSelected);
+                memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _secondSelected, true);
+            }
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());

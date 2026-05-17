@@ -105,7 +105,7 @@ public class MemePlayer : MonoBehaviour
         }
     }
 
-    /// Plays video (muted) on hover target — shows image if video can't play.
+    /// Plays video (muted) on hover target — always shows preview if possible.
     public void PlayHover(RawImage target, Reel reel)
     {
         if (reel?.memeData == null || target == null) return;
@@ -117,7 +117,7 @@ public class MemePlayer : MonoBehaviour
             if (videoPlayer.clip == reel.memeData.memeVideo && _rt != null)
             {
                 target.texture = _rt;
-                // Restart if stopped and no slot is using the VideoPlayer
+                // Restart from beginning if stopped and no slot is using the VideoPlayer
                 if (_currentVideoSlot == null && !videoPlayer.isPlaying)
                 {
                     videoPlayer.time = 0;
@@ -142,10 +142,11 @@ public class MemePlayer : MonoBehaviour
         }
 
         // Static image fallback (if no video, or slot is using VideoPlayer for another clip)
+        // Always try memeImage first, then reel's card back as last resort
         if (reel.memeData.memeImage != null)
-        {
             target.texture = reel.memeData.memeImage;
-        }
+        else if (reel.cardBack != null)
+            target.texture = reel.cardBack;
     }
 
     /// Stops hover video — skips if a slot is actively using the VideoPlayer.
