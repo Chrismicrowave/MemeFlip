@@ -212,9 +212,10 @@ public class GameManager : MonoBehaviour
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
-        if (reel.owner == _currentPlayer)
+        bool validAttacker = reel.owner == _currentPlayer;
+        if (validAttacker)
             actionPanel.ShowAttackerSlot(_firstSelected, reel.owner);
-        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, false);
+        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, validAttacker);
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
     }
@@ -233,8 +234,6 @@ public class GameManager : MonoBehaviour
         {
             actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
             actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
-            // Play sound for both slots now (attack is valid)
-            memePlayer?.PlaySlotSound(actionPanel.playerSlot1Image, _firstSelected);
             memePlayer?.PlaySlotSound(actionPanel.playerSlot2Image, _secondSelected);
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
