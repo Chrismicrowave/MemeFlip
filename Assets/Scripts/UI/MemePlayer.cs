@@ -80,11 +80,13 @@ public class MemePlayer : MonoBehaviour
             videoPlayer.Play();
             if (targetSlot != null) targetSlot.texture = _rt;
 
-            // Per-slot audio independent of VideoPlayer (so both slots play simultaneously)
+            // Per-slot audio independent of VideoPlayer (so both slots play simultaneously).
+            // Skip memeSound if the video already has embedded audio to avoid doubling.
             if (withSound)
             {
                 slotAudio.volume = 1f;
-                if (reel.memeData.memeSound != null)
+                bool videoHasAudio = videoPlayer.clip != null && videoPlayer.clip.audioTrackCount > 0;
+                if (reel.memeData.memeSound != null && !videoHasAudio)
                     slotAudio.PlayOneShot(reel.memeData.memeSound);
             }
         }
