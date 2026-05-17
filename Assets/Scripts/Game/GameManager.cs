@@ -146,6 +146,31 @@ public class GameManager : MonoBehaviour
             else
                 FinishPlayerTurn();
         }
+
+        // Dynamic mouse scaling on board
+        if (hitSomething)
+        {
+            board.UpdateDynamicScales(hit.point);
+        }
+        else
+        {
+            Plane boardPlane = new(Vector3.up, board.transform.position);
+            if (boardPlane.Raycast(ray, out float enter))
+            {
+                Vector3 pt = ray.GetPoint(enter);
+                float halfW = board.gridSize.y * board.cellSpacing * 0.5f;
+                float halfD = board.gridSize.x * board.cellSpacing * 0.5f;
+                Vector3 local = pt - board.transform.position;
+                if (Mathf.Abs(local.x) <= halfW && Mathf.Abs(local.z) <= halfD)
+                    board.UpdateDynamicScales(pt);
+                else
+                    board.ResetDynamicScales();
+            }
+            else
+            {
+                board.ResetDynamicScales();
+            }
+        }
     }
 
     public void OnReelClicked(Reel reel)
@@ -184,7 +209,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
         _firstSelected.FlipUp();
-        board.OnReelFlipped(_firstSelected);
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
@@ -202,7 +226,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-        board.OnReelFlipped(_secondSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         RefreshHoverForReel(reel);
 
@@ -470,7 +493,6 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        board.OnReelFlipped(_firstSelected);
         actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
@@ -479,7 +501,6 @@ public class GameManager : MonoBehaviour
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        board.OnReelFlipped(_secondSelected);
         actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
@@ -535,7 +556,6 @@ public class GameManager : MonoBehaviour
 
     void FlipBackSelections()
     {
-        board.ResetScales();
         memePlayer?.Stop();
         hoverPopup.Unpin();
         if (_firstSelected != null && !_firstSelected.isDestroyed)

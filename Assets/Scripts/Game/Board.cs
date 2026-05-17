@@ -7,9 +7,9 @@ public class Board : MonoBehaviour
     public Vector2Int gridSize = new(4, 3); // rows, cols
     public float cellSpacing = 2f;
 
-    [Header("Flip Scaling")]
-    public float flipScale = 1.8f;
-    public float adjacentScale = 1.3f;
+    [Header("Dynamic Scaling")]
+    public float dynamicScaleMax = 1.8f;
+    public float dynamicScaleRadius = 3f;
 
     [Header("Memes")]
     public MemeLibrary memeLibrary;
@@ -182,21 +182,19 @@ public class Board : MonoBehaviour
         return AllReels.FindAll(r => r.owner == owner && !r.isDestroyed).Count;
     }
 
-    public void OnReelFlipped(Reel reel)
+    public void UpdateDynamicScales(Vector3 mouseWorldPos)
     {
-        reel.transform.localScale = Vector3.one * flipScale;
-
-        foreach (var other in AllReels)
+        foreach (var reel in AllReels)
         {
-            if (other == reel || other.isDestroyed) continue;
-            bool adjacent = Mathf.Abs(other.boardPosition.x - reel.boardPosition.x) +
-                            Mathf.Abs(other.boardPosition.y - reel.boardPosition.y) == 1;
-            if (adjacent && other.transform.localScale.x < flipScale - 0.01f)
-                other.transform.localScale = Vector3.one * adjacentScale;
+            if (reel == null || reel.isDestroyed) continue;
+            float dist = Vector3.Distance(mouseWorldPos, reel.transform.position);
+            float t = 1f - Mathf.Clamp01(dist / dynamicScaleRadius);
+            float scale = Mathf.Lerp(1f, dynamicScaleMax, t);
+            reel.transform.localScale = Vector3.one * scale;
         }
     }
 
-    public void ResetScales()
+    public void ResetDynamicScales()
     {
         foreach (var reel in AllReels)
             if (reel != null && !reel.isDestroyed)
