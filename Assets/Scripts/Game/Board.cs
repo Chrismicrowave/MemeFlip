@@ -194,6 +194,7 @@ public class Board : MonoBehaviour
             t = Mathf.Pow(t, dynamicScaleCurve);
             float scale = Mathf.Lerp(1f, dynamicScaleMax, t);
             reel.transform.localScale = Vector3.one * scale;
+            reel.ShowFlipPrompt(scale > 1.1f);
         }
     }
 
@@ -201,7 +202,10 @@ public class Board : MonoBehaviour
     {
         foreach (var reel in AllReels)
             if (reel != null && !reel.isDestroyed)
+            {
                 reel.transform.localScale = Vector3.one;
+                reel.ShowFlipPrompt(false);
+            }
     }
 
     [ContextMenu("Refresh Grid")]
