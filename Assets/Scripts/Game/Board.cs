@@ -82,23 +82,31 @@ public class Board : MonoBehaviour
 
         if (shufflable.Count < 2) return;
 
-        List<Vector2Int> positions = shufflable.ConvertAll(r => r.boardPosition);
+        // Collect all positions this owner's reels occupy (including destroyed)
+        List<Vector2Int> allOwnerPositions = new();
+        foreach (var reel in AllReels)
+            if (reel.owner == owner)
+                allOwnerPositions.Add(reel.boardPosition);
 
-        for (int i = positions.Count - 1; i > 0; i--)
+        if (allOwnerPositions.Count < shufflable.Count) return;
+
+        // Shuffle all owner positions, take first N for alive reels
+        for (int i = allOwnerPositions.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
-            (positions[i], positions[j]) = (positions[j], positions[i]);
+            (allOwnerPositions[i], allOwnerPositions[j]) = (allOwnerPositions[j], allOwnerPositions[i]);
         }
 
         for (int i = 0; i < shufflable.Count; i++)
         {
             Reel reel = shufflable[i];
-            Vector2Int newPos = positions[i];
+            Vector2Int newPos = allOwnerPositions[i];
 
-            _positionMap[reel.boardPosition] = null;
+            if (_positionMap.ContainsKey(reel.boardPosition))
+                _positionMap[reel.boardPosition] = null;
+
             reel.boardPosition = newPos;
             _positionMap[newPos] = reel;
-
             reel.transform.position = GridToWorld(newPos);
         }
     }

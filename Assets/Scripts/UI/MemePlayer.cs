@@ -8,11 +8,14 @@ public class MemePlayer : MonoBehaviour
     public RawImage display;
     public VideoPlayer videoPlayer;
     public AudioSource audioSource;
+    public AudioSource audioSource2;
 
     RawImage _currentVideoSlot;
     RenderTexture _frozenFrame;
     bool _hasFrozenFrame;
     RenderTexture _rt;
+    RawImage _slot1Target;
+    RawImage _slot2Target;
 
     void Awake()
     {
@@ -46,11 +49,18 @@ public class MemePlayer : MonoBehaviour
         _hasFrozenFrame = true;
     }
 
-    /// Routes video to target slot display with optional sound.
+    /// Routes video to target slot display with per-slot independent audio.
     /// Freezes the previous slot's last frame so both slots show different content.
     public void PlaySlot(RawImage targetSlot, Reel reel, bool withSound)
     {
         if (reel?.memeData == null) return;
+
+        // Track which slot images we've seen
+        if (_slot1Target == null) _slot1Target = targetSlot;
+        else if (_slot2Target == null && targetSlot != _slot1Target) _slot2Target = targetSlot;
+
+        AudioSource slotAudio = targetSlot == _slot1Target ? audioSource : audioSource2;
+        if (slotAudio == null) slotAudio = audioSource;
 
         if (reel.memeData.memeVideo != null)
         {
@@ -67,9 +77,15 @@ public class MemePlayer : MonoBehaviour
             videoPlayer.isLooping = false;
             videoPlayer.Stop();
             videoPlayer.time = 0;
-            audioSource.volume = withSound ? 1f : 0f;
             videoPlayer.Play();
             if (targetSlot != null) targetSlot.texture = _rt;
+
+            // Per-slot audio independent of VideoPlayer (so both slots play simultaneously)
+            if (withSound && reel.memeData.memeSound != null)
+            {
+                slotAudio.volume = 1f;
+                slotAudio.PlayOneShot(reel.memeData.memeSound);
+            }
         }
         else if (reel.memeData.memeImage != null)
         {
@@ -78,8 +94,8 @@ public class MemePlayer : MonoBehaviour
             if (targetSlot != null) targetSlot.texture = reel.memeData.memeImage;
             if (withSound && reel.memeData.memeSound != null)
             {
-                audioSource.volume = 1f;
-                audioSource.PlayOneShot(reel.memeData.memeSound);
+                slotAudio.volume = 1f;
+                slotAudio.PlayOneShot(reel.memeData.memeSound);
             }
         }
     }
@@ -140,11 +156,15 @@ public class MemePlayer : MonoBehaviour
     {
         _currentVideoSlot = null;
         _hasFrozenFrame = false;
+        _slot1Target = null;
+        _slot2Target = null;
 
         if (videoPlayer != null && videoPlayer.isPlaying)
             videoPlayer.Stop();
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
+        if (audioSource2 != null && audioSource2.isPlaying)
+            audioSource2.Stop();
         if (display != null) display.texture = null;
     }
 
