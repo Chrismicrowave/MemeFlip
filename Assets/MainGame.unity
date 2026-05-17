@@ -153,7 +153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_SizeDelta.y
@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalRotation.w
@@ -193,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 54
+      value: 99.99997
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1329,8 +1329,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 780, y: 101}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 780, y: 35}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &672964461
 MonoBehaviour:
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490196, g: 0.49638733, b: 0.45882356, a: 1}
+  m_Color: {r: 0.9490196, g: 0.49638733, b: 0.45882356, a: 0.6}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2620,8 +2620,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -780, y: 101}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -780, y: 35}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1300323954
 MonoBehaviour:
@@ -2636,7 +2636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490196, g: 0.49638733, b: 0.45882356, a: 1}
+  m_Color: {r: 0.9490196, g: 0.49638733, b: 0.45882356, a: 0.6}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2900,7 +2900,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2916,7 +2916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2940,7 +2940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 54
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4216,6 +4216,10 @@ MonoBehaviour:
   shuffleLabel: {fileID: 0}
   shuffleButtonP2: {fileID: 0}
   shuffleLabelP2: {fileID: 0}
+  turnPanelP1: {fileID: 0}
+  turnPanelP2NPC: {fileID: 0}
+  turnTextP1: {fileID: 0}
+  turnTextP2NPC: {fileID: 0}
   turnText: {fileID: 759998378}
   messagePanel: {fileID: 0}
   instructionPickReel: Pick a reel as attacker
