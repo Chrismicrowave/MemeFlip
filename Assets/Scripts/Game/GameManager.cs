@@ -302,11 +302,16 @@ public class GameManager : MonoBehaviour
         int damage = Mathf.Max(1, attacker.stats.atk);
         target.stats.currentHP -= damage;
 
-        string msg = $"{OwnerDisplayName(attacker.owner)} ATK({attacker.stats.atk}) = {damage} dmg!";
+        string attackerName = ReelDisplayName(attacker);
+        string targetName = ReelDisplayName(target);
+        string attackerOwner = OwnerDisplayName(attacker.owner);
+        string targetOwner = OwnerDisplayName(target.owner);
+
+        string msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage to {targetOwner}'s {targetName}";
         if (target.stats.currentHP <= 0)
         {
             target.DestroyReel();
-            msg = $"{damage} dmg — DESTROYED!";
+            msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage — {targetOwner}'s {targetName} DESTROYED!";
         }
 
         actionPanel.SetMessageText(msg + "\n" + actionPanel.instructionClickOutside);
@@ -522,11 +527,14 @@ public class GameManager : MonoBehaviour
         int damage = Mathf.Max(1, _firstSelected.stats.atk);
         _secondSelected.stats.currentHP -= damage;
 
-        string msg = $"NPC ATK({_firstSelected.stats.atk}) → {damage} dmg!";
+        string npcName = ReelDisplayName(_firstSelected);
+        string targetName = ReelDisplayName(_secondSelected);
+        string targetOwner = OwnerDisplayName(_secondSelected.owner);
+        string msg = $"NPC's {npcName} dealt {damage} damage to {targetOwner}'s {targetName}";
         if (_secondSelected.stats.currentHP <= 0)
         {
             _secondSelected.DestroyReel();
-            msg = $"NPC {damage} dmg — Your reel DESTROYED!";
+            msg = $"NPC's {npcName} dealt {damage} damage — {targetOwner}'s {targetName} DESTROYED!";
         }
 
         actionPanel.SetMessageText(msg + "\n" + actionPanel.instructionClickOutside);
@@ -576,6 +584,13 @@ public class GameManager : MonoBehaviour
         if (Instance == null || Instance.gameMode == GameMode.VsNPC)
             return owner == Owner.Player ? "Player" : "NPC";
         return owner == Owner.Player ? "Player 1" : "Player 2";
+    }
+
+    static string ReelDisplayName(Reel reel)
+    {
+        if (reel.memeData != null && !string.IsNullOrEmpty(reel.memeData.memeName))
+            return reel.memeData.memeName;
+        return reel.name;
     }
 
     void RefreshUI()
