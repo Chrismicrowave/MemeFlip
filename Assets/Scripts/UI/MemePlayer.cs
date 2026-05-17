@@ -81,10 +81,11 @@ public class MemePlayer : MonoBehaviour
             if (targetSlot != null) targetSlot.texture = _rt;
 
             // Per-slot audio independent of VideoPlayer (so both slots play simultaneously)
-            if (withSound && reel.memeData.memeSound != null)
+            if (withSound)
             {
                 slotAudio.volume = 1f;
-                slotAudio.PlayOneShot(reel.memeData.memeSound);
+                if (reel.memeData.memeSound != null)
+                    slotAudio.PlayOneShot(reel.memeData.memeSound);
             }
         }
         else if (reel.memeData.memeImage != null)
@@ -92,10 +93,11 @@ public class MemePlayer : MonoBehaviour
             if (_currentVideoSlot == targetSlot)
                 _currentVideoSlot = null;
             if (targetSlot != null) targetSlot.texture = reel.memeData.memeImage;
-            if (withSound && reel.memeData.memeSound != null)
+            if (withSound)
             {
                 slotAudio.volume = 1f;
-                slotAudio.PlayOneShot(reel.memeData.memeSound);
+                if (reel.memeData.memeSound != null)
+                    slotAudio.PlayOneShot(reel.memeData.memeSound);
             }
         }
     }
