@@ -40,14 +40,14 @@ public class Reel : MonoBehaviour
 
     void Awake()
     {
-        var canvas = transform.Find("Canvas");
+        Transform canvas = transform.Find("Canvas");
         if (canvas != null)
         {
-            var faceTf = canvas.Find("FaceImage");
+            Transform faceTf = canvas.Find("mask/FaceImage");
             if (faceTf != null)
                 _faceImage = faceTf.GetComponent<RawImage>();
 
-            var borderTf = canvas.Find("Border");
+            Transform borderTf = canvas.Find("Border");
             if (borderTf != null)
                 _borderImage = borderTf.GetComponent<Image>();
         }

@@ -7,11 +7,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public enum GameMode { VsNPC, VsPlayer }
+
     [Header("References")]
     public Board board;
     public ActionPanel actionPanel;
     public ReelHoverPopup hoverPopup;
     public MemePlayer memePlayer;
+
+    [Header("Mode")]
+    public GameMode gameMode = GameMode.VsNPC;
 
     [Header("State")]
     public TurnPhase currentPhase = TurnPhase.PlayerSelectFirst;
@@ -20,6 +25,9 @@ public class GameManager : MonoBehaviour
     Reel _secondSelected;
     Reel _hoveredReel;
     int _playerShuffleCharges = 2;
+    int _playerTwoShuffleCharges = 2;
+    Owner _currentPlayer = Owner.Player;
+    Owner Opponent => _currentPlayer == Owner.Player ? Owner.NPC : Owner.Player;
     bool _resultFromNpcTurn;
 
     void Awake()
@@ -35,7 +43,7 @@ public class GameManager : MonoBehaviour
         hoverPopup.Hide();
         WireButtons();
         RefreshUI();
-        actionPanel.SetTurnText("Your Turn");
+        actionPanel.SetTurnText(gameMode == GameMode.VsPlayer ? "Player 1's Turn" : "Your Turn");
     }
 
     void WireButtons()
@@ -99,7 +107,9 @@ public class GameManager : MonoBehaviour
         // ShowResult — click outside board to dismiss
         if (currentPhase == TurnPhase.ShowResult && clicked && hitReel == null && !overUI)
         {
-            if (_resultFromNpcTurn)
+            if (gameMode == GameMode.VsPlayer)
+                FinishCurrentTurn();
+            else if (_resultFromNpcTurn)
                 FinishNPCTurn();
             else
                 FinishPlayerTurn();
@@ -146,7 +156,7 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
-        actionPanel.SetInstructionText("Select a face-down reel as target");
+        actionPanel.SetInstructionText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
     }
 
@@ -157,6 +167,20 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
+
+        // Validate ownership: attacker must be current player's, target must be opponent's
+        if (_firstSelected.owner != _currentPlayer || _secondSelected.owner != Opponent)
+        {
+            actionPanel.ShowMessage(actionPanel.msgInvalidAttack);
+            _firstSelected.FlipDown();
+            _secondSelected.FlipDown();
+            _firstSelected = null;
+            _secondSelected = null;
+            currentPhase = TurnPhase.PlayerSelectFirst;
+            RefreshUI();
+            return;
+        }
+
         currentPhase = TurnPhase.Resolving;
         actionPanel.ShowShuffleButton(false);
         actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
@@ -173,7 +197,36 @@ public class GameManager : MonoBehaviour
 
     public void OnShuffleClicked()
     {
-        if (currentPhase != TurnPhase.PlayerSelectFirst || _playerShuffleCharges <= 0) return;
+        if (currentPhase != TurnPhase.PlayerSelectFirst) return;
+
+        if (gameMode == GameMode.VsPlayer)
+        {
+            int charges = _currentPlayer == Owner.Player ? _playerShuffleCharges : _playerTwoShuffleCharges;
+            if (charges <= 0) return;
+
+            if (_currentPlayer == Owner.Player) _playerShuffleCharges--;
+            else _playerTwoShuffleCharges--;
+
+            if (_firstSelected != null && !_firstSelected.isDestroyed)
+                _firstSelected.FlipDown();
+            _firstSelected = null;
+
+            board.ShuffleOwnerReels(_currentPlayer);
+            RefreshUI();
+            actionPanel.ShowMessage($"Shuffle! {charges - 1} charges left");
+            actionPanel.ShowShuffleButton(false);
+
+            // Switch to next player
+            _currentPlayer = Opponent;
+            currentPhase = TurnPhase.PlayerSelectFirst;
+            actionPanel.SetTurnText(_currentPlayer == Owner.Player ? "Player 1's Turn" : "Player 2's Turn");
+            actionPanel.SetInstructionText(actionPanel.instructionPickReel);
+            actionPanel.ShowShuffleButton(true);
+            return;
+        }
+
+        // VsNPC mode
+        if (_playerShuffleCharges <= 0) return;
 
         _playerShuffleCharges--;
 
@@ -194,7 +247,7 @@ public class GameManager : MonoBehaviour
         int damage = Mathf.Max(1, attacker.stats.atk);
         target.stats.currentHP -= damage;
 
-        string msg = $"{attacker.owner} ATK({attacker.stats.atk}) = {damage} dmg!";
+        string msg = $"{OwnerDisplayName(attacker.owner)} ATK({attacker.stats.atk}) = {damage} dmg!";
         if (target.stats.currentHP <= 0)
         {
             target.DestroyReel();
@@ -212,19 +265,19 @@ public class GameManager : MonoBehaviour
         if (!board.HasAliveReels(Owner.NPC))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver("You Win!");
+            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? "Player 1 Wins!" : "You Win!");
             return;
         }
 
         if (!board.HasAliveReels(Owner.Player))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver("NPC Wins!");
+            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? "Player 2 Wins!" : "NPC Wins!");
             return;
         }
 
         currentPhase = TurnPhase.ShowResult;
-        actionPanel.SetInstructionText("Click anywhere outside the board to proceed");
+        actionPanel.SetInstructionText(actionPanel.instructionClickOutside);
     }
 
     IEnumerator PlayerAttackSequence()
@@ -307,6 +360,31 @@ public class GameManager : MonoBehaviour
         StartNPCTurn();
     }
 
+    void FinishCurrentTurn()
+    {
+        if (currentPhase != TurnPhase.ShowResult) return;
+        FlipBackSelections();
+
+        if (!board.HasAliveReels(Owner.NPC))
+        {
+            currentPhase = TurnPhase.GameOver;
+            actionPanel.ShowGameOver("Player 1 Wins!");
+            return;
+        }
+        if (!board.HasAliveReels(Owner.Player))
+        {
+            currentPhase = TurnPhase.GameOver;
+            actionPanel.ShowGameOver("Player 2 Wins!");
+            return;
+        }
+
+        _currentPlayer = Opponent;
+        currentPhase = TurnPhase.PlayerSelectFirst;
+        actionPanel.ShowShuffleButton(true);
+        actionPanel.SetTurnText(_currentPlayer == Owner.Player ? "Player 1's Turn" : "Player 2's Turn");
+        RefreshUI();
+    }
+
     void StartNPCTurn()
     {
         currentPhase = TurnPhase.NPCTurn;
@@ -319,7 +397,7 @@ public class GameManager : MonoBehaviour
     void ExecuteNPCTurn()
     {
         var npcAttackers = board.GetAliveFaceDown(Owner.NPC);
-        var allTargets = board.GetAliveFaceDownAll();
+        var allTargets = board.GetAliveFaceDown(Owner.Player);
 
         if (npcAttackers.Count == 0 || allTargets.Count == 0)
         {
@@ -384,7 +462,7 @@ public class GameManager : MonoBehaviour
 
         _resultFromNpcTurn = true;
         currentPhase = TurnPhase.ShowResult;
-        actionPanel.SetInstructionText("Click anywhere outside the board to proceed");
+        actionPanel.SetInstructionText(actionPanel.instructionClickOutside);
     }
 
     void FinishNPCTurn()
@@ -418,12 +496,23 @@ public class GameManager : MonoBehaviour
         hoverPopup.Hide();
     }
 
+    int CurrentShuffleCharges => gameMode == GameMode.VsPlayer
+        ? (_currentPlayer == Owner.Player ? _playerShuffleCharges : _playerTwoShuffleCharges)
+        : _playerShuffleCharges;
+
+    public static string OwnerDisplayName(Owner owner)
+    {
+        if (Instance == null || Instance.gameMode == GameMode.VsNPC)
+            return owner == Owner.Player ? "Player" : "NPC";
+        return owner == Owner.Player ? "Player 1" : "Player 2";
+    }
+
     void RefreshUI()
     {
         actionPanel.ClearSlots();
-        actionPanel.SetShuffleCharges(_playerShuffleCharges);
+        actionPanel.SetShuffleCharges(CurrentShuffleCharges);
         actionPanel.UpdateHpBars();
-        actionPanel.SetInstructionText("");
+        actionPanel.SetInstructionText(currentPhase == TurnPhase.PlayerSelectFirst ? actionPanel.instructionPickReel : "");
     }
 
     public int PlayerShuffleCharges => _playerShuffleCharges;

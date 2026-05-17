@@ -29,6 +29,12 @@ public class ActionPanel : MonoBehaviour
     public TextMeshProUGUI turnText;
     public TextMeshProUGUI instructionText;
 
+    [Header("Instruction Messages")]
+    public string instructionPickReel = "Pick a reel";
+    public string instructionSelectTarget = "Select a face-down reel as target";
+    public string instructionClickOutside = "Click anywhere outside the board to proceed";
+    public string msgInvalidAttack = "Must attack with your own reel!";
+
     [Header("Message")]
     public GameObject messageRoot;
     public TextMeshProUGUI messageText;
@@ -102,8 +108,7 @@ public class ActionPanel : MonoBehaviour
         if (md.memeVideo != null) name = md.memeVideo.name;
         else if (md.memeImage != null) name = md.memeImage.name;
         else return "Unknown";
-        string tag = reel.owner == Owner.Player ? "Player" : "NPC";
-        return $"({tag}:{name})";
+        return $"({GameManager.OwnerDisplayName(reel.owner)}:{name})";
     }
 
     static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel, Scrollbar hpBar, Image ownerColour)
@@ -197,8 +202,9 @@ public class ActionPanel : MonoBehaviour
         var board = GameManager.Instance.board;
         int pAlive = board.AliveCount(Owner.Player);
         int nAlive = board.AliveCount(Owner.NPC);
-        playerHpLabel.text = $"Your reels: {pAlive}/6";
-        npcHpLabel.text = $"NPC reels: {nAlive}/6";
+        bool isVsPlayer = GameManager.Instance.gameMode == GameManager.GameMode.VsPlayer;
+        playerHpLabel.text = isVsPlayer ? $"P1 reels: {pAlive}/6" : $"Your reels: {pAlive}/6";
+        npcHpLabel.text = isVsPlayer ? $"P2 reels: {nAlive}/6" : $"NPC reels: {nAlive}/6";
 
         UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, GameManager.Instance.FirstSelected);
         UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, GameManager.Instance.SecondSelected);
