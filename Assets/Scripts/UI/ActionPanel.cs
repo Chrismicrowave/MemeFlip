@@ -27,17 +27,13 @@ public class ActionPanel : MonoBehaviour
 
     [Header("Status")]
     public TextMeshProUGUI turnText;
-    public TextMeshProUGUI instructionText;
+    public TextMeshProUGUI messagePanel;
 
     [Header("Instruction Messages")]
     public string instructionPickReel = "Pick a reel";
     public string instructionSelectTarget = "Select a face-down reel as target";
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
     public string msgInvalidAttack = "Must attack with your own reel!";
-
-    [Header("Message")]
-    public GameObject messageRoot;
-    public TextMeshProUGUI messageText;
 
     [Header("HP Summary")]
     public TextMeshProUGUI playerHpLabel;
@@ -53,7 +49,7 @@ public class ActionPanel : MonoBehaviour
         Transform c = transform;
 
         if (turnText == null) turnText = c.Find("TurnText")?.GetComponent<TextMeshProUGUI>();
-        if (instructionText == null) instructionText = c.Find("InstructionText")?.GetComponent<TextMeshProUGUI>();
+        if (messagePanel == null) messagePanel = c.Find("InstructionText")?.GetComponent<TextMeshProUGUI>();
         if (playerHpLabel == null) playerHpLabel = c.Find("PlayerHp")?.GetComponent<TextMeshProUGUI>();
         if (npcHpLabel == null) npcHpLabel = c.Find("NpcHp")?.GetComponent<TextMeshProUGUI>();
 
@@ -76,9 +72,6 @@ public class ActionPanel : MonoBehaviour
         if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
         if (shuffleLabel == null) shuffleLabel = c.Find("ShuffleButton/Label")?.GetComponent<TextMeshProUGUI>();
 
-        if (messageRoot == null) messageRoot = c.Find("MessageRoot")?.gameObject;
-        if (messageText == null) messageText = c.Find("MessageRoot/MessageText")?.GetComponent<TextMeshProUGUI>();
-
         if (gameOverRoot == null) gameOverRoot = c.Find("GameOverRoot")?.gameObject;
         if (gameOverLabel == null) gameOverLabel = c.Find("GameOverRoot/GameOverLabel")?.GetComponent<TextMeshProUGUI>();
         if (restartButton == null) restartButton = c.Find("GameOverRoot/RestartButton")?.GetComponent<Button>();
@@ -86,7 +79,6 @@ public class ActionPanel : MonoBehaviour
         ClearSlots();
         ShowAttackButton(false);
         ShowShuffleButton(false);
-        if (messageRoot != null) messageRoot.SetActive(false);
         if (gameOverRoot != null) gameOverRoot.SetActive(false);
         if (restartButton != null)
         {
@@ -179,22 +171,9 @@ public class ActionPanel : MonoBehaviour
         if (turnText != null) turnText.text = text;
     }
 
-    public void SetInstructionText(string text)
+    public void SetMessageText(string text)
     {
-        if (instructionText != null) instructionText.text = text;
-    }
-
-    public void ShowMessage(string msg)
-    {
-        if (messageRoot != null) messageRoot.SetActive(true);
-        if (messageText != null) messageText.text = msg;
-        CancelInvoke(nameof(HideMessage));
-        Invoke(nameof(HideMessage), 2.5f);
-    }
-
-    void HideMessage()
-    {
-        if (messageRoot != null) messageRoot.SetActive(false);
+        if (messagePanel != null) messagePanel.text = text;
     }
 
     public void UpdateHpBars()

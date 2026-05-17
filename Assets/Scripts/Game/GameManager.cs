@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
-        actionPanel.SetInstructionText(actionPanel.instructionSelectTarget);
+        actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
     }
 
@@ -173,8 +173,7 @@ public class GameManager : MonoBehaviour
         if (_firstSelected.owner != _currentPlayer || _secondSelected.owner != Opponent)
         {
             _attackResolved = false;
-            actionPanel.ShowMessage(actionPanel.msgInvalidAttack);
-            actionPanel.SetInstructionText(actionPanel.msgInvalidAttack + "\n" + actionPanel.instructionClickOutside);
+            actionPanel.SetMessageText(actionPanel.msgInvalidAttack + "\n" + actionPanel.instructionClickOutside);
             currentPhase = TurnPhase.ShowResult;
             return;
         }
@@ -211,14 +210,13 @@ public class GameManager : MonoBehaviour
 
             board.ShuffleOwnerReels(_currentPlayer);
             RefreshUI();
-            actionPanel.ShowMessage($"Shuffle! {charges - 1} charges left");
             actionPanel.ShowShuffleButton(false);
 
             // Switch to next player
             _currentPlayer = Opponent;
             currentPhase = TurnPhase.PlayerSelectFirst;
             actionPanel.SetTurnText(_currentPlayer == Owner.Player ? "Player 1's Turn" : "Player 2's Turn");
-            actionPanel.SetInstructionText(actionPanel.instructionPickReel);
+            actionPanel.SetMessageText($"Shuffle! {charges - 1} charges left\n" + actionPanel.instructionPickReel);
             actionPanel.ShowShuffleButton(true);
             return;
         }
@@ -234,7 +232,7 @@ public class GameManager : MonoBehaviour
 
         board.ShuffleOwnerReels(Owner.Player);
         RefreshUI();
-        actionPanel.ShowMessage($"Shuffle! {_playerShuffleCharges} charges left");
+        actionPanel.SetMessageText($"Shuffle! {_playerShuffleCharges} charges left");
         actionPanel.ShowShuffleButton(false);
 
         StartNPCTurn();
@@ -253,8 +251,7 @@ public class GameManager : MonoBehaviour
             msg = $"{damage} dmg — DESTROYED!";
         }
 
-        actionPanel.ShowMessage(msg);
-        actionPanel.SetInstructionText(msg + "\n" + actionPanel.instructionClickOutside);
+        actionPanel.SetMessageText(msg + "\n" + actionPanel.instructionClickOutside);
         actionPanel.UpdateHpBars();
 
         CheckWinCondition();
@@ -473,8 +470,7 @@ public class GameManager : MonoBehaviour
             msg = $"NPC {damage} dmg — Your reel DESTROYED!";
         }
 
-        actionPanel.ShowMessage(msg);
-        actionPanel.SetInstructionText(msg + "\n" + actionPanel.instructionClickOutside);
+        actionPanel.SetMessageText(msg + "\n" + actionPanel.instructionClickOutside);
         actionPanel.UpdateHpBars();
 
         _attackResolved = true;
@@ -529,7 +525,7 @@ public class GameManager : MonoBehaviour
         actionPanel.ClearSlots();
         actionPanel.SetShuffleCharges(CurrentShuffleCharges);
         actionPanel.UpdateHpBars();
-        actionPanel.SetInstructionText(currentPhase == TurnPhase.PlayerSelectFirst ? actionPanel.instructionPickReel : "");
+        actionPanel.SetMessageText(currentPhase == TurnPhase.PlayerSelectFirst ? actionPanel.instructionPickReel : "");
     }
 
     public int PlayerShuffleCharges => _playerShuffleCharges;
