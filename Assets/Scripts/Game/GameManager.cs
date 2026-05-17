@@ -184,6 +184,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
         _firstSelected.FlipUp();
+        board.OnReelFlipped(_firstSelected);
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
@@ -201,6 +202,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
+        board.OnReelFlipped(_secondSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         RefreshHoverForReel(reel);
 
@@ -314,25 +316,24 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return DashAndBack(_firstSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
         yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
         ResolveAttack(_firstSelected, _secondSelected);
     }
 
-    IEnumerator DashAndBack(Reel reel, RectTransform slotRt)
+    IEnumerator DashAndBack(Reel reel, Reel target, RectTransform slotRt)
     {
-        // Reel
         float width = reel.GetComponent<Renderer>().bounds.size.x;
         float distance = width * reel.attackDashDistancePercent;
-        float dir = reel.owner == Owner.Player ? 1f : -1f;
+        Vector3 dir = (target.transform.position - reel.transform.position).normalized;
         float halfDuration = reel.attackDashDuration * 0.5f;
         Vector3 startPos = reel.transform.position;
-        Vector3 targetPos = startPos + Vector3.right * distance * dir;
+        Vector3 targetPos = startPos + dir * distance;
 
         // Slot
         Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
         float slotDist = slotRt != null ? slotRt.rect.width * reel.attackDashDistancePercent : 0f;
-        Vector2 slotTarget = slotOrig + Vector2.right * slotDist * dir;
+        Vector2 slotTarget = slotOrig + Vector2.right * slotDist * Mathf.Sign(dir.x);
 
         // Dash out
         float elapsed = 0f;
@@ -469,6 +470,7 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
+        board.OnReelFlipped(_firstSelected);
         actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
@@ -477,6 +479,7 @@ public class GameManager : MonoBehaviour
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
+        board.OnReelFlipped(_secondSelected);
         actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
@@ -492,7 +495,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return DashAndBack(_firstSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
         yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
 
         int damage = Mathf.Max(1, _firstSelected.stats.atk);
@@ -532,6 +535,7 @@ public class GameManager : MonoBehaviour
 
     void FlipBackSelections()
     {
+        board.ResetScales();
         memePlayer?.Stop();
         hoverPopup.Unpin();
         if (_firstSelected != null && !_firstSelected.isDestroyed)

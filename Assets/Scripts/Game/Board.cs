@@ -7,6 +7,10 @@ public class Board : MonoBehaviour
     public Vector2Int gridSize = new(4, 3); // rows, cols
     public float cellSpacing = 2f;
 
+    [Header("Flip Scaling")]
+    public float flipScale = 1.8f;
+    public float adjacentScale = 1.3f;
+
     [Header("Memes")]
     public MemeLibrary memeLibrary;
 
@@ -176,6 +180,27 @@ public class Board : MonoBehaviour
     public int AliveCount(Owner owner)
     {
         return AllReels.FindAll(r => r.owner == owner && !r.isDestroyed).Count;
+    }
+
+    public void OnReelFlipped(Reel reel)
+    {
+        reel.transform.localScale = Vector3.one * flipScale;
+
+        foreach (var other in AllReels)
+        {
+            if (other == reel || other.isDestroyed) continue;
+            bool adjacent = Mathf.Abs(other.boardPosition.x - reel.boardPosition.x) +
+                            Mathf.Abs(other.boardPosition.y - reel.boardPosition.y) == 1;
+            if (adjacent && other.transform.localScale.x < flipScale - 0.01f)
+                other.transform.localScale = Vector3.one * adjacentScale;
+        }
+    }
+
+    public void ResetScales()
+    {
+        foreach (var reel in AllReels)
+            if (reel != null && !reel.isDestroyed)
+                reel.transform.localScale = Vector3.one;
     }
 
     [ContextMenu("Refresh Grid")]
