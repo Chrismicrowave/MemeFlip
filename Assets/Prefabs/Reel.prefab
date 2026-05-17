@@ -247,6 +247,7 @@ MonoBehaviour:
   jitterIntensity: 0.05
   jitterDuration: 0.3
   jitterSpeed: 20
+  jitterSlotIntensity: 8
   playerColor: {r: 0.2, g: 0.33, b: 1, a: 1}
   npcColor: {r: 1, g: 0.2, b: 0.33, a: 1}
   cardBack: {fileID: 2800000, guid: 03f284806c735f340ae2422fdf3293b2, type: 3}

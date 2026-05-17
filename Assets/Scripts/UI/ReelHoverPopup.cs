@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class ReelHoverPopup : MonoBehaviour
 {
     public GameObject panel;
-    public GameObject flipPrompt;
     public TextMeshProUGUI ownerText;
     public TextMeshProUGUI statsText;
     public TextMeshProUGUI statusText;
@@ -14,7 +13,6 @@ public class ReelHoverPopup : MonoBehaviour
     void Start()
     {
         if (panel == null) panel = GameObject.Find("HoverCanvas/HoverPanel");
-        if (flipPrompt == null) flipPrompt = GameObject.Find("HoverCanvas/FlipPrompt");
         if (ownerText == null) ownerText = GameObject.Find("HoverCanvas/HoverPanel/OwnerText")?.GetComponent<TextMeshProUGUI>();
         if (statsText == null) statsText = GameObject.Find("HoverCanvas/HoverPanel/StatsText")?.GetComponent<TextMeshProUGUI>();
         if (statusText == null) statusText = GameObject.Find("HoverCanvas/HoverPanel/FaceStatus")?.GetComponent<TextMeshProUGUI>();
@@ -24,7 +22,6 @@ public class ReelHoverPopup : MonoBehaviour
             panel.SetActive(false);
             panel.GetComponent<RectTransform>().pivot = Vector2.zero;
         }
-        if (flipPrompt != null) flipPrompt.SetActive(false);
     }
 
     public void Show(Reel reel)
@@ -34,30 +31,18 @@ public class ReelHoverPopup : MonoBehaviour
         bool showFlip = reel.isFaceDown && !reel.isDestroyed;
 
         panel.SetActive(!showFlip);
-        if (flipPrompt != null) flipPrompt.SetActive(showFlip);
 
-        // Calculate position in world space relative to reel
-        Vector3 reelScreenPos = Camera.main.WorldToScreenPoint(reel.transform.position);
-        float margin = 15f;
-        float worldMargin = 0.15f;
-
-        if (showFlip && flipPrompt != null)
-        {
-            RectTransform rt = flipPrompt.GetComponent<RectTransform>();
-            bool flipLeft = rt != null && reelScreenPos.x + margin + rt.rect.width > Screen.width;
-            flipPrompt.transform.position = reel.transform.position + new Vector3(
-                flipLeft ? -worldMargin : worldMargin,
-                worldMargin,
-                0f
-            );
-            return;
-        }
+        if (showFlip) return;
 
         UpdateStats(reel);
 
         // Preview texture is set by MemePlayer.PlayHover (handles video + image)
         if (previewImage != null)
             previewImage.gameObject.SetActive(!reel.isFaceDown && !reel.isDestroyed);
+
+        Vector3 reelScreenPos = Camera.main.WorldToScreenPoint(reel.transform.position);
+        float margin = 15f;
+        float worldMargin = 0.15f;
 
         RectTransform panelRt = panel.GetComponent<RectTransform>();
         bool panelFlipLeft = panelRt != null && reelScreenPos.x + margin + panelRt.rect.width > Screen.width;
@@ -120,6 +105,5 @@ public class ReelHoverPopup : MonoBehaviour
         if (previewImage != null)
             previewImage.texture = null;
         if (panel != null) panel.SetActive(false);
-        if (flipPrompt != null) flipPrompt.SetActive(false);
     }
 }

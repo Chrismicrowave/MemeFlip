@@ -55,23 +55,9 @@ public class Reel : MonoBehaviour
             if (borderTf != null)
                 _borderImage = borderTf.GetComponent<Image>();
 
-            // Flip prompt at bottom of reel face
-            var promptGO = new GameObject("FlipPrompt");
-            promptGO.transform.SetParent(canvas, false);
-            _flipPrompt = promptGO.AddComponent<TextMeshProUGUI>();
-            _flipPrompt.text = "FLIP";
-            _flipPrompt.fontSize = 10;
-            _flipPrompt.alignment = TextAlignmentOptions.Center;
-            _flipPrompt.color = Color.white;
-
-            var rt = promptGO.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0, 0);
-            rt.anchorMax = new Vector2(1, 0);
-            rt.pivot = new Vector2(0.5f, 0);
-            rt.anchoredPosition = new Vector2(0, 0.05f);
-            rt.sizeDelta = new Vector2(0, 0.2f);
-
-            _flipPrompt.gameObject.SetActive(false);
+            Transform flipTf = canvas.Find("FlipPrompt");
+            if (flipTf != null)
+                _flipPrompt = flipTf.GetComponent<TextMeshProUGUI>();
         }
     }
 
