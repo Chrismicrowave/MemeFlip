@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         if (reel.owner == _currentPlayer)
             actionPanel.ShowAttackerSlot(_firstSelected, reel.owner);
-        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
+        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, false);
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
     }
@@ -226,13 +226,16 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
+        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, false);
         RefreshHoverForReel(reel);
 
         if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
         {
             actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
             actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
+            // Play sound for both slots now (attack is valid)
+            memePlayer?.PlaySlotSound(actionPanel.playerSlot1Image, _firstSelected);
+            memePlayer?.PlaySlotSound(actionPanel.playerSlot2Image, _secondSelected);
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());

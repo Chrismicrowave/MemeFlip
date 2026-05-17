@@ -143,6 +143,18 @@ public class MemePlayer : MonoBehaviour
             videoPlayer.Stop();
     }
 
+    /// Plays sound for a reel on the audio source associated with the given slot.
+    /// This avoids restarting video — only the audio is triggered.
+    public void PlaySlotSound(RawImage slotImage, Reel reel)
+    {
+        if (reel?.memeData?.memeSound == null || slotImage == null) return;
+
+        AudioSource src = slotImage == _slot1Target ? audioSource : audioSource2;
+        if (src == null) src = audioSource;
+        src.volume = 1f;
+        src.PlayOneShot(reel.memeData.memeSound);
+    }
+
     /// Replays just the sound for a reel (on slot click).
     public void PlaySound(Reel reel)
     {
