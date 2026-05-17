@@ -182,12 +182,16 @@ public class GameManager : MonoBehaviour
         {
             if (reel == _firstSelected)
             {
-                memePlayer?.PlaySlot(actionPanel.playerSlot1Image, reel, true);
+                int si = reel.owner == Owner.Player ? 0 : 1;
+                var img = si == 0 ? actionPanel.playerSlot1Image : actionPanel.playerSlot2Image;
+                memePlayer?.PlaySlot(si, img, reel, true);
                 return;
             }
             if (reel == _secondSelected)
             {
-                memePlayer?.PlaySlot(actionPanel.playerSlot2Image, reel, true);
+                int si = reel.owner == Owner.Player ? 0 : 1;
+                var img = si == 0 ? actionPanel.playerSlot1Image : actionPanel.playerSlot2Image;
+                memePlayer?.PlaySlot(si, img, reel, true);
                 return;
             }
             // Face-down unselected reels fall through to selection logic
@@ -216,8 +220,18 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         bool validAttacker = reel.owner == _currentPlayer;
         if (validAttacker)
-            actionPanel.ShowAttackerSlot(_firstSelected);
-        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, validAttacker);
+        {
+            if (reel.owner == Owner.Player)
+            {
+                actionPanel.ShowP1Slot(_firstSelected);
+                memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _firstSelected, true);
+            }
+            else
+            {
+                actionPanel.ShowP2Slot(_firstSelected);
+                memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _firstSelected, true);
+            }
+        }
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
     }
@@ -229,14 +243,23 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, false);
+        var targetSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1Image : actionPanel.playerSlot2Image;
+        int targetSlotIdx = _secondSelected.owner == Owner.Player ? 0 : 1;
+        memePlayer?.PlaySlot(targetSlotIdx, targetSlot, _secondSelected, false);
         RefreshHoverForReel(reel);
 
         if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
         {
-            actionPanel.ShowAttackerSlot(_firstSelected);
-            actionPanel.ShowTargetSlot(_secondSelected);
-            memePlayer?.PlaySlotSound(actionPanel.playerSlot2Image, _secondSelected);
+            // Show each reel in its owner's slot
+            if (_firstSelected.owner == Owner.Player)
+                actionPanel.ShowP1Slot(_firstSelected);
+            else
+                actionPanel.ShowP2Slot(_firstSelected);
+            if (_secondSelected.owner == Owner.Player)
+                actionPanel.ShowP1Slot(_secondSelected);
+            else
+                actionPanel.ShowP2Slot(_secondSelected);
+            memePlayer?.PlaySlotSound(targetSlotIdx, _secondSelected);
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());
@@ -502,16 +525,18 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        actionPanel.ShowAttackerSlot(_firstSelected);
-        memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
+        // NPC attacker (P2) → Slot2
+        actionPanel.ShowP2Slot(_firstSelected);
+        memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
 
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        actionPanel.ShowTargetSlot(_secondSelected);
-        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
+        // Player target (P1) → Slot1
+        actionPanel.ShowP1Slot(_secondSelected);
+        memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
     }
 

@@ -51,15 +51,16 @@ public class MemePlayer : MonoBehaviour
 
     /// Routes video to target slot display with per-slot independent audio.
     /// Freezes the previous slot's last frame so both slots show different content.
-    public void PlaySlot(RawImage targetSlot, Reel reel, bool withSound)
+    /// slotIndex: 0 = Slot1 (P1), 1 = Slot2 (P2).
+    public void PlaySlot(int slotIndex, RawImage targetSlot, Reel reel, bool withSound)
     {
         if (reel?.memeData == null) return;
 
-        // Track which slot images we've seen
-        if (_slot1Target == null) _slot1Target = targetSlot;
-        else if (_slot2Target == null && targetSlot != _slot1Target) _slot2Target = targetSlot;
+        // Track explicitly by slot index
+        if (slotIndex == 0) _slot1Target = targetSlot;
+        else if (slotIndex == 1) _slot2Target = targetSlot;
 
-        AudioSource slotAudio = targetSlot == _slot1Target ? audioSource : audioSource2;
+        AudioSource slotAudio = slotIndex == 0 ? audioSource : audioSource2;
         if (slotAudio == null) slotAudio = audioSource;
 
         if (reel.memeData.memeVideo != null)
@@ -116,6 +117,14 @@ public class MemePlayer : MonoBehaviour
             if (videoPlayer.clip == reel.memeData.memeVideo && _rt != null)
             {
                 target.texture = _rt;
+                // Restart if stopped and no slot is using the VideoPlayer
+                if (_currentVideoSlot == null && !videoPlayer.isPlaying)
+                {
+                    videoPlayer.time = 0;
+                    videoPlayer.isLooping = true;
+                    audioSource.volume = 0f;
+                    videoPlayer.Play();
+                }
                 return;
             }
 
@@ -149,11 +158,12 @@ public class MemePlayer : MonoBehaviour
 
     /// Plays sound for a reel on the audio source associated with the given slot.
     /// This avoids restarting video — only the audio is triggered.
-    public void PlaySlotSound(RawImage slotImage, Reel reel)
+    /// slotIndex: 0 = Slot1 (P1 audioSource), 1 = Slot2 (P2 audioSource2).
+    public void PlaySlotSound(int slotIndex, Reel reel)
     {
-        if (reel?.memeData?.memeSound == null || slotImage == null) return;
+        if (reel?.memeData?.memeSound == null) return;
 
-        AudioSource src = slotImage == _slot1Target ? audioSource : audioSource2;
+        AudioSource src = slotIndex == 0 ? audioSource : audioSource2;
         if (src == null) src = audioSource;
         src.volume = 1f;
         src.PlayOneShot(reel.memeData.memeSound);

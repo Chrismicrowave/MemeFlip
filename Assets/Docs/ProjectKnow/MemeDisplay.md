@@ -4,12 +4,29 @@ Three display contexts share one `VideoPlayer` (on `MemePlayer`).
 
 ## Contexts
 
-| Context | What | Sound | When |
-|---------|------|-------|------|
-| **Hover panel** | Video (muted) or static `memeImage` | No | Cursor over 3D board reel |
-| **Player Slot 1** | Video or static `memeImage` | Yes | First reel flipped/selected |
-| **Player Slot 2** | Video or static `memeImage` | Yes | Second reel flipped/selected |
-| **Slot click (replay)** | Full replay (video restart or image + sound) | Yes | Click the slot panel GameObject |
+| Context | What | Sound | slotIndex | When |
+|---------|------|-------|-----------|------|
+| **Hover panel** | Video (muted) or static `memeImage` | No | — | Cursor over 3D board reel |
+| **Slot1 (P1)** | Video or static `memeImage` | Yes | 0 | P1's attacker or P1's damage receiver |
+| **Slot2 (P2)** | Video or static `memeImage` | Yes | 1 | P2's attacker or P2's damage receiver |
+| **Slot click (replay)** | Full replay (video restart + sound) | Yes | 0 or 1 | Click the slot panel GameObject |
+
+## Slot Ownership Routing
+
+| Slot | Side | Shows | AudioSource |
+|------|------|-------|-------------|
+| **Slot1** (playerSlot1) | P1 | P1's attacker, P1's damage receiver (from P2's attack) | `audioSource` |
+| **Slot2** (playerSlot2) | P2 | P2's attacker, P2's damage receiver (from P1's attack) | `audioSource2` |
+
+Each reel always appears in its owner's slot regardless of whose turn it is:
+- `reel.owner == Owner.Player` → Slot1 via `ShowP1Slot()` / `slotIndex=0`
+- `reel.owner == Owner.NPC` → Slot2 via `ShowP2Slot()` / `slotIndex=1`
+
+`PlaySlot(slotIndex, targetSlot, reel, withSound)` uses `slotIndex` to route audio:
+- `slotIndex=0` → plays sound on `audioSource`
+- `slotIndex=1` → plays sound on `audioSource2`
+
+This means during NPC's turn, the NPC's attacker (Owner.NPC, Slot2) and Player's target (Owner.Player, Slot1) swap which slot they occupy compared to P1's turn.
 
 ## Constraints
 

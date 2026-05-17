@@ -133,16 +133,16 @@ public class ActionPanel : MonoBehaviour
         if (ownerColour != null) ownerColour.color = c;
     }
 
-    public void ShowAttackerSlot(Reel reel)
+    public void ShowP1Slot(Reel reel)
     {
         FillSlot(playerSlot1, playerSlot1Owner, playerSlot1HP, playerSlot1ATK, reel, playerSlot1HPBar, playerSlot1OwnerColour);
         SetSlotImage(playerSlot1Image, reel);
     }
 
-    public void ShowTargetSlot(Reel target)
+    public void ShowP2Slot(Reel reel)
     {
-        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2HP, playerSlot2ATK, target, playerSlot2HPBar, playerSlot2OwnerColour);
-        SetSlotImage(playerSlot2Image, target);
+        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2HP, playerSlot2ATK, reel, playerSlot2HPBar, playerSlot2OwnerColour);
+        SetSlotImage(playerSlot2Image, reel);
     }
 
     void SetSlotImage(RawImage target, Reel reel)

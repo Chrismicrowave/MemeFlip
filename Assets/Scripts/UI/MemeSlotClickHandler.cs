@@ -16,6 +16,6 @@ public class MemeSlotClickHandler : MonoBehaviour, IPointerClickHandler
         if (reel == null) return;
 
         RawImage target = slotIndex == 0 ? gm.actionPanel.playerSlot1Image : gm.actionPanel.playerSlot2Image;
-        gm.memePlayer.PlaySlot(target, reel, true);
+        gm.memePlayer.PlaySlot(slotIndex, target, reel, true);
     }
 }
