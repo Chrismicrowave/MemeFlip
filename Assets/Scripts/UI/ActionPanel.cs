@@ -98,9 +98,12 @@ public class ActionPanel : MonoBehaviour
     {
         var md = reel?.memeData;
         if (md == null) return "???";
-        if (md.memeVideo != null) return md.memeVideo.name;
-        if (md.memeImage != null) return md.memeImage.name;
-        return "Unknown";
+        string name;
+        if (md.memeVideo != null) name = md.memeVideo.name;
+        else if (md.memeImage != null) name = md.memeImage.name;
+        else return "Unknown";
+        string tag = reel.owner == Owner.Player ? "Player" : "NPC";
+        return $"({tag}:{name})";
     }
 
     static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel, Scrollbar hpBar, Image ownerColour)
