@@ -27,6 +27,8 @@ public class Reel : MonoBehaviour
     public float jitterDuration = 0.3f;
     [Tooltip("Jitter oscillation speed")]
     public float jitterSpeed = 20f;
+    [Tooltip("How far the playerslot shakes (UI pixels)")]
+    public float jitterSlotIntensity = 8f;
 
     [Header("Colors")]
     public Color playerColor = new(0.2f, 0.33f, 1f);

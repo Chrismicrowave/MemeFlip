@@ -372,7 +372,8 @@ public class GameManager : MonoBehaviour
             float z = Mathf.Cos(elapsed * reel.jitterSpeed * 0.7f) * reel.jitterIntensity;
             reel.transform.position = origPos + new Vector3(x, 0f, z);
             if (slotRt != null)
-                slotRt.anchoredPosition = slotOrig + new Vector2(x, 0f);
+                slotRt.anchoredPosition = slotOrig + new Vector2(
+                    Mathf.Sin(elapsed * reel.jitterSpeed) * reel.jitterSlotIntensity, 0f);
             elapsed += Time.deltaTime;
             yield return null;
         }
