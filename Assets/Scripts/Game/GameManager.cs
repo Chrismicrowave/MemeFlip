@@ -216,7 +216,7 @@ public class GameManager : MonoBehaviour
         RefreshUI();
         bool validAttacker = reel.owner == _currentPlayer;
         if (validAttacker)
-            actionPanel.ShowAttackerSlot(_firstSelected, reel.owner);
+            actionPanel.ShowAttackerSlot(_firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, validAttacker);
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
@@ -234,8 +234,8 @@ public class GameManager : MonoBehaviour
 
         if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
         {
-            actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
-            actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
+            actionPanel.ShowAttackerSlot(_firstSelected);
+            actionPanel.ShowTargetSlot(_secondSelected);
             memePlayer?.PlaySlotSound(actionPanel.playerSlot2Image, _secondSelected);
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
@@ -502,7 +502,7 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
+        actionPanel.ShowAttackerSlot(_firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
@@ -510,7 +510,7 @@ public class GameManager : MonoBehaviour
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
+        actionPanel.ShowTargetSlot(_secondSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
     }
