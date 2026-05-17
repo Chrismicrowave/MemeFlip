@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
 
     void HandleSelectFirst(Reel reel)
     {
-        if (!reel.isFaceDown) { Debug.Log($"[GM] Reject — not faceDown"); return; }
+        if (!reel.isFaceDown) return;
 
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
         _firstSelected = reel;
@@ -187,7 +187,8 @@ public class GameManager : MonoBehaviour
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
-        actionPanel.ShowAttackerSlot(_firstSelected);
+        if (reel.owner == _currentPlayer)
+            actionPanel.ShowAttackerSlot(_firstSelected, reel.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
@@ -195,29 +196,28 @@ public class GameManager : MonoBehaviour
 
     void HandleSelectSecond(Reel reel)
     {
-        if (!reel.isFaceDown || reel == _firstSelected) { Debug.Log($"[GM] Reject target — faceDown:{reel.isFaceDown} sameAsFirst:{reel == _firstSelected}"); return; }
+        if (!reel.isFaceDown || reel == _firstSelected) return;
 
         Debug.Log($"[GM] Selected second (target): {reel.name} at {reel.boardPosition}");
         _secondSelected = reel;
         _secondSelected.FlipUp();
-
-        // Show both slots regardless of ownership validity
-        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         RefreshHoverForReel(reel);
 
-        // Validate ownership: attacker must be current player's, target must be opponent's
-        if (_firstSelected.owner != _currentPlayer || _secondSelected.owner != Opponent)
+        if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
+        {
+            actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
+            actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
+            currentPhase = TurnPhase.Resolving;
+            HideAllShuffleButtons();
+            StartCoroutine(PlayerAttackSequence());
+        }
+        else
         {
             _attackResolved = false;
             actionPanel.SetMessageText(actionPanel.msgInvalidAttack + "\n" + actionPanel.instructionClickOutside);
             currentPhase = TurnPhase.ShowResult;
-            return;
         }
-
-        currentPhase = TurnPhase.Resolving;
-        HideAllShuffleButtons();
-        StartCoroutine(PlayerAttackSequence());
     }
 
     void RefreshHoverForReel(Reel reel)
@@ -312,10 +312,10 @@ public class GameManager : MonoBehaviour
     IEnumerator PlayerAttackSequence()
     {
         yield return new WaitForSeconds(0.3f);
-        var slot1Rt = actionPanel.playerSlot1?.GetComponent<RectTransform>();
-        var slot2Rt = actionPanel.playerSlot2?.GetComponent<RectTransform>();
-        yield return DashAndBack(_firstSelected, slot1Rt);
-        yield return Jitter(_secondSelected, slot2Rt);
+        var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        yield return DashAndBack(_firstSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
         ResolveAttack(_firstSelected, _secondSelected);
     }
 
@@ -324,14 +324,15 @@ public class GameManager : MonoBehaviour
         // Reel
         float width = reel.GetComponent<Renderer>().bounds.size.x;
         float distance = width * reel.attackDashDistancePercent;
+        float dir = reel.owner == Owner.Player ? 1f : -1f;
         float halfDuration = reel.attackDashDuration * 0.5f;
         Vector3 startPos = reel.transform.position;
-        Vector3 targetPos = startPos + Vector3.right * distance;
+        Vector3 targetPos = startPos + Vector3.right * distance * dir;
 
         // Slot
         Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
         float slotDist = slotRt != null ? slotRt.rect.width * reel.attackDashDistancePercent : 0f;
-        Vector2 slotTarget = slotOrig + Vector2.right * slotDist;
+        Vector2 slotTarget = slotOrig + Vector2.right * slotDist * dir;
 
         // Dash out
         float elapsed = 0f;
@@ -467,7 +468,7 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        actionPanel.ShowAttackerSlot(_firstSelected);
+        actionPanel.ShowAttackerSlot(_firstSelected, _firstSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
         Invoke(nameof(NPCSecondFlip), 0.8f);
     }
@@ -475,7 +476,7 @@ public class GameManager : MonoBehaviour
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
+        actionPanel.ShowTargetSlot(_secondSelected, _secondSelected.owner);
         memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
         Invoke(nameof(NPCResolve), 0.6f);
     }
@@ -488,10 +489,10 @@ public class GameManager : MonoBehaviour
     IEnumerator NPCAttackSequence()
     {
         yield return new WaitForSeconds(0.3f);
-        var slot1Rt = actionPanel.playerSlot1?.GetComponent<RectTransform>();
-        var slot2Rt = actionPanel.playerSlot2?.GetComponent<RectTransform>();
-        yield return DashAndBack(_firstSelected, slot1Rt);
-        yield return Jitter(_secondSelected, slot2Rt);
+        var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        yield return DashAndBack(_firstSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
 
         int damage = Mathf.Max(1, _firstSelected.stats.atk);
         _secondSelected.stats.currentHP -= damage;
