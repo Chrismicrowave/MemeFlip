@@ -24,8 +24,17 @@ public class ActionPanel : MonoBehaviour
     public Button attackButton;
     public Button shuffleButton;
     public TextMeshProUGUI shuffleLabel;
+    public Button shuffleButtonP2;
+    public TextMeshProUGUI shuffleLabelP2;
+
+    [Header("Turn Panels")]
+    public GameObject turnPanelP1;
+    public GameObject turnPanelP2NPC;
+    public TextMeshProUGUI turnTextP1;
+    public TextMeshProUGUI turnTextP2NPC;
 
     [Header("Status")]
+    [System.Obsolete("Use turnPanelP1/turnPanelP2NPC instead")]
     public TextMeshProUGUI turnText;
     public TextMeshProUGUI messagePanel;
 
@@ -44,12 +53,12 @@ public class ActionPanel : MonoBehaviour
     public TextMeshProUGUI gameOverLabel;
     public Button restartButton;
 
-    void Start()
+    void Awake()
     {
         Transform c = transform;
 
         if (turnText == null) turnText = c.Find("TurnText")?.GetComponent<TextMeshProUGUI>();
-        if (messagePanel == null) messagePanel = c.Find("InstructionText")?.GetComponent<TextMeshProUGUI>();
+        if (messagePanel == null) messagePanel = c.Find("MessagePanel/MessageText")?.GetComponent<TextMeshProUGUI>();
         if (playerHpLabel == null) playerHpLabel = c.Find("PlayerHp")?.GetComponent<TextMeshProUGUI>();
         if (npcHpLabel == null) npcHpLabel = c.Find("NpcHp")?.GetComponent<TextMeshProUGUI>();
 
@@ -71,14 +80,24 @@ public class ActionPanel : MonoBehaviour
         if (attackButton == null) attackButton = c.Find("AttackButton")?.GetComponent<Button>();
         if (shuffleButton == null) shuffleButton = c.Find("ShuffleButton")?.GetComponent<Button>();
         if (shuffleLabel == null) shuffleLabel = c.Find("ShuffleButton/Label")?.GetComponent<TextMeshProUGUI>();
+        if (shuffleButtonP2 == null) shuffleButtonP2 = c.Find("ShuffleButtonP2")?.GetComponent<Button>();
+        if (shuffleLabelP2 == null) shuffleLabelP2 = c.Find("ShuffleButtonP2/Label")?.GetComponent<TextMeshProUGUI>();
 
         if (gameOverRoot == null) gameOverRoot = c.Find("GameOverRoot")?.gameObject;
         if (gameOverLabel == null) gameOverLabel = c.Find("GameOverRoot/GameOverLabel")?.GetComponent<TextMeshProUGUI>();
         if (restartButton == null) restartButton = c.Find("GameOverRoot/RestartButton")?.GetComponent<Button>();
 
+        if (turnPanelP1 == null) turnPanelP1 = c.Find("TurnPrompt P1")?.gameObject;
+        if (turnPanelP2NPC == null) turnPanelP2NPC = c.Find("TurnPrompt P2NPC")?.gameObject;
+        if (turnTextP1 == null && turnPanelP1 != null) turnTextP1 = turnPanelP1.GetComponentInChildren<TextMeshProUGUI>();
+        if (turnTextP2NPC == null && turnPanelP2NPC != null) turnTextP2NPC = turnPanelP2NPC.GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+    void Start()
+    {
         ClearSlots();
         ShowAttackButton(false);
-        ShowShuffleButton(false);
+        // Shuffle visibility managed by GameManager
         if (gameOverRoot != null) gameOverRoot.SetActive(false);
         if (restartButton != null)
         {
@@ -166,9 +185,34 @@ public class ActionPanel : MonoBehaviour
         if (shuffleButton != null) shuffleButton.interactable = charges > 0;
     }
 
+    public void ShowShuffleButtonP2(bool show)
+    {
+        if (shuffleButtonP2 != null) shuffleButtonP2.gameObject.SetActive(show);
+    }
+
+    public void SetShuffleChargesP2(int charges)
+    {
+        if (shuffleLabelP2 != null) shuffleLabelP2.text = $"Shuffle ({charges})";
+        if (shuffleButtonP2 != null) shuffleButtonP2.interactable = charges > 0;
+    }
+
     public void SetTurnText(string text)
     {
         if (turnText != null) turnText.text = text;
+    }
+
+    public void ShowTurnPanelP1(string text)
+    {
+        if (turnPanelP1 != null) turnPanelP1.SetActive(true);
+        if (turnPanelP2NPC != null) turnPanelP2NPC.SetActive(false);
+        if (turnTextP1 != null) turnTextP1.text = text;
+    }
+
+    public void ShowTurnPanelP2NPC(string text)
+    {
+        if (turnPanelP1 != null) turnPanelP1.SetActive(false);
+        if (turnPanelP2NPC != null) turnPanelP2NPC.SetActive(true);
+        if (turnTextP2NPC != null) turnTextP2NPC.text = text;
     }
 
     public void SetMessageText(string text)

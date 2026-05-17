@@ -56,6 +56,18 @@ public class Board : MonoBehaviour
             (assignment[i], assignment[j]) = (assignment[j], assignment[i]);
         }
 
+        // Shuffle memes for unique deal-like assignment
+        List<MemeData> shuffledMemes = new();
+        if (memeLibrary != null && memeLibrary.memes.Count > 0)
+        {
+            shuffledMemes = new List<MemeData>(memeLibrary.memes);
+            for (int i = shuffledMemes.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                (shuffledMemes[i], shuffledMemes[j]) = (shuffledMemes[j], shuffledMemes[i]);
+            }
+        }
+
         // Assign each reel
         for (int i = 0; i < count; i++)
         {
@@ -66,8 +78,8 @@ public class Board : MonoBehaviour
             reel.name = $"{owner}_Reel_{pos.x}_{pos.y}";
             reel.transform.position = GridToWorld(pos);
             reel.Init(owner, pos);
-            reel.memeData = memeLibrary != null && memeLibrary.memes.Count > 0
-                ? memeLibrary.memes[Random.Range(0, memeLibrary.memes.Count)]
+            reel.memeData = shuffledMemes.Count > 0
+                ? shuffledMemes[i % shuffledMemes.Count]
                 : null;
 
             AllReels.Add(reel);
@@ -105,6 +117,40 @@ public class Board : MonoBehaviour
             if (_positionMap.ContainsKey(reel.boardPosition))
                 _positionMap[reel.boardPosition] = null;
 
+            reel.boardPosition = newPos;
+            _positionMap[newPos] = reel;
+            reel.transform.position = GridToWorld(newPos);
+        }
+    }
+
+    /// <summary>Shuffle all alive face-down reels across every grid position (slots left empty are possible).</summary>
+    public void ShuffleAllFaceDown()
+    {
+        List<Reel> shufflable = AllReels.FindAll(r => !r.isDestroyed && r.isFaceDown);
+        if (shufflable.Count < 1) return;
+
+        // Generate all grid positions as the pool
+        List<Vector2Int> allPositions = new();
+        for (int row = 0; row < gridSize.x; row++)
+        for (int col = 0; col < gridSize.y; col++)
+            allPositions.Add(new Vector2Int(row, col));
+
+        // Shuffle all positions
+        for (int i = allPositions.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (allPositions[i], allPositions[j]) = (allPositions[j], allPositions[i]);
+        }
+
+        // Clear old position map entries
+        foreach (var reel in shufflable)
+            if (_positionMap.ContainsKey(reel.boardPosition))
+                _positionMap[reel.boardPosition] = null;
+
+        for (int i = 0; i < shufflable.Count; i++)
+        {
+            Reel reel = shufflable[i];
+            Vector2Int newPos = allPositions[i];
             reel.boardPosition = newPos;
             _positionMap[newPos] = reel;
             reel.transform.position = GridToWorld(newPos);

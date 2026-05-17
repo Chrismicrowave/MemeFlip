@@ -43,18 +43,49 @@ public class GameManager : MonoBehaviour
         hoverPopup.gameObject.SetActive(true);
         hoverPopup.Hide();
         WireButtons();
+        ShowCurrentPlayerButtons();
         RefreshUI();
-        actionPanel.SetTurnText(gameMode == GameMode.VsPlayer ? "Player 1's Turn" : "Your Turn");
     }
 
     void WireButtons()
     {
-        var shfBtn = UnityEngine.GameObject.Find("GameCanvas/ShuffleButton")?.GetComponent<UnityEngine.UI.Button>();
-        if (shfBtn != null)
+        if (actionPanel.shuffleButton != null)
         {
-            shfBtn.onClick.RemoveAllListeners();
-            shfBtn.onClick.AddListener(OnShuffleClicked);
+            actionPanel.shuffleButton.onClick.RemoveAllListeners();
+            actionPanel.shuffleButton.onClick.AddListener(OnShuffleClicked);
         }
+        if (actionPanel.shuffleButtonP2 != null)
+        {
+            actionPanel.shuffleButtonP2.onClick.RemoveAllListeners();
+            actionPanel.shuffleButtonP2.onClick.AddListener(OnShuffleClicked);
+        }
+    }
+
+    void ShowCurrentPlayerButtons()
+    {
+        if (gameMode == GameMode.VsPlayer)
+        {
+            bool isP1 = _currentPlayer == Owner.Player;
+            actionPanel.ShowShuffleButton(isP1);
+            actionPanel.ShowShuffleButtonP2(!isP1);
+            if (isP1)
+                actionPanel.ShowTurnPanelP1("Player 1's Turn");
+            else
+                actionPanel.ShowTurnPanelP2NPC("Player 2's Turn");
+        }
+        else
+        {
+            actionPanel.ShowShuffleButton(true);
+            actionPanel.ShowShuffleButtonP2(false);
+            actionPanel.ShowTurnPanelP1("Your Turn");
+        }
+        actionPanel.ShowAttackButton(false);
+    }
+
+    void HideAllShuffleButtons()
+    {
+        actionPanel.ShowShuffleButton(false);
+        actionPanel.ShowShuffleButtonP2(false);
     }
 
     void Update()
@@ -154,6 +185,7 @@ public class GameManager : MonoBehaviour
         _firstSelected = reel;
         _firstSelected.FlipUp();
         currentPhase = TurnPhase.PlayerSelectSecond;
+        HideAllShuffleButtons();
         RefreshUI();
         actionPanel.ShowAttackerSlot(_firstSelected);
         memePlayer?.PlaySlot(actionPanel.playerSlot1Image, _firstSelected, true);
@@ -169,6 +201,11 @@ public class GameManager : MonoBehaviour
         _secondSelected = reel;
         _secondSelected.FlipUp();
 
+        // Show both slots regardless of ownership validity
+        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
+        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
+        RefreshHoverForReel(reel);
+
         // Validate ownership: attacker must be current player's, target must be opponent's
         if (_firstSelected.owner != _currentPlayer || _secondSelected.owner != Opponent)
         {
@@ -179,10 +216,7 @@ public class GameManager : MonoBehaviour
         }
 
         currentPhase = TurnPhase.Resolving;
-        actionPanel.ShowShuffleButton(false);
-        actionPanel.ShowTargetSlot(_secondSelected, _firstSelected);
-        memePlayer?.PlaySlot(actionPanel.playerSlot2Image, _secondSelected, true);
-        RefreshHoverForReel(reel);
+        HideAllShuffleButtons();
         StartCoroutine(PlayerAttackSequence());
     }
 
@@ -208,16 +242,15 @@ public class GameManager : MonoBehaviour
                 _firstSelected.FlipDown();
             _firstSelected = null;
 
-            board.ShuffleOwnerReels(_currentPlayer);
+            board.ShuffleAllFaceDown();
             RefreshUI();
-            actionPanel.ShowShuffleButton(false);
+            HideAllShuffleButtons();
 
             // Switch to next player
             _currentPlayer = Opponent;
             currentPhase = TurnPhase.PlayerSelectFirst;
-            actionPanel.SetTurnText(_currentPlayer == Owner.Player ? "Player 1's Turn" : "Player 2's Turn");
             actionPanel.SetMessageText($"Shuffle! {charges - 1} charges left\n" + actionPanel.instructionPickReel);
-            actionPanel.ShowShuffleButton(true);
+            ShowCurrentPlayerButtons();
             return;
         }
 
@@ -230,10 +263,10 @@ public class GameManager : MonoBehaviour
             _firstSelected.FlipDown();
         _firstSelected = null;
 
-        board.ShuffleOwnerReels(Owner.Player);
+        board.ShuffleAllFaceDown();
         RefreshUI();
         actionPanel.SetMessageText($"Shuffle! {_playerShuffleCharges} charges left");
-        actionPanel.ShowShuffleButton(false);
+        HideAllShuffleButtons();
 
         StartNPCTurn();
     }
@@ -356,7 +389,7 @@ public class GameManager : MonoBehaviour
         {
             currentPhase = TurnPhase.PlayerSelectFirst;
             RefreshUI();
-            actionPanel.ShowShuffleButton(true);
+            ShowCurrentPlayerButtons();
             return;
         }
 
@@ -372,9 +405,10 @@ public class GameManager : MonoBehaviour
 
         if (!_attackResolved)
         {
+            _currentPlayer = Opponent;
             currentPhase = TurnPhase.PlayerSelectFirst;
             RefreshUI();
-            actionPanel.ShowShuffleButton(true);
+            ShowCurrentPlayerButtons();
             return;
         }
 
@@ -393,17 +427,16 @@ public class GameManager : MonoBehaviour
 
         _currentPlayer = Opponent;
         currentPhase = TurnPhase.PlayerSelectFirst;
-        actionPanel.ShowShuffleButton(true);
-        actionPanel.SetTurnText(_currentPlayer == Owner.Player ? "Player 1's Turn" : "Player 2's Turn");
+        ShowCurrentPlayerButtons();
         RefreshUI();
     }
 
     void StartNPCTurn()
     {
         currentPhase = TurnPhase.NPCTurn;
-        actionPanel.SetTurnText("NPC Turn");
+        actionPanel.ShowTurnPanelP2NPC("NPC Turn");
         actionPanel.ShowAttackButton(false);
-        actionPanel.ShowShuffleButton(false);
+        HideAllShuffleButtons();
         Invoke(nameof(ExecuteNPCTurn), 0.8f);
     }
 
@@ -491,8 +524,7 @@ public class GameManager : MonoBehaviour
         }
 
         currentPhase = TurnPhase.PlayerSelectFirst;
-        actionPanel.SetTurnText("Your Turn");
-        actionPanel.ShowShuffleButton(true);
+        ShowCurrentPlayerButtons();
         RefreshUI();
     }
 
@@ -524,6 +556,7 @@ public class GameManager : MonoBehaviour
     {
         actionPanel.ClearSlots();
         actionPanel.SetShuffleCharges(CurrentShuffleCharges);
+        actionPanel.SetShuffleChargesP2(_playerTwoShuffleCharges);
         actionPanel.UpdateHpBars();
         actionPanel.SetMessageText(currentPhase == TurnPhase.PlayerSelectFirst ? actionPanel.instructionPickReel : "");
     }
