@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -12,6 +14,18 @@ public class Board : MonoBehaviour
     public float dynamicScaleRadius = 3f;
     [Tooltip("Higher = sharper falloff near cursor, more distinction between closest reels")]
     public float dynamicScaleCurve = 2f;
+
+    [Header("Reel Fly Animation")]
+    [Tooltip("Duration of the reel-to-slot fly animation in seconds")]
+    public float flyDuration = 0.4f;
+    [Tooltip("Easing curve for the fly animation (time 0→1, value 0→1)")]
+    public AnimationCurve flyMotionCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [Tooltip("Final local scale of the flying reel clone at the slot position")]
+    public float flyEndScale = 0.35f;
+
+    public bool IsSlot1Animating { get; private set; }
+    public bool IsSlot2Animating { get; private set; }
+    public bool IsAnySlotAnimating => IsSlot1Animating || IsSlot2Animating;
 
     [Header("Memes")]
     public MemeLibrary memeLibrary;
@@ -206,6 +220,42 @@ public class Board : MonoBehaviour
                 reel.transform.localScale = Vector3.one;
                 reel.ShowFlipPrompt(false);
             }
+    }
+
+    /// <summary>
+    /// Fly a clone of the reel from its board position to the target slot scene position.
+    /// Calls onComplete after the animation finishes.
+    /// </summary>
+    public void AnimateReelToSlot(Reel reel, Transform slotScenePos, int slotIndex, System.Action onComplete)
+    {
+        StartCoroutine(AnimateReelToSlotCoroutine(reel, slotScenePos, slotIndex, onComplete));
+    }
+
+    IEnumerator AnimateReelToSlotCoroutine(Reel reel, Transform slotScenePos, int slotIndex, System.Action onComplete)
+    {
+        if (slotIndex == 0) IsSlot1Animating = true;
+        else IsSlot2Animating = true;
+
+        GameObject clone = Instantiate(reel.gameObject, reel.transform.position, reel.transform.rotation, null);
+        clone.transform.localScale = reel.transform.lossyScale;
+
+        Collider col = clone.GetComponent<Collider>();
+        if (col != null) Destroy(col);
+        Reel reelComp = clone.GetComponent<Reel>();
+        if (reelComp != null) Destroy(reelComp);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Join(clone.transform.DOMove(slotScenePos.position, flyDuration).SetEase(flyMotionCurve));
+        seq.Join(clone.transform.DOScale(Vector3.one * flyEndScale, flyDuration).SetEase(flyMotionCurve));
+
+        yield return seq.WaitForCompletion();
+
+        Destroy(clone);
+
+        if (slotIndex == 0) IsSlot1Animating = false;
+        else IsSlot2Animating = false;
+
+        onComplete?.Invoke();
     }
 
     [ContextMenu("Refresh Grid")]

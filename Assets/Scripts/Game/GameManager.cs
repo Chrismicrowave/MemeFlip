@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -17,6 +18,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Mode")]
     public GameMode gameMode = GameMode.VsNPC;
+
+    [Header("Attack Animation")]
+    [Tooltip("Easing for the dash-out / dash-back attack motion")]
+    public Ease attackDashEase = Ease.InOutQuad;
+    [Tooltip("Easing for the jitter timer (linear preserves the raw Sin/Cos wave)")]
+    public Ease attackJitterEase = Ease.Linear;
 
     [Header("State")]
     public TurnPhase currentPhase = TurnPhase.PlayerSelectFirst;
@@ -221,16 +228,8 @@ public class GameManager : MonoBehaviour
         bool validAttacker = reel.owner == _currentPlayer;
         if (validAttacker)
         {
-            if (reel.owner == Owner.Player)
-            {
-                actionPanel.ShowP1Slot(_firstSelected);
-                memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _firstSelected, true);
-            }
-            else
-            {
-                actionPanel.ShowP2Slot(_firstSelected);
-                memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _firstSelected, true);
-            }
+            int slotIdx = reel.owner == Owner.Player ? 0 : 1;
+            ShowSlotAfterAnimation(_firstSelected, slotIdx);
         }
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
         RefreshHoverForReel(reel);
@@ -247,22 +246,10 @@ public class GameManager : MonoBehaviour
 
         if (_firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
         {
-            // Ensure attacker slot panel visible (video already started in HandleSelectFirst)
-            if (_firstSelected.owner == Owner.Player)
-                actionPanel.ShowP1Slot(_firstSelected);
-            else
-                actionPanel.ShowP2Slot(_firstSelected);
-            // Show target in its owner's slot with full video + sound
-            if (_secondSelected.owner == Owner.Player)
-            {
-                actionPanel.ShowP1Slot(_secondSelected);
-                memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _secondSelected, true);
-            }
-            else
-            {
-                actionPanel.ShowP2Slot(_secondSelected);
-                memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _secondSelected, true);
-            }
+            // Ensure attacker slot panel visible (animation may still be in progress)
+            // Show target in its owner's slot with fly animation
+            int tgtSlotIdx = _secondSelected.owner == Owner.Player ? 0 : 1;
+            ShowSlotAfterAnimation(_secondSelected, tgtSlotIdx);
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());
@@ -369,8 +356,41 @@ public class GameManager : MonoBehaviour
         currentPhase = TurnPhase.ShowResult;
     }
 
+    /// <summary>
+    /// Shows the reel slot after the fly animation. Falls back to immediate show if no scene pos is configured.
+    /// </summary>
+    void ShowSlotAfterAnimation(Reel reel, int slotIndex, System.Action onSlotShown = null)
+    {
+        Transform slotScenePos = slotIndex == 0 ? actionPanel.slot1ScenePos : actionPanel.slot2ScenePos;
+        System.Action showSlot = () =>
+        {
+            if (slotIndex == 0)
+            {
+                actionPanel.ShowP1Slot(reel);
+                memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, reel, true);
+            }
+            else
+            {
+                actionPanel.ShowP2Slot(reel);
+                memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, reel, true);
+            }
+            onSlotShown?.Invoke();
+        };
+
+        if (slotScenePos == null)
+        {
+            showSlot();
+            return;
+        }
+
+        board.AnimateReelToSlot(reel, slotScenePos, slotIndex, showSlot);
+    }
+
     IEnumerator PlayerAttackSequence()
     {
+        // Wait for slot fly animations to complete
+        while (board.IsAnySlotAnimating)
+            yield return null;
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
@@ -388,56 +408,45 @@ public class GameManager : MonoBehaviour
         Vector3 startPos = reel.transform.position;
         Vector3 targetPos = startPos + dir * distance;
 
-        // Slot
         Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
         float slotDist = slotRt != null ? slotRt.rect.width * reel.attackDashDistancePercent : 0f;
         Vector2 slotTarget = slotOrig + Vector2.right * slotDist * Mathf.Sign(dir.x);
 
-        // Dash out
-        float elapsed = 0f;
-        while (elapsed < halfDuration)
-        {
-            float t = elapsed / halfDuration;
-            reel.transform.position = Vector3.Lerp(startPos, targetPos, t);
-            if (slotRt != null) slotRt.anchoredPosition = Vector2.Lerp(slotOrig, slotTarget, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        reel.transform.position = targetPos;
-        if (slotRt != null) slotRt.anchoredPosition = slotTarget;
+        Sequence seq = DOTween.Sequence();
+        seq.Append(reel.transform.DOMove(targetPos, halfDuration).SetEase(attackDashEase));
+        if (slotRt != null)
+            seq.Join(slotRt.DOAnchorPos(slotTarget, halfDuration).SetEase(attackDashEase));
+        seq.Append(reel.transform.DOMove(startPos, halfDuration).SetEase(attackDashEase));
+        if (slotRt != null)
+            seq.Join(slotRt.DOAnchorPos(slotOrig, halfDuration).SetEase(attackDashEase));
 
-        // Dash back
-        elapsed = 0f;
-        while (elapsed < halfDuration)
-        {
-            float t = elapsed / halfDuration;
-            reel.transform.position = Vector3.Lerp(targetPos, startPos, t);
-            if (slotRt != null) slotRt.anchoredPosition = Vector2.Lerp(slotTarget, slotOrig, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        reel.transform.position = startPos;
-        if (slotRt != null) slotRt.anchoredPosition = slotOrig;
+        yield return seq.WaitForCompletion();
     }
 
     IEnumerator Jitter(Reel reel, RectTransform slotRt)
     {
         Vector3 origPos = reel.transform.position;
         Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
-        float elapsed = 0f;
-        while (elapsed < reel.jitterDuration)
-        {
-            float x = Mathf.Sin(elapsed * reel.jitterSpeed) * reel.jitterIntensity;
-            float z = Mathf.Cos(elapsed * reel.jitterSpeed * 0.7f) * reel.jitterIntensity;
-            reel.transform.position = origPos + new Vector3(x, 0f, z);
-            if (slotRt != null)
-                slotRt.anchoredPosition = slotOrig + new Vector2(
-                    Mathf.Sin(elapsed * reel.jitterSpeed) * reel.jitterSlotIntensity, 0f);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        reel.transform.position = origPos;
-        if (slotRt != null) slotRt.anchoredPosition = slotOrig;
+        float t = 0f;
+        Tween tween = DOTween.To(() => t, v => t = v, 1f, reel.jitterDuration)
+            .SetEase(attackJitterEase)
+            .OnUpdate(() =>
+            {
+                float angle = t * reel.jitterDuration * reel.jitterSpeed;
+                float x = Mathf.Sin(angle) * reel.jitterIntensity;
+                float z = Mathf.Cos(angle * 0.7f) * reel.jitterIntensity;
+                reel.transform.position = origPos + new Vector3(x, 0f, z);
+                if (slotRt != null)
+                    slotRt.anchoredPosition = slotOrig + new Vector2(
+                        Mathf.Sin(angle) * reel.jitterSlotIntensity, 0f);
+            })
+            .OnComplete(() =>
+            {
+                reel.transform.position = origPos;
+                if (slotRt != null) slotRt.anchoredPosition = slotOrig;
+            });
+
+        yield return tween.WaitForCompletion();
     }
 
     void FinishPlayerTurn()
@@ -528,19 +537,17 @@ public class GameManager : MonoBehaviour
         _secondSelected = targetPick;
 
         _firstSelected.FlipUp();
-        // NPC attacker (P2) → Slot2
-        actionPanel.ShowP2Slot(_firstSelected);
-        memePlayer?.PlaySlot(1, actionPanel.playerSlot2Image, _firstSelected, true);
-        Invoke(nameof(NPCSecondFlip), 0.8f);
+        // NPC attacker (P2) → Slot2 with fly animation
+        int slotIdx = _firstSelected.owner == Owner.Player ? 0 : 1;
+        ShowSlotAfterAnimation(_firstSelected, slotIdx, () => Invoke(nameof(NPCSecondFlip), 0.4f));
     }
 
     void NPCSecondFlip()
     {
         _secondSelected.FlipUp();
-        // Player target (P1) → Slot1
-        actionPanel.ShowP1Slot(_secondSelected);
-        memePlayer?.PlaySlot(0, actionPanel.playerSlot1Image, _secondSelected, true);
-        Invoke(nameof(NPCResolve), 0.6f);
+        // Player target (P1) → Slot1 with fly animation
+        int slotIdx = _secondSelected.owner == Owner.Player ? 0 : 1;
+        ShowSlotAfterAnimation(_secondSelected, slotIdx, () => Invoke(nameof(NPCResolve), 0.3f));
     }
 
     void NPCResolve()
@@ -550,6 +557,9 @@ public class GameManager : MonoBehaviour
 
     IEnumerator NPCAttackSequence()
     {
+        // Wait for slot fly animations to complete
+        while (board.IsAnySlotAnimating)
+            yield return null;
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
