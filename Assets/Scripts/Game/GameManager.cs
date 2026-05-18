@@ -72,15 +72,15 @@ public class GameManager : MonoBehaviour
             actionPanel.ShowShuffleButton(isP1);
             actionPanel.ShowShuffleButtonP2(!isP1);
             if (isP1)
-                actionPanel.ShowTurnPanelP1("Player 1's Turn");
+                actionPanel.ShowTurnPanelP1(actionPanel.turnLabelP1Turn);
             else
-                actionPanel.ShowTurnPanelP2NPC("Player 2's Turn");
+                actionPanel.ShowTurnPanelP2NPC(actionPanel.turnLabelP2Turn);
         }
         else
         {
             actionPanel.ShowShuffleButton(true);
             actionPanel.ShowShuffleButtonP2(false);
-            actionPanel.ShowTurnPanelP1("Your Turn");
+            actionPanel.ShowTurnPanelP1(actionPanel.turnLabelYourTurn);
         }
         actionPanel.ShowAttackButton(false);
     }
@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
         {
             _attackResolved = false;
             string msg = _firstPickWasInvalid
-                ? "No valid attacker — turn ends when you click away"
+                ? actionPanel.msgNoValidAttacker
                 : actionPanel.msgInvalidAttack + "\n" + actionPanel.instructionClickOutside;
             actionPanel.SetMessageText(msg);
             currentPhase = TurnPhase.ShowResult;
@@ -351,14 +351,14 @@ public class GameManager : MonoBehaviour
         if (!board.HasAliveReels(Owner.NPC))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? "Player 1 Wins!" : "You Win!");
+            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? actionPanel.gameOverP1Wins : actionPanel.gameOverYouWin);
             return;
         }
 
         if (!board.HasAliveReels(Owner.Player))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? "Player 2 Wins!" : "NPC Wins!");
+            actionPanel.ShowGameOver(gameMode == GameMode.VsPlayer ? actionPanel.gameOverP2Wins : actionPanel.gameOverNPCWins);
             return;
         }
 
@@ -452,13 +452,13 @@ public class GameManager : MonoBehaviour
         if (!board.HasAliveReels(Owner.NPC))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver("Player 1 Wins!");
+            actionPanel.ShowGameOver(actionPanel.gameOverP1Wins);
             return;
         }
         if (!board.HasAliveReels(Owner.Player))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver("Player 2 Wins!");
+            actionPanel.ShowGameOver(actionPanel.gameOverP2Wins);
             return;
         }
 
@@ -471,7 +471,7 @@ public class GameManager : MonoBehaviour
     void StartNPCTurn()
     {
         currentPhase = TurnPhase.NPCTurn;
-        actionPanel.ShowTurnPanelP2NPC("NPC Turn");
+        actionPanel.ShowTurnPanelP2NPC(actionPanel.turnLabelNPCTurn);
         actionPanel.ShowAttackButton(false);
         HideAllShuffleButtons();
         Invoke(nameof(ExecuteNPCTurn), 0.8f);
@@ -562,7 +562,7 @@ public class GameManager : MonoBehaviour
         if (!board.HasAliveReels(Owner.Player))
         {
             currentPhase = TurnPhase.GameOver;
-            actionPanel.ShowGameOver("NPC Wins!");
+            actionPanel.ShowGameOver(actionPanel.gameOverNPCWins);
             return;
         }
 

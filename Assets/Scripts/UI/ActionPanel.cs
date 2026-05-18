@@ -38,6 +38,10 @@ public class ActionPanel : MonoBehaviour
     public GameObject turnPanelP2NPC;
     public TextMeshProUGUI turnTextP1;
     public TextMeshProUGUI turnTextP2NPC;
+    public string turnLabelYourTurn = "Your Turn";
+    public string turnLabelP1Turn = "Player 1's Turn";
+    public string turnLabelP2Turn = "Player 2's Turn";
+    public string turnLabelNPCTurn = "NPC Turn";
 
     [Header("Status")]
     [System.Obsolete("Use turnPanelP1/turnPanelP2NPC instead")]
@@ -50,6 +54,7 @@ public class ActionPanel : MonoBehaviour
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
     public string msgInvalidAttack = "Must attack with your own reel!";
     public string msgInvalidAttackerPick = "{0}'s reel revealed — can't assign to attacker slot. Pick another reel to explore the board, or shuffle all reels.";
+    public string msgNoValidAttacker = "No valid attacker — turn ends when you click away";
 
     [Header("HP Summary")]
     public TextMeshProUGUI playerHpLabel;
@@ -59,6 +64,10 @@ public class ActionPanel : MonoBehaviour
     public GameObject gameOverRoot;
     public TextMeshProUGUI gameOverLabel;
     public Button restartButton;
+    public string gameOverYouWin = "You Win!";
+    public string gameOverNPCWins = "NPC Wins!";
+    public string gameOverP1Wins = "Player 1 Wins!";
+    public string gameOverP2Wins = "Player 2 Wins!";
 
     void Awake()
     {
