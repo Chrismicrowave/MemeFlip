@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour
             actionPanel.ShowTurnPanelP1(actionPanel.turnLabelYourTurn);
         }
         actionPanel.ShowAttackButton(false);
+        actionPanel.UpdateSlotLabels(_currentPlayer);
     }
 
     void HideAllShuffleButtons()
@@ -263,7 +264,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _attackResolved = false;
-            actionPanel.SetMessageText(actionPanel.msgNoAttack + "\n" + actionPanel.instructionClickOutside);
+            actionPanel.SetMessageText(ActionPanel.GetNoAttackMessage(_firstPickWasInvalid) + "\n" + actionPanel.instructionClickOutside);
             currentPhase = TurnPhase.ShowResult;
         }
     }
@@ -471,6 +472,7 @@ public class GameManager : MonoBehaviour
         actionPanel.ShowTurnPanelP2NPC(actionPanel.turnLabelNPCTurn);
         actionPanel.ShowAttackButton(false);
         HideAllShuffleButtons();
+        actionPanel.UpdateSlotLabels(Opponent);
         Invoke(nameof(ExecuteNPCTurn), 0.8f);
     }
 

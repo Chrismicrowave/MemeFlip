@@ -43,6 +43,12 @@ public class ActionPanel : MonoBehaviour
     public string turnLabelP2Turn = "Player 2's Turn";
     public string turnLabelNPCTurn = "NPC Turn";
 
+    [Header("Slot Labels")]
+    public TextMeshProUGUI slot1Label;
+    public TextMeshProUGUI slot2Label;
+    public string slotLabelAttacker = "Attacker";
+    public string slotLabelTarget = "Target";
+
     [Header("Status")]
     [System.Obsolete("Use turnPanelP1/turnPanelP2NPC instead")]
     public TextMeshProUGUI turnText;
@@ -106,6 +112,9 @@ public class ActionPanel : MonoBehaviour
         if (turnPanelP2NPC == null) turnPanelP2NPC = c.Find("TurnPrompt P2NPC")?.gameObject;
         if (turnTextP1 == null && turnPanelP1 != null) turnTextP1 = turnPanelP1.GetComponentInChildren<TextMeshProUGUI>();
         if (turnTextP2NPC == null && turnPanelP2NPC != null) turnTextP2NPC = turnPanelP2NPC.GetComponentInChildren<TextMeshProUGUI>();
+
+        if (slot1Label == null) slot1Label = c.Find("Slot1Box/Slot1Label")?.GetComponent<TextMeshProUGUI>();
+        if (slot2Label == null) slot2Label = c.Find("Slot2Box/Slot2Label")?.GetComponent<TextMeshProUGUI>();
     }
 
     void Start()
@@ -234,6 +243,19 @@ public class ActionPanel : MonoBehaviour
     public void SetMessageText(string text)
     {
         if (messagePanel != null) messagePanel.text = text;
+    }
+
+    public void UpdateSlotLabels(Owner currentPlayer)
+    {
+        if (slot1Label != null)
+            slot1Label.text = currentPlayer == Owner.Player ? slotLabelAttacker : slotLabelTarget;
+        if (slot2Label != null)
+            slot2Label.text = currentPlayer == Owner.Player ? slotLabelTarget : slotLabelAttacker;
+    }
+
+    public static string GetNoAttackMessage(bool attackerEmpty)
+    {
+        return "no attack happens — " + (attackerEmpty ? "attacker slot empty" : "target slot empty");
     }
 
     public void UpdateHpBars()
