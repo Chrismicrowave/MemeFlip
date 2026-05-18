@@ -49,7 +49,7 @@ public class ActionPanel : MonoBehaviour
     public string instructionSelectTarget = "Great! Pick OPPONENT'S reel as target";
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
     public string msgInvalidAttack = "Must attack with your own reel!";
-    public string msgInvalidAttackerPick = "{0}'s reel revealed for your info — pick one of YOUR reels as attacker, or shuffle to end your turn";
+    public string msgInvalidAttackerPick = "{0}'s reel revealed — can't assign to attacker slot. Pick another reel to explore the board, or shuffle all reels.";
 
     [Header("HP Summary")]
     public TextMeshProUGUI playerHpLabel;
