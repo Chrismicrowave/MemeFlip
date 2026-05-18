@@ -4747,10 +4747,9 @@ MonoBehaviour:
   instructionPickReel: Pick a reel as attacker
   instructionSelectTarget: Pick a second reel as target
   instructionClickOutside: Click anywhere outside the reels icon to proceed
-  msgInvalidAttack: No attack happens, attacker belongs to opponent
+  msgNoAttack: "no attack happens \u2014 attacker slot empty / target slot empty"
   msgInvalidAttackerPick: "{0}'s reel revealed \u2014 can't assign to attacker slot.
     Pick another reel to explore the board, or shuffle all reels."
-  msgNoValidAttacker: "No valid attacker \u2014 turn ends when you click away"
   playerHpLabel: {fileID: 560667151}
   npcHpLabel: {fileID: 847511643}
   gameOverRoot: {fileID: 0}

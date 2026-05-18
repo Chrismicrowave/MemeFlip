@@ -52,9 +52,8 @@ public class ActionPanel : MonoBehaviour
     public string instructionPickReel = "Pick YOUR reel as attacker";
     public string instructionSelectTarget = "Great! Pick OPPONENT'S reel as target";
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
-    public string msgInvalidAttack = "Must attack with your own reel!";
+    public string msgNoAttack = "no attack happens — attacker slot empty / target slot empty";
     public string msgInvalidAttackerPick = "{0}'s reel revealed — can't assign to attacker slot. Pick another reel to explore the board, or shuffle all reels.";
-    public string msgNoValidAttacker = "No valid attacker — turn ends when you click away";
 
     [Header("HP Summary")]
     public TextMeshProUGUI playerHpLabel;
