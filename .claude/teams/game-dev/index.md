@@ -38,6 +38,7 @@ These files contain reusable patterns loaded on demand. **Scan this list at sess
 
 - **Never `??` with Unity Objects** — `if (x == null)` only. Fake-nulls bypass C# reference equality.
 - **Check serialized overrides** before changing code defaults. Scene/prefab values beat script defaults.
+- **Edit public/serialized field variables in the Unity Inspector**, never in script defaults — the scene's serialized value overrides the C# default at runtime. Always use `set_property` MCP tool for public field changes.
 - **Stop Play mode before structural edits.** Changes don't persist.
 - **UI bars: `localScale.x` or `sizeDelta.x`** — never `Image.fillAmount` without sprite.
 - **Input System throughout** — Input System actions for gameplay, `InputSystemUIInputModule` on EventSystem for UI. Never legacy `StandaloneInputModule` or `Input.GetKey`.

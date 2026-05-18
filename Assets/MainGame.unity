@@ -1741,15 +1741,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c609c64cf7d6f649b5b761f9459baaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DOTweenManager
-  flyDuration: 0.4
+  flyDuration: 0.15
   flyMotionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -4738,19 +4738,28 @@ MonoBehaviour:
   turnPanelP2NPC: {fileID: 0}
   turnTextP1: {fileID: 0}
   turnTextP2NPC: {fileID: 0}
+  turnLabelYourTurn: Your Turn
+  turnLabelP1Turn: Player 1's Turn
+  turnLabelP2Turn: Player 2's Turn
+  turnLabelNPCTurn: NPC Turn
   turnText: {fileID: 759998378}
   messagePanel: {fileID: 0}
   instructionPickReel: Pick a reel as attacker
   instructionSelectTarget: Pick a second reel as target
   instructionClickOutside: Click anywhere outside the reels icon to proceed
   msgInvalidAttack: No attack happens, attacker belongs to opponent
-  msgInvalidAttackerPick: "{0}'s reel revealed for your info \u2014 pick one of YOUR
-    reels as attacker, or shuffle to end your turn"
+  msgInvalidAttackerPick: "{0}'s reel revealed \u2014 can't assign to attacker slot.
+    Pick another reel to explore the board, or shuffle all reels."
+  msgNoValidAttacker: "No valid attacker \u2014 turn ends when you click away"
   playerHpLabel: {fileID: 560667151}
   npcHpLabel: {fileID: 847511643}
   gameOverRoot: {fileID: 0}
   gameOverLabel: {fileID: 0}
   restartButton: {fileID: 0}
+  gameOverYouWin: You Win!
+  gameOverNPCWins: NPC Wins!
+  gameOverP1Wins: Player 1 Wins!
+  gameOverP2Wins: Player 2 Wins!
 --- !u!114 &2064683485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5005,6 +5014,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1613170998}
   - {fileID: 1971459025}
+  - {fileID: 809544549}
   - {fileID: 1982429632}
   - {fileID: 1024325129}
   - {fileID: 480492790}
@@ -5017,4 +5027,3 @@ SceneRoots:
   - {fileID: 273477189}
   - {fileID: 1657724806}
   - {fileID: 810468645}
-  - {fileID: 809544549}
