@@ -253,9 +253,14 @@ public class ActionPanel : MonoBehaviour
             slot2Label.text = currentPlayer == Owner.Player ? slotLabelTarget : slotLabelAttacker;
     }
 
-    public static string GetNoAttackMessage(bool attackerEmpty)
+    public static string GetNoAttackMessage(bool attackerEmpty, Owner currentPlayer)
     {
-        return "no attack happens — " + (attackerEmpty ? "attacker slot empty" : "target slot empty");
+        bool p1IsAttacker = currentPlayer == Owner.Player;
+        string slot = attackerEmpty
+            ? (p1IsAttacker ? "Slot1" : "Slot2")
+            : (p1IsAttacker ? "Slot2" : "Slot1");
+        string role = attackerEmpty ? "Attacker" : "Target";
+        return $"no attack happens — {slot} ({role}) empty";
     }
 
     public void UpdateHpBars()

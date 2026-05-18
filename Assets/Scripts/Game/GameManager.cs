@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _attackResolved = false;
-            actionPanel.SetMessageText(ActionPanel.GetNoAttackMessage(_firstPickWasInvalid) + "\n" + actionPanel.instructionClickOutside);
+            actionPanel.SetMessageText(ActionPanel.GetNoAttackMessage(_firstPickWasInvalid, _currentPlayer) + "\n" + actionPanel.instructionClickOutside);
             currentPhase = TurnPhase.ShowResult;
         }
     }
