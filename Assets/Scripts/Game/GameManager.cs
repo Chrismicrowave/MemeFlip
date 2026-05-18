@@ -1,5 +1,4 @@
 using System.Collections;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,18 +11,13 @@ public class GameManager : MonoBehaviour
 
     [Header("References")]
     public Board board;
+    public DOTweenManager dotweenManager;
     public ActionPanel actionPanel;
     public ReelHoverPopup hoverPopup;
     public MemePlayer memePlayer;
 
     [Header("Mode")]
     public GameMode gameMode = GameMode.VsNPC;
-
-    [Header("Attack Animation")]
-    [Tooltip("Easing for the dash-out / dash-back attack motion")]
-    public Ease attackDashEase = Ease.InOutQuad;
-    [Tooltip("Easing for the jitter timer (linear preserves the raw Sin/Cos wave)")]
-    public Ease attackJitterEase = Ease.Linear;
 
     [Header("State")]
     public TurnPhase currentPhase = TurnPhase.PlayerSelectFirst;
@@ -383,70 +377,20 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        board.AnimateReelToSlot(reel, slotScenePos, slotIndex, showSlot);
+        dotweenManager.AnimateReelFly(reel, slotScenePos, slotIndex, showSlot);
     }
 
     IEnumerator PlayerAttackSequence()
     {
         // Wait for slot fly animations to complete
-        while (board.IsAnySlotAnimating)
+        while (dotweenManager.IsAnySlotAnimating)
             yield return null;
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
-        yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
         ResolveAttack(_firstSelected, _secondSelected);
-    }
-
-    IEnumerator DashAndBack(Reel reel, Reel target, RectTransform slotRt)
-    {
-        float width = reel.GetComponent<Renderer>().bounds.size.x;
-        float distance = width * reel.attackDashDistancePercent;
-        Vector3 dir = (target.transform.position - reel.transform.position).normalized;
-        float halfDuration = reel.attackDashDuration * 0.5f;
-        Vector3 startPos = reel.transform.position;
-        Vector3 targetPos = startPos + dir * distance;
-
-        Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
-        float slotDist = slotRt != null ? slotRt.rect.width * reel.attackDashDistancePercent : 0f;
-        Vector2 slotTarget = slotOrig + Vector2.right * slotDist * Mathf.Sign(dir.x);
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(reel.transform.DOMove(targetPos, halfDuration).SetEase(attackDashEase));
-        if (slotRt != null)
-            seq.Join(slotRt.DOAnchorPos(slotTarget, halfDuration).SetEase(attackDashEase));
-        seq.Append(reel.transform.DOMove(startPos, halfDuration).SetEase(attackDashEase));
-        if (slotRt != null)
-            seq.Join(slotRt.DOAnchorPos(slotOrig, halfDuration).SetEase(attackDashEase));
-
-        yield return seq.WaitForCompletion();
-    }
-
-    IEnumerator Jitter(Reel reel, RectTransform slotRt)
-    {
-        Vector3 origPos = reel.transform.position;
-        Vector2 slotOrig = slotRt != null ? slotRt.anchoredPosition : Vector2.zero;
-        float t = 0f;
-        Tween tween = DOTween.To(() => t, v => t = v, 1f, reel.jitterDuration)
-            .SetEase(attackJitterEase)
-            .OnUpdate(() =>
-            {
-                float angle = t * reel.jitterDuration * reel.jitterSpeed;
-                float x = Mathf.Sin(angle) * reel.jitterIntensity;
-                float z = Mathf.Cos(angle * 0.7f) * reel.jitterIntensity;
-                reel.transform.position = origPos + new Vector3(x, 0f, z);
-                if (slotRt != null)
-                    slotRt.anchoredPosition = slotOrig + new Vector2(
-                        Mathf.Sin(angle) * reel.jitterSlotIntensity, 0f);
-            })
-            .OnComplete(() =>
-            {
-                reel.transform.position = origPos;
-                if (slotRt != null) slotRt.anchoredPosition = slotOrig;
-            });
-
-        yield return tween.WaitForCompletion();
     }
 
     void FinishPlayerTurn()
@@ -558,13 +502,13 @@ public class GameManager : MonoBehaviour
     IEnumerator NPCAttackSequence()
     {
         // Wait for slot fly animations to complete
-        while (board.IsAnySlotAnimating)
+        while (dotweenManager.IsAnySlotAnimating)
             yield return null;
         yield return new WaitForSeconds(0.3f);
         var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
-        yield return Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
 
         int damage = Mathf.Max(1, _firstSelected.stats.atk);
         _secondSelected.stats.currentHP -= damage;
