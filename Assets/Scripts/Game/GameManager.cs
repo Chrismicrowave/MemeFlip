@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     Reel _hoveredReel;
     int _playerShuffleCharges = 2;
     int _playerTwoShuffleCharges = 2;
+    readonly System.Collections.Generic.List<Reel> _revealedReels = new();
     Owner _currentPlayer = Owner.Player;
     Owner Opponent => _currentPlayer == Owner.Player ? Owner.NPC : Owner.Player;
     bool _resultFromNpcTurn;
@@ -214,19 +215,26 @@ public class GameManager : MonoBehaviour
         if (!reel.isFaceDown) return;
 
         Debug.Log($"[GM] Selected first: {reel.name} at {reel.boardPosition}");
+        reel.FlipUp();
+        RefreshHoverForReel(reel);
+
+        if (reel.owner != _currentPlayer)
+        {
+            // Opponent's reel — reveal for info, stay in same phase, let player pick again
+            if (!_revealedReels.Contains(reel))
+                _revealedReels.Add(reel);
+            actionPanel.SetMessageText(string.Format(actionPanel.msgInvalidAttackerPick, OwnerDisplayName(reel.owner)));
+            return;
+        }
+
+        // Valid: own reel selected as attacker
         _firstSelected = reel;
-        _firstSelected.FlipUp();
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
-        bool validAttacker = reel.owner == _currentPlayer;
-        if (validAttacker)
-        {
-            int slotIdx = reel.owner == Owner.Player ? 0 : 1;
-            ShowSlotAfterAnimation(_firstSelected, slotIdx);
-        }
+        int slotIdx = reel.owner == Owner.Player ? 0 : 1;
+        ShowSlotAfterAnimation(_firstSelected, slotIdx);
         actionPanel.SetMessageText(actionPanel.instructionSelectTarget);
-        RefreshHoverForReel(reel);
     }
 
     void HandleSelectSecond(Reel reel)
@@ -556,6 +564,12 @@ public class GameManager : MonoBehaviour
             _firstSelected.FlipDown();
         if (_secondSelected != null && !_secondSelected.isDestroyed)
             _secondSelected.FlipDown();
+        foreach (var reel in _revealedReels)
+        {
+            if (reel != null && !reel.isDestroyed)
+                reel.FlipDown();
+        }
+        _revealedReels.Clear();
         _firstSelected = null;
         _secondSelected = null;
         hoverPopup.Hide();

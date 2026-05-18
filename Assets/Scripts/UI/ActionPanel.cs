@@ -4,6 +4,12 @@ using UnityEngine.UI;
 
 public class ActionPanel : MonoBehaviour
 {
+    [Header("Scene Slot Positions")]
+    [Tooltip("World-space transform that the flying reel clone targets for Slot1")]
+    public Transform slot1ScenePos;
+    [Tooltip("World-space transform that the flying reel clone targets for Slot2")]
+    public Transform slot2ScenePos;
+
     [Header("Slots")]
     public GameObject playerSlot1;
     public TextMeshProUGUI playerSlot1Owner;
@@ -39,10 +45,11 @@ public class ActionPanel : MonoBehaviour
     public TextMeshProUGUI messagePanel;
 
     [Header("Instruction Messages")]
-    public string instructionPickReel = "Pick a reel";
-    public string instructionSelectTarget = "Select a face-down reel as target";
+    public string instructionPickReel = "Pick YOUR reel as attacker";
+    public string instructionSelectTarget = "Great! Pick OPPONENT'S reel as target";
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
     public string msgInvalidAttack = "Must attack with your own reel!";
+    public string msgInvalidAttackerPick = "{0}'s reel revealed for your info — pick one of YOUR reels as attacker, or shuffle to end your turn";
 
     [Header("HP Summary")]
     public TextMeshProUGUI playerHpLabel;
