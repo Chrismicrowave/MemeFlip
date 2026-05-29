@@ -139,17 +139,18 @@ Shader "UI/ColorShiftBlob"
                     wB     += w * colb[i].a;
                 }
 
-                float3 col;
+                float3 blended;
                 if (wA < 0.001 && wB < 0.001)
-                    col = 0;
+                    blended = 0;
                 else
                 {
                     float3 normA = wA > 0.001 ? blendA / wA : 0;
                     float3 normB = wB > 0.001 ? blendB / wB : 0;
-                    col = lerp(normA, normB, _Transition);
+                    blended = lerp(normA, normB, _Transition);
                 }
 
-                col *= i.color.rgb;
+                blended *= i.color.rgb;
+                float4 col = float4(blended, 1);
 
                 #ifdef UNITY_UI_CLIP_RECT
                 col.a *= UnityGet2DClipping(i.worldPosition.xy, _ClipRect);
@@ -158,7 +159,7 @@ Shader "UI/ColorShiftBlob"
                 clip(col.a - 0.001);
                 #endif
 
-                return fixed4(col, 1);
+                return col;
             }
             ENDCG
         }
