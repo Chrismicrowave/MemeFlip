@@ -12,6 +12,19 @@ public class UIGradient : BaseMeshEffect
     public float m_angle = 0f;
     public bool m_ignoreRatio = true;
 
+    [Header("Spin")]
+    public bool spin = false;
+    public float spinSpeed = 30f;
+
+    void Update()
+    {
+        if (spin)
+        {
+            m_angle += spinSpeed * Time.deltaTime;
+            graphic?.SetVerticesDirty();
+        }
+    }
+
     public override void ModifyMesh(VertexHelper vh)
     {
         if(enabled)
