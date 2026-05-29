@@ -16,10 +16,16 @@ public class Board : MonoBehaviour
     public float dynamicScaleCurve = 2f;
 
     [Header("Shuffle Animation")]
-    [Tooltip("Duration of the shuffle move animation in seconds")]
+    [Tooltip("Duration of each reel's move animation in seconds")]
     public float shuffleDuration = 0.4f;
-    [Tooltip("Easing curve for the shuffle movement")]
-    public Ease shuffleEase = Ease.InOutQuad;
+    [Tooltip("Delay between each reel starting its move (stepping sequence)")]
+    public float shuffleStepInterval = 0.08f;
+    [Tooltip("Movement curve. Value goes above 1 = tile overshoots past target and bounces back.\nAdjust the last keyframe's tangent or add a peak above 1.")]
+    public AnimationCurve shuffleCurve = new(
+        new Keyframe(0f, 0f),
+        new Keyframe(0.6f, 1.3f),
+        new Keyframe(1f, 1f)
+    );
 
     [Header("Memes")]
     public MemeLibrary memeLibrary;
@@ -194,18 +200,21 @@ public class Board : MonoBehaviour
             if (_positionMap.ContainsKey(reel.boardPosition))
                 _positionMap[reel.boardPosition] = null;
 
-        // Animate all reels simultaneously
-        Sequence seq = DOTween.Sequence();
+        // Animate reels in stepping sequence with overshoot curve
+        float totalDuration = shuffleDuration + (shufflable.Count - 1) * shuffleStepInterval;
         for (int i = 0; i < shufflable.Count; i++)
         {
             Reel reel = shufflable[i];
             Vector2Int newPos = allPositions[i];
+            Vector3 targetPos = GridToWorld(newPos);
             reel.boardPosition = newPos;
             _positionMap[newPos] = reel;
-            seq.Join(reel.transform.DOMove(GridToWorld(newPos), shuffleDuration).SetEase(shuffleEase));
+            reel.transform.DOMove(targetPos, shuffleDuration)
+                .SetDelay(i * shuffleStepInterval)
+                .SetEase(shuffleCurve);
         }
 
-        yield return seq.WaitForCompletion();
+        yield return new WaitForSeconds(totalDuration);
     }
 
     public List<Reel> GetAliveFaceDown(Owner owner)
