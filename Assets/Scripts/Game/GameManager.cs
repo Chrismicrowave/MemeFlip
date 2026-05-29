@@ -522,21 +522,26 @@ public class GameManager : MonoBehaviour
         while (dotweenManager.IsAnySlotAnimating)
             yield return null;
         yield return new WaitForSeconds(0.3f);
-        var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return dotweenManager.DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
-        yield return dotweenManager.Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
 
-        int damage = Mathf.Max(1, _firstSelected.stats.atk);
-        _secondSelected.stats.currentHP -= damage;
+        // Same owner-aware resolution as PlayerAttackSequence
+        Reel attacker = _firstSelected.owner == _currentPlayer ? _firstSelected : _secondSelected;
+        Reel target   = _firstSelected.owner == _currentPlayer ? _secondSelected : _firstSelected;
 
-        string npcName = ReelDisplayName(_firstSelected);
-        string targetName = ReelDisplayName(_secondSelected);
-        string targetOwner = OwnerDisplayName(_secondSelected.owner);
+        var atkSlot = attacker.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        var tgtSlot = target.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        yield return dotweenManager.DashAndBack(attacker, target, atkSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.Jitter(target, tgtSlot?.GetComponent<RectTransform>());
+
+        int damage = Mathf.Max(1, attacker.stats.atk);
+        target.stats.currentHP -= damage;
+
+        string npcName = ReelDisplayName(attacker);
+        string targetName = ReelDisplayName(target);
+        string targetOwner = OwnerDisplayName(target.owner);
         string msg = $"NPC's {npcName} dealt {damage} damage to {targetOwner}'s {targetName}";
-        if (_secondSelected.stats.currentHP <= 0)
+        if (target.stats.currentHP <= 0)
         {
-            _secondSelected.DestroyReel();
+            target.DestroyReel();
             msg = $"NPC's {npcName} dealt {damage} damage — {targetOwner}'s {targetName} DESTROYED!";
         }
 
@@ -550,6 +555,7 @@ public class GameManager : MonoBehaviour
 
     void FinishNPCTurn()
     {
+        _currentPlayer = Owner.Player;
         _resultFromNpcTurn = false;
         FlipBackSelections();
 
