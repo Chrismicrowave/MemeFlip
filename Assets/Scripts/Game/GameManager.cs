@@ -42,7 +42,8 @@ public class GameManager : MonoBehaviour
         board.Initialize();
         actionPanel.gameObject.SetActive(true);
         hoverPopup.gameObject.SetActive(true);
-        hoverPopup.Hide();
+        var hp = GameObject.Find("HoverCanvas/HoverPanel");
+        if (hp != null) hp.SetActive(false);
         WireButtons();
         ShowCurrentPlayerButtons();
         RefreshUI();
