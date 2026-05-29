@@ -55,10 +55,10 @@ public class ActionPanel : MonoBehaviour
     public TextMeshProUGUI messagePanel;
 
     [Header("Instruction Messages")]
-    public string instructionPickReel = "Pick YOUR reel as attacker";
-    public string instructionSelectTarget = "Great! Pick OPPONENT'S reel as target";
+    public string instructionPickReel = "Pick any reel";
+    public string instructionSelectTarget = "Pick a second reel";
     public string instructionClickOutside = "Click anywhere outside the board to proceed";
-    public string msgNoAttack = "no attack happens — attacker slot empty / target slot empty";
+    public string msgNoAttack = "same team — no attack happens";
     public string msgInvalidAttackerPick = "{0}'s reel revealed — can't assign to attacker slot. Pick another reel to explore the board, or shuffle all reels.";
 
     [Header("HP Summary")]
@@ -253,15 +253,9 @@ public class ActionPanel : MonoBehaviour
             slot2Label.text = currentPlayer == Owner.Player ? slotLabelTarget : slotLabelAttacker;
     }
 
-    public static string GetNoAttackMessage(bool attackerEmpty, Owner currentPlayer)
+    public static string GetNoAttackMessage()
     {
-        bool p1IsAttacker = currentPlayer == Owner.Player;
-        string slot = attackerEmpty
-            ? (p1IsAttacker ? "Slot1" : "Slot2")
-            : (p1IsAttacker ? "Slot2" : "Slot1");
-        string role = attackerEmpty ? "Attacker" : "Target";
-        //return $"no attack happens — {slot} ({role}) empty";
-        return $"no attack happens — {role} slot empty";
+        return "same team — no attack";
     }
 
     public void UpdateHpBars()

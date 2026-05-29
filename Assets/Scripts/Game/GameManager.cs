@@ -27,12 +27,10 @@ public class GameManager : MonoBehaviour
     Reel _hoveredReel;
     int _playerShuffleCharges = 2;
     int _playerTwoShuffleCharges = 2;
-    readonly System.Collections.Generic.List<Reel> _revealedReels = new();
     Owner _currentPlayer = Owner.Player;
     Owner Opponent => _currentPlayer == Owner.Player ? Owner.NPC : Owner.Player;
     bool _resultFromNpcTurn;
     bool _attackResolved;
-    bool _firstPickWasInvalid;
 
     void Awake()
     {
@@ -221,19 +219,6 @@ public class GameManager : MonoBehaviour
         RefreshHoverForReel(reel);
         _firstSelected = reel;
 
-        if (reel.owner != _currentPlayer)
-        {
-            // Opponent's reel — reveal and use as invalid attacker, advance to pick 2
-            _firstPickWasInvalid = true;
-            if (!_revealedReels.Contains(reel))
-                _revealedReels.Add(reel);
-            currentPhase = TurnPhase.PlayerSelectSecond;
-            actionPanel.SetMessageText(string.Format(actionPanel.msgInvalidAttackerPick, OwnerDisplayName(reel.owner)));
-            return;
-        }
-
-        // Valid: own reel selected as attacker
-        _firstPickWasInvalid = false;
         currentPhase = TurnPhase.PlayerSelectSecond;
         HideAllShuffleButtons();
         RefreshUI();
@@ -255,8 +240,9 @@ public class GameManager : MonoBehaviour
         int tgtSlotIdx = _secondSelected.owner == Owner.Player ? 0 : 1;
         ShowSlotAfterAnimation(_secondSelected, tgtSlotIdx);
 
-        if (!_firstPickWasInvalid && _firstSelected.owner == _currentPlayer && _secondSelected.owner == Opponent)
+        if (_firstSelected.owner != _secondSelected.owner)
         {
+            // Opposite teams — first pick attacks second pick
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());
@@ -264,7 +250,7 @@ public class GameManager : MonoBehaviour
         else
         {
             _attackResolved = false;
-            actionPanel.SetMessageText(ActionPanel.GetNoAttackMessage(_firstPickWasInvalid, _currentPlayer) + "\n" + actionPanel.instructionClickOutside);
+            actionPanel.SetMessageText(ActionPanel.GetNoAttackMessage() + "\n" + actionPanel.instructionClickOutside);
             currentPhase = TurnPhase.ShowResult;
         }
     }
@@ -423,14 +409,6 @@ public class GameManager : MonoBehaviour
 
         if (!_attackResolved)
         {
-            if (_firstPickWasInvalid)
-            {
-                // Two invalid picks — pass turn to NPC
-                currentPhase = TurnPhase.NPCTurn;
-                RefreshUI();
-                StartNPCTurn();
-                return;
-            }
             currentPhase = TurnPhase.PlayerSelectFirst;
             RefreshUI();
             ShowCurrentPlayerButtons();
@@ -587,12 +565,6 @@ public class GameManager : MonoBehaviour
             _firstSelected.FlipDown();
         if (_secondSelected != null && !_secondSelected.isDestroyed)
             _secondSelected.FlipDown();
-        foreach (var reel in _revealedReels)
-        {
-            if (reel != null && !reel.isDestroyed)
-                reel.FlipDown();
-        }
-        _revealedReels.Clear();
         _firstSelected = null;
         _secondSelected = null;
         hoverPopup.Hide();
