@@ -96,13 +96,11 @@ public static class ProjectDigestEmitter
             // Unity's Application.dataPath is Assets/ — project root is one level up
             string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
-            // Fast check: if no .git directory exists, don't even try
-            if (!Directory.Exists(Path.Combine(projectRoot, ".git")))
-            {
-                // Also check for .git file (worktree/submodule)
-                if (!File.Exists(Path.Combine(projectRoot, ".git")))
-                    return "_not a git repository_";
-            }
+            // Early-out if not a git repo — avoids spawning a git process that
+            // would write errors to stderr (and potentially deadlock the pipe).
+            if (!Directory.Exists(Path.Combine(projectRoot, ".git")) &&
+                !File.Exists(Path.Combine(projectRoot, ".git")))
+                return "_not a git repository_";
 
             var psi = new ProcessStartInfo("git", args)
             {
@@ -119,9 +117,11 @@ public static class ProjectDigestEmitter
             // Read BOTH stdout and stderr to prevent pipe-buffer deadlock
             string output = process.StandardOutput.ReadToEnd().Trim();
             string error  = process.StandardError.ReadToEnd().Trim();
-            process.WaitForExit(5000);
+            process.WaitForExit(5000); // 5 second timeout
 
-            return string.IsNullOrEmpty(output) && !string.IsNullOrEmpty(error) ? $"_git error_: {error}" : output;
+            return string.IsNullOrEmpty(output) && !string.IsNullOrEmpty(error)
+                ? $"_git error_: {error}"
+                : output;
         }
         catch
         {
