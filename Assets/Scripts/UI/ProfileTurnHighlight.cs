@@ -4,14 +4,21 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Highlights the active player's profile group.
-/// Active group → full scale, gradients enabled.
-/// Inactive group → 50% scale, gradients disabled.
+/// Active group → full scale, gradients enabled, colour.
+/// Inactive group → scaled down, gradients off, desaturated.
 /// </summary>
 public class ProfileTurnHighlight : MonoBehaviour
 {
     [Header("Profile Groups")]
     public GameObject profileP1;
     public GameObject profileP2;
+
+    [Header("Profile Pictures")]
+    public Image profilePicP1;
+    public Image profilePicP2;
+
+    [Header("Desaturation")]
+    public Material grayscaleMat;
 
     [Header("Settings")]
     [Tooltip("Scale of the inactive profile (0-1).")]
@@ -40,6 +47,11 @@ public class ProfileTurnHighlight : MonoBehaviour
     {
         SetGroup(profileP1, active == Owner.Player);
         SetGroup(profileP2, active != Owner.Player);
+
+        if (profilePicP1 != null)
+            profilePicP1.material = active == Owner.Player ? null : grayscaleMat;
+        if (profilePicP2 != null)
+            profilePicP2.material = active != Owner.Player ? null : grayscaleMat;
     }
 
     void SetGroup(GameObject group, bool active)
