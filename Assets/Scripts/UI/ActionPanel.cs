@@ -303,7 +303,8 @@ public class ActionPanel : MonoBehaviour
     static Color GetBarBgColor(Scrollbar bar)
     {
         if (bar == null) return Color.gray;
-        var bg = bar.transform.Find("Background")?.GetComponent<Image>();
+        // The Scrollbar's own Image is the background track
+        var bg = bar.GetComponent<Image>();
         return bg != null ? bg.color : Color.gray;
     }
 
