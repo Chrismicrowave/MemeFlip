@@ -272,8 +272,14 @@ public class ActionPanel : MonoBehaviour
         playerHpLabel.text = isVsPlayer ? $"P1 reels: {pAlive}/6" : $"Your reels: {pAlive}/6";
         npcHpLabel.text = isVsPlayer ? $"P2 reels: {nAlive}/6" : $"NPC reels: {nAlive}/6";
 
-        UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, GameManager.Instance.FirstSelected);
-        UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, GameManager.Instance.SecondSelected);
+        // Resolve which reel belongs in each slot by owner (matches ShowSlotAfterAnimation logic)
+        var fs = GameManager.Instance.FirstSelected;
+        var ss = GameManager.Instance.SecondSelected;
+        Reel slot1Reel = fs != null && fs.owner == Owner.Player ? fs : (ss != null && ss.owner == Owner.Player ? ss : null);
+        Reel slot2Reel = fs != null && fs.owner != Owner.Player ? fs : (ss != null && ss.owner != Owner.Player ? ss : null);
+
+        UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, slot1Reel);
+        UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, slot2Reel);
     }
 
     Color _handleOrgColor1, _handleOrgColor2;
