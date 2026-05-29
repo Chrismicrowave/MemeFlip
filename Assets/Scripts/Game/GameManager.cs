@@ -399,6 +399,8 @@ public class GameManager : MonoBehaviour
         Reel attacker = _firstSelected.owner == _currentPlayer ? _firstSelected : _secondSelected;
         Reel target   = _firstSelected.owner == _currentPlayer ? _secondSelected : _firstSelected;
 
+        Debug.Log($"[GM] Attack: currentPlayer={_currentPlayer} | first={_firstSelected.name}({_firstSelected.owner}) second={_secondSelected.name}({_secondSelected.owner}) → attacker={attacker.name}({attacker.owner}) target={target.name}({target.owner})");
+
         var atkSlot = attacker.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         var tgtSlot = target.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
         yield return dotweenManager.DashAndBack(attacker, target, atkSlot?.GetComponent<RectTransform>());
