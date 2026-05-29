@@ -143,7 +143,7 @@ public class ActionPanel : MonoBehaviour
         if (md.memeVideo != null) name = md.memeVideo.name;
         else if (md.memeImage != null) name = md.memeImage.name;
         else return "Unknown";
-        return $"({GameManager.OwnerDisplayName(reel.owner)}:{name})";
+        return $"{name}";
     }
 
     static void FillSlot(GameObject panel, TextMeshProUGUI ownerLabel, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel, Scrollbar hpBar, Image ownerColour)

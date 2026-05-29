@@ -598,6 +598,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -1}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &307231483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7277969328573503619, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
+  m_PrefabInstance: {fileID: 4661254}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &330661778
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,6 +939,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2064683487}
     m_Modifications:
+    - target: {fileID: 1676381592898647550, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 380
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676381592898647550, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -13.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1949923531275494722, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Name
       value: PlayerSlotPanel1
@@ -1996,8 +2015,8 @@ MonoBehaviour:
   dynamicScaleMax: 2
   dynamicScaleRadius: 3
   dynamicScaleCurve: 2
-  shuffleDuration: 0.4
-  shuffleStepInterval: 0.03
+  shuffleDuration: 0.2
+  shuffleStepInterval: 0.08
   shuffleCurve:
     serializedVersion: 2
     m_Curve:
@@ -2011,8 +2030,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.6138855
-      value: 1.1658714
+      time: 0.725
+      value: 1.1296872
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3573,6 +3592,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2157444140510947809, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
   m_PrefabInstance: {fileID: 1451868561}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1146234285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7277969328573503619, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
+  m_PrefabInstance: {fileID: 1451868561}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1001 &1173668608
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4613,6 +4643,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1622356431 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2382887499079617197, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
+  m_PrefabInstance: {fileID: 4661254}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1657724802
 GameObject:
   m_ObjectHideFlags: 0
@@ -5543,6 +5584,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864470670}
   m_CullTransparentMesh: 1
+--- !u!114 &1886172244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2382887499079617197, guid: 443ca45f4c79f70438d65ca8c8bb2fff, type: 3}
+  m_PrefabInstance: {fileID: 1451868561}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1901235859
 GameObject:
   m_ObjectHideFlags: 0
@@ -5918,10 +5970,10 @@ MonoBehaviour:
   playerSlot2HPBar: {fileID: 0}
   playerSlot2OwnerColour: {fileID: 0}
   attackButton: {fileID: 0}
-  shuffleButton: {fileID: 0}
-  shuffleLabel: {fileID: 0}
-  shuffleButtonP2: {fileID: 0}
-  shuffleLabelP2: {fileID: 0}
+  shuffleButton: {fileID: 307231483}
+  shuffleLabel: {fileID: 1622356431}
+  shuffleButtonP2: {fileID: 1146234285}
+  shuffleLabelP2: {fileID: 1886172244}
   turnPanelP1: {fileID: 0}
   turnPanelP2NPC: {fileID: 0}
   turnTextP1: {fileID: 0}
