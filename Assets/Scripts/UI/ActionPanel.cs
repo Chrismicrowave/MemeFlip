@@ -278,8 +278,8 @@ public class ActionPanel : MonoBehaviour
         Reel slot1Reel = fs != null && fs.owner == Owner.Player ? fs : (ss != null && ss.owner == Owner.Player ? ss : null);
         Reel slot2Reel = fs != null && fs.owner != Owner.Player ? fs : (ss != null && ss.owner != Owner.Player ? ss : null);
 
-        UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, slot1Reel, _handleOrgColor1);
-        UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, slot2Reel, _handleOrgColor2);
+        UpdateSlotDisplay(playerSlot1HPBar, playerSlot1HP, playerSlot1ATK, slot1Reel);
+        UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, slot2Reel);
     }
 
     Color _handleOrgColor1, _handleOrgColor2;
@@ -315,19 +315,19 @@ public class ActionPanel : MonoBehaviour
         if (img != null) img.color = c;
     }
 
-    static void UpdateSlotDisplay(Scrollbar bar, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel, Color orgHandleColor)
+    static void UpdateSlotDisplay(Scrollbar bar, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel)
     {
         if (reel == null || reel.isDestroyed)
         {
             if (bar != null) bar.size = 0f;
             if (hpLabel != null) hpLabel.text = reel != null ? $"0/{reel.stats.maxHP}" : "0/0";
-            SetHandleColor(bar, GetBarBgColor(bar));
+            if (reel != null && reel.isDestroyed)
+                SetHandleColor(bar, GetBarBgColor(bar));
             return;
         }
         if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
         if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
         if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
-        SetHandleColor(bar, orgHandleColor);
     }
 
     public void ShowGameOver(string text)
