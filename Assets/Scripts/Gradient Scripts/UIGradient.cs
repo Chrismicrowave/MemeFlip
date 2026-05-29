@@ -15,12 +15,13 @@ public class UIGradient : BaseMeshEffect
     [Header("Spin")]
     public bool spin = false;
     public float spinSpeed = 30f;
+    float _spinAngle;
 
     void Update()
     {
         if (spin)
         {
-            m_angle += spinSpeed * Time.deltaTime;
+            _spinAngle += spinSpeed * Time.deltaTime;
             graphic?.SetVerticesDirty();
         }
     }
@@ -30,7 +31,7 @@ public class UIGradient : BaseMeshEffect
         if(enabled)
         {
             Rect rect = graphic.rectTransform.rect;
-            Vector2 dir = UIGradientUtils.RotationDir(m_angle);
+            Vector2 dir = UIGradientUtils.RotationDir(m_angle + _spinAngle);
 
             if (!m_ignoreRatio)
                 dir = UIGradientUtils.CompensateAspectRatio(rect, dir);

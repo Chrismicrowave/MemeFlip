@@ -1062,15 +1062,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Enabled
@@ -1247,6 +1247,14 @@ PrefabInstance:
     - target: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7491656882630183760, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: spin
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7491656882630183760, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: m_angle
+      value: 559.7156
       objectReference: {fileID: 0}
     - target: {fileID: 9209611361701629539, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Name
@@ -1925,6 +1933,8 @@ MonoBehaviour:
   m_color2: {r: 0.61694115, g: 0.34571397, b: 0.9559748, a: 1}
   m_angle: -78
   m_ignoreRatio: 1
+  spin: 0
+  spinSpeed: 30
 --- !u!1 &661811504
 GameObject:
   m_ObjectHideFlags: 0
@@ -3639,6 +3649,8 @@ MonoBehaviour:
   speed: 1
   blobScale: 2
   transitionDuration: 1
+  enableSpin: 0
+  spinSpeed: 15
 --- !u!1001 &926802103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5108,6 +5120,8 @@ MonoBehaviour:
   m_color2: {r: 0.34509808, g: 0.49948892, b: 0.95686275, a: 1}
   m_angle: -51
   m_ignoreRatio: 1
+  spin: 0
+  spinSpeed: 30
 --- !u!1 &1613170995
 GameObject:
   m_ObjectHideFlags: 0
@@ -5901,6 +5915,8 @@ MonoBehaviour:
   m_color2: {r: 0.76415086, g: 0.8468196, b: 1, a: 1}
   m_angle: -28
   m_ignoreRatio: 1
+  spin: 0
+  spinSpeed: 30
 --- !u!1 &1830751397
 GameObject:
   m_ObjectHideFlags: 0
@@ -6183,6 +6199,7 @@ Material:
     m_Floats:
     - _BlobScale: 4
     - _ColorMask: 15
+    - _Rotation: 0
     - _Speed: 0.2
     - _Stencil: 0
     - _StencilComp: 8
@@ -6519,6 +6536,8 @@ MonoBehaviour:
   m_color2: {r: 0.76415086, g: 0.8468196, b: 1, a: 1}
   m_angle: -28
   m_ignoreRatio: 1
+  spin: 0
+  spinSpeed: 30
 --- !u!114 &2046143255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6784,15 +6803,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2248850329944070977, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.36477977
       objectReference: {fileID: 0}
     - target: {fileID: 2716564073690675727, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Color.b
@@ -6953,6 +6972,14 @@ PrefabInstance:
     - target: {fileID: 6757020606879625781, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_Name
       value: MemeImage
+      objectReference: {fileID: 0}
+    - target: {fileID: 7491656882630183760, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: spin
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7491656882630183760, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
+      propertyPath: m_angle
+      value: 575.4442
       objectReference: {fileID: 0}
     - target: {fileID: 7491656882630183760, guid: 2a5444624ddf6f14499cb4b4d35a2b46, type: 3}
       propertyPath: m_color1.b
