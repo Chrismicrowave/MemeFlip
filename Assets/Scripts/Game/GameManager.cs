@@ -598,6 +598,7 @@ public class GameManager : MonoBehaviour
     }
 
     public int PlayerShuffleCharges => _playerShuffleCharges;
+    public Owner CurrentPlayer => _currentPlayer;
     public Reel FirstSelected => _firstSelected;
     public Reel SecondSelected => _secondSelected;
 }
