@@ -153,8 +153,8 @@ public class ActionPanel : MonoBehaviour
         if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
         if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
         if (hpBar != null) hpBar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
-        Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
-        if (ownerColour != null) ownerColour.color = c;
+        //Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
+        //if (ownerColour != null) ownerColour.color = c;
     }
 
     public void ShowP1Slot(Reel reel)

@@ -71,7 +71,8 @@ public class ReelHoverPopup : MonoBehaviour
 
     void UpdateStats(Reel reel)
     {
-        Color c = reel.owner == Owner.Player ? reel.playerColor : reel.npcColor;
+        var gm = GameManager.Instance;
+        Color c = (gm != null && gm.CurrentPlayer == Owner.Player) ? reel.colorSetA1 : reel.colorSetB1;
         string colorTag = $"#{(byte)(c.r * 255):X2}{(byte)(c.g * 255):X2}{(byte)(c.b * 255):X2}";
 
         if (reel.isDestroyed)

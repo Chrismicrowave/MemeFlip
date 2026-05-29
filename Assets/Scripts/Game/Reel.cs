@@ -32,16 +32,21 @@ public class Reel : MonoBehaviour
     public float jitterSlotIntensity = 8f;
 
     [Header("Gradient Colour Sets")]
-    [Tooltip("Border colour during Player 1's turn.")]
-    public Color colorSetA = new(0.3f, 0.6f, 1.0f);
-    [Tooltip("Border colour during NPC / Player 2's turn.")]
-    public Color colorSetB = new(0.9f, 0.3f, 0.3f);
+    [Tooltip("Gradient colour 1 during Player 1's turn.")]
+    public Color colorSetA1 = new(0.3f, 0.6f, 1.0f);
+    [Tooltip("Gradient colour 2 during Player 1's turn.")]
+    public Color colorSetA2 = new(0.1f, 0.8f, 0.6f);
+    [Tooltip("Gradient colour 1 during NPC / Player 2's turn.")]
+    public Color colorSetB1 = new(0.9f, 0.3f, 0.3f);
+    [Tooltip("Gradient colour 2 during NPC / Player 2's turn.")]
+    public Color colorSetB2 = new(0.9f, 0.7f, 0.1f);
 
     [Header("Face")]
     public Texture cardBack;
 
     private RawImage _faceImage;
     private Image _borderImage;
+    private UIGradient _borderGradient;
     private TextMeshProUGUI _flipPrompt;
 
     void Awake()
@@ -55,7 +60,10 @@ public class Reel : MonoBehaviour
 
             Transform borderTf = canvas.Find("Border");
             if (borderTf != null)
+            {
                 _borderImage = borderTf.GetComponent<Image>();
+                _borderGradient = borderTf.GetComponent<UIGradient>();
+            }
 
             Transform flipTf = canvas.Find("FlipPrompt");
             if (flipTf != null)
@@ -126,7 +134,12 @@ public class Reel : MonoBehaviour
             {
                 _borderImage.enabled = true;
                 var gm = GameManager.Instance;
-                _borderImage.color = (gm != null && gm.CurrentPlayer == Owner.Player) ? colorSetA : colorSetB;
+                bool isPlayerTurn = gm != null && gm.CurrentPlayer == Owner.Player;
+                if (_borderGradient != null)
+                {
+                    _borderGradient.m_color1 = isPlayerTurn ? colorSetA1 : colorSetB1;
+                    _borderGradient.m_color2 = isPlayerTurn ? colorSetA2 : colorSetB2;
+                }
             }
         }
     }
