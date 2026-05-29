@@ -494,6 +494,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_7
@@ -1887,6 +1935,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_1
@@ -2458,6 +2554,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_6
@@ -3787,6 +3931,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_5
@@ -4225,6 +4417,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_8
@@ -4828,6 +5068,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_4
@@ -5737,6 +6025,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_9
@@ -5827,6 +6163,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_10
@@ -5917,6 +6301,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_3
@@ -6486,6 +6918,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_11
@@ -6576,6 +7056,54 @@ PrefabInstance:
       propertyPath: cardBack
       value: 
       objectReference: {fileID: 2800000, guid: 2df0573ef66a79145bbbe32572d43be4, type: 3}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.b
+      value: 0.7150158
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.g
+      value: 0.36163503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.g
+      value: 0.33647794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetA2.r
+      value: 0.51147276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.b
+      value: 0.99154586
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB1.r
+      value: 0.5254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.b
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.g
+      value: 0.49948892
+      objectReference: {fileID: 0}
+    - target: {fileID: 5066802870033521375, guid: eb1c337a1d710df43843e378d097c295, type: 3}
+      propertyPath: colorSetB2.r
+      value: 0.34509808
+      objectReference: {fileID: 0}
     - target: {fileID: 6191388171683054074, guid: eb1c337a1d710df43843e378d097c295, type: 3}
       propertyPath: m_Name
       value: Reel_2
