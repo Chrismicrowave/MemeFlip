@@ -276,6 +276,7 @@ public class ActionPanel : MonoBehaviour
         if (reel == null || reel.isDestroyed)
         {
             if (bar != null) bar.size = 0f;
+            if (hpLabel != null) hpLabel.text = reel != null ? $"0/{reel.stats.maxHP}" : "0/0";
             return;
         }
         if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
