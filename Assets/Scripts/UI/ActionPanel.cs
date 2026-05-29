@@ -119,6 +119,7 @@ public class ActionPanel : MonoBehaviour
 
     void Start()
     {
+        CacheHandleColors();
         ClearSlots();
         ShowAttackButton(false);
         // Shuffle visibility managed by GameManager
@@ -192,6 +193,9 @@ public class ActionPanel : MonoBehaviour
         if (playerSlot1ATK != null) playerSlot1ATK.text = "";
         if (playerSlot2HP != null) playerSlot2HP.text = "";
         if (playerSlot2ATK != null) playerSlot2ATK.text = "";
+        // Restore handle colours (green etc.) for next slot display
+        SetHandleColor(playerSlot1HPBar, _handleOrgColor1);
+        SetHandleColor(playerSlot2HPBar, _handleOrgColor2);
     }
 
     public void ShowAttackButton(bool show)
@@ -271,6 +275,28 @@ public class ActionPanel : MonoBehaviour
         UpdateSlotDisplay(playerSlot2HPBar, playerSlot2HP, playerSlot2ATK, GameManager.Instance.SecondSelected);
     }
 
+    Color _handleOrgColor1, _handleOrgColor2;
+
+    void CacheHandleColors()
+    {
+        _handleOrgColor1 = GetHandleColor(playerSlot1HPBar);
+        _handleOrgColor2 = GetHandleColor(playerSlot2HPBar);
+    }
+
+    static Color GetHandleColor(Scrollbar bar)
+    {
+        if (bar == null || bar.handleRect == null) return Color.white;
+        var img = bar.handleRect.GetComponent<Image>();
+        return img != null ? img.color : Color.white;
+    }
+
+    static void SetHandleColor(Scrollbar bar, Color c)
+    {
+        if (bar == null || bar.handleRect == null) return;
+        var img = bar.handleRect.GetComponent<Image>();
+        if (img != null) img.color = c;
+    }
+
     static void UpdateSlotDisplay(Scrollbar bar, TextMeshProUGUI hpLabel, TextMeshProUGUI atkLabel, Reel reel)
     {
         if (reel == null || reel.isDestroyed)
@@ -283,14 +309,7 @@ public class ActionPanel : MonoBehaviour
         if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
         if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
         if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
-        SetHandleColor(bar, Color.white);
-    }
-
-    static void SetHandleColor(Scrollbar bar, Color c)
-    {
-        if (bar == null || bar.handleRect == null) return;
-        var img = bar.handleRect.GetComponent<Image>();
-        if (img != null) img.color = c;
+        // keep existing handle colour (green by default) — not overridden
     }
 
     public void ShowGameOver(string text)
