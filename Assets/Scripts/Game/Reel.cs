@@ -31,9 +31,11 @@ public class Reel : MonoBehaviour
     [Tooltip("How far the playerslot shakes (UI pixels)")]
     public float jitterSlotIntensity = 8f;
 
-    [Header("Colors")]
-    public Color playerColor = new(0.2f, 0.33f, 1f);
-    public Color npcColor = new(1f, 0.2f, 0.33f);
+    [Header("Gradient Colour Sets")]
+    [Tooltip("Border colour during Player 1's turn.")]
+    public Color colorSetA = new(0.3f, 0.6f, 1.0f);
+    [Tooltip("Border colour during NPC / Player 2's turn.")]
+    public Color colorSetB = new(0.9f, 0.3f, 0.3f);
 
     [Header("Face")]
     public Texture cardBack;
@@ -123,7 +125,8 @@ public class Reel : MonoBehaviour
             if (_borderImage != null)
             {
                 _borderImage.enabled = true;
-                _borderImage.color = owner == Owner.Player ? playerColor : npcColor;
+                var gm = GameManager.Instance;
+                _borderImage.color = (gm != null && gm.CurrentPlayer == Owner.Player) ? colorSetA : colorSetB;
             }
         }
     }
