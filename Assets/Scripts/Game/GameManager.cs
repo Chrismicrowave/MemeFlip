@@ -394,11 +394,16 @@ public class GameManager : MonoBehaviour
         while (dotweenManager.IsAnySlotAnimating)
             yield return null;
         yield return new WaitForSeconds(0.3f);
-        var atkSlot = _firstSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        var tgtSlot = _secondSelected.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
-        yield return dotweenManager.DashAndBack(_firstSelected, _secondSelected, atkSlot?.GetComponent<RectTransform>());
-        yield return dotweenManager.Jitter(_secondSelected, tgtSlot?.GetComponent<RectTransform>());
-        ResolveAttack(_firstSelected, _secondSelected);
+
+        // Attacker is always the current player's reel, regardless of pick order
+        Reel attacker = _firstSelected.owner == _currentPlayer ? _firstSelected : _secondSelected;
+        Reel target   = _firstSelected.owner == _currentPlayer ? _secondSelected : _firstSelected;
+
+        var atkSlot = attacker.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        var tgtSlot = target.owner == Owner.Player ? actionPanel.playerSlot1 : actionPanel.playerSlot2;
+        yield return dotweenManager.DashAndBack(attacker, target, atkSlot?.GetComponent<RectTransform>());
+        yield return dotweenManager.Jitter(target, tgtSlot?.GetComponent<RectTransform>());
+        ResolveAttack(attacker, target);
     }
 
     void FinishPlayerTurn()
