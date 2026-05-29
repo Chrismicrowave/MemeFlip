@@ -165,7 +165,7 @@ public class ActionPanel : MonoBehaviour
 
     public void ShowP2Slot(Reel reel)
     {
-        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2HP, playerSlot2ATK, reel, playerSlot2HPBar, playerSlot2OwnerColour);
+        FillSlot(playerSlot2, playerSlot2Owner, playerSlot2HP, playerSlot2ATK, reel, playerSlot2HPBar, null); // owner colour disabled
         SetSlotImage(playerSlot2Image, reel);
     }
 
@@ -187,7 +187,7 @@ public class ActionPanel : MonoBehaviour
         if (playerSlot1HPBar != null) playerSlot1HPBar.size = 0f;
         if (playerSlot2HPBar != null) playerSlot2HPBar.size = 0f;
         //if (playerSlot1OwnerColour != null) playerSlot1OwnerColour.color = Color.gray;
-        if (playerSlot2OwnerColour != null) playerSlot2OwnerColour.color = Color.gray;
+        //if (playerSlot2OwnerColour != null) playerSlot2OwnerColour.color = Color.gray;
         if (playerSlot1HP != null) playerSlot1HP.text = "";
         if (playerSlot1ATK != null) playerSlot1ATK.text = "";
         if (playerSlot2HP != null) playerSlot2HP.text = "";
