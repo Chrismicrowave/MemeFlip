@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ public class ProfileTurnHighlight : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Scale of the inactive profile (0-1).")]
     public float inactiveScale = 0.5f;
+    [Tooltip("Duration of the scale animation in seconds.")]
+    public float animDuration = 0.4f;
 
     Owner? _lastOwner;
 
@@ -43,7 +46,9 @@ public class ProfileTurnHighlight : MonoBehaviour
     {
         if (group == null) return;
 
-        group.transform.localScale = active ? Vector3.one : (Vector3.one * inactiveScale);
+        Vector3 targetScale = active ? Vector3.one : (Vector3.one * inactiveScale);
+        group.transform.DOKill();
+        group.transform.DOScale(targetScale, animDuration).SetEase(Ease.OutCubic);
 
         // Toggle all UIGradients in the group
         var gradients = group.GetComponentsInChildren<UIGradient>(true);
