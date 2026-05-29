@@ -277,11 +277,20 @@ public class ActionPanel : MonoBehaviour
         {
             if (bar != null) bar.size = 0f;
             if (hpLabel != null) hpLabel.text = reel != null ? $"0/{reel.stats.maxHP}" : "0/0";
+            SetHandleColor(bar, Color.gray);
             return;
         }
         if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
         if (hpLabel != null) hpLabel.text = $"{reel.stats.currentHP}/{reel.stats.maxHP}";
         if (atkLabel != null) atkLabel.text = $"ATK: {reel.stats.atk}";
+        SetHandleColor(bar, Color.white);
+    }
+
+    static void SetHandleColor(Scrollbar bar, Color c)
+    {
+        if (bar == null || bar.handleRect == null) return;
+        var img = bar.handleRect.GetComponent<Image>();
+        if (img != null) img.color = c;
     }
 
     public void ShowGameOver(string text)
