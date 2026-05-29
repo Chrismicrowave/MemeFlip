@@ -26,7 +26,7 @@ public class ReelHoverPopup : MonoBehaviour
 
     public void Show(Reel reel)
     {
-        if (panel == null || _pinned) return;
+        if (!enabled || panel == null || _pinned) return;
 
         bool showFlip = reel.isFaceDown && !reel.isDestroyed;
 
@@ -58,6 +58,7 @@ public class ReelHoverPopup : MonoBehaviour
 
     public void Pin(Reel reel, Vector2 screenPos)
     {
+        if (!enabled) return;
         _pinned = true;
         _pinnedPos = screenPos;
         if (panel == null) return;
