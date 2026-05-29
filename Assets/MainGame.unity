@@ -7819,7 +7819,7 @@ MonoBehaviour:
   profilePicP1: {fileID: 1324093924}
   profilePicP2: {fileID: 1130252827}
   grayscaleMat: {fileID: 2100000, guid: 0589a5a56a1470244ad38cead55ce72c, type: 2}
-  inactiveScale: 0.5
+  inactiveScale: 0.65
   animDuration: 0.4
 --- !u!1001 &2130911694
 PrefabInstance:
