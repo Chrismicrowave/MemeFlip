@@ -22,6 +22,8 @@ Shader "UI/ColorShiftBlob"
         _ColorB3 ("Set B – Colour 3", Color) = (0.0, 0.0, 0.0, 0)
         _ColorB4 ("Set B – Colour 4", Color) = (0.0, 0.0, 0.0, 0)
 
+        _BgColor ("Background", Color) = (1, 1, 1, 1)
+
         _Speed ("Speed", Float) = 0.2
         _BlobScale ("Blob Scale", Float) = 4.0
         _Transition ("Transition (0=A, 1=B)", Range(0,1)) = 0
@@ -82,6 +84,7 @@ Shader "UI/ColorShiftBlob"
 
             float4 _ColorA1, _ColorA2, _ColorA3, _ColorA4;
             float4 _ColorB1, _ColorB2, _ColorB3, _ColorB4;
+            float4 _BgColor;
             float _Speed, _BlobScale, _Transition;
 
             v2f vert(appdata_base v)
@@ -137,15 +140,20 @@ Shader "UI/ColorShiftBlob"
                 blendB += _ColorB4.rgb * w * _ColorB4.a;
                 wB += w * _ColorB4.a;
 
-                float3 result;
+                float3 blobColor;
                 if (wA < 0.001 && wB < 0.001)
-                    result = 0;
+                    blobColor = _BgColor.rgb;
                 else
                 {
-                    float3 normA = wA > 0.001 ? blendA / wA : 0;
-                    float3 normB = wB > 0.001 ? blendB / wB : 0;
-                    result = lerp(normA, normB, _Transition);
+                    float3 normA = wA > 0.001 ? blendA / wA : _BgColor.rgb;
+                    float3 normB = wB > 0.001 ? blendB / wB : _BgColor.rgb;
+                    blobColor = lerp(normA, normB, _Transition);
                 }
+
+                // Blend with background — edges fade smoothly into _BgColor
+                float totalW = lerp(wA, wB, _Transition);
+                float bgBlend = saturate(totalW * 2.5);
+                float3 result = lerp(_BgColor.rgb, blobColor, bgBlend);
 
                 result *= i.color.rgb;
                 float4 col = float4(result, 1);
