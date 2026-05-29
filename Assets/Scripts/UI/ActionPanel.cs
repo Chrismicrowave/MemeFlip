@@ -260,7 +260,8 @@ public class ActionPanel : MonoBehaviour
             ? (p1IsAttacker ? "Slot1" : "Slot2")
             : (p1IsAttacker ? "Slot2" : "Slot1");
         string role = attackerEmpty ? "Attacker" : "Target";
-        return $"no attack happens — {slot} ({role}) empty";
+        //return $"no attack happens — {slot} ({role}) empty";
+        return $"no attack happens — {role} slot empty";
     }
 
     public void UpdateHpBars()

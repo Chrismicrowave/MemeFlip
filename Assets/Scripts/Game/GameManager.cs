@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
             bool isReel = hitReel != null;
             bool faceDown = isReel && hitReel.isFaceDown;
             bool destroyed = isReel && hitReel.isDestroyed;
-            Debug.Log($"[Input] Click — overUI:{overUI} | hit:{objName} | isReel:{isReel} | faceDown:{faceDown} | destroyed:{destroyed} | phase:{currentPhase}");
+            //Debug.Log($"[Input] Click — overUI:{overUI} | hit:{objName} | isReel:{isReel} | faceDown:{faceDown} | destroyed:{destroyed} | phase:{currentPhase}");
         }
 
         if (clicked && hitReel != null)
@@ -338,11 +338,13 @@ public class GameManager : MonoBehaviour
         string attackerOwner = OwnerDisplayName(attacker.owner);
         string targetOwner = OwnerDisplayName(target.owner);
 
-        string msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage to {targetOwner}'s {targetName}";
+        //string msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage to {targetOwner}'s {targetName}";
+        string msg = $"{damage} damage dealt";
         if (target.stats.currentHP <= 0)
         {
             target.DestroyReel();
-            msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage — {targetOwner}'s {targetName} DESTROYED!";
+            //msg = $"{attackerOwner}'s {attackerName} dealt {damage} damage — {targetOwner}'s {targetName} DESTROYED!";
+            msg = $"{damage} damage dealt, {targetName} DESTROYED!";
         }
 
         actionPanel.SetMessageText(msg + "\n" + actionPanel.instructionClickOutside);
