@@ -133,12 +133,11 @@ public class Reel : MonoBehaviour
             if (_borderImage != null)
             {
                 _borderImage.enabled = true;
-                var gm = GameManager.Instance;
-                bool isPlayerTurn = gm != null && gm.CurrentPlayer == Owner.Player;
+                bool isPlayerOwned = owner == Owner.Player;
                 if (_borderGradient != null)
                 {
-                    _borderGradient.m_color1 = isPlayerTurn ? colorSetA1 : colorSetB1;
-                    _borderGradient.m_color2 = isPlayerTurn ? colorSetA2 : colorSetB2;
+                    _borderGradient.m_color1 = isPlayerOwned ? colorSetA1 : colorSetB1;
+                    _borderGradient.m_color2 = isPlayerOwned ? colorSetA2 : colorSetB2;
                 }
             }
         }
