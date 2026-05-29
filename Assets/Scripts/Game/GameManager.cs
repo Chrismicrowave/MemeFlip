@@ -41,8 +41,8 @@ public class GameManager : MonoBehaviour
     {
         board.Initialize();
         actionPanel.gameObject.SetActive(true);
-        //hoverPopup.gameObject.SetActive(true); // disabled — hover panel not needed
-        //hoverPopup.Hide();
+        hoverPopup.gameObject.SetActive(true);
+        hoverPopup.Hide();
         WireButtons();
         ShowCurrentPlayerButtons();
         RefreshUI();
