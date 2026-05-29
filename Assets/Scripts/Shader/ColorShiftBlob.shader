@@ -26,6 +26,7 @@ Shader "UI/ColorShiftBlob"
 
         _Speed ("Speed", Float) = 0.2
         _BlobScale ("Blob Scale", Float) = 4.0
+        _Rotation ("Rotation (degrees)", Float) = 0
         _Transition ("Transition (0=A, 1=B)", Range(0,1)) = 0
     }
 
@@ -85,7 +86,7 @@ Shader "UI/ColorShiftBlob"
             float4 _ColorA1, _ColorA2, _ColorA3, _ColorA4;
             float4 _ColorB1, _ColorB2, _ColorB3, _ColorB4;
             float4 _BgColor;
-            float _Speed, _BlobScale, _Transition;
+            float _Speed, _BlobScale, _Rotation, _Transition;
 
             v2f vert(appdata_base v)
             {
@@ -100,7 +101,13 @@ Shader "UI/ColorShiftBlob"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float2 uv = i.uv;
+                float2 uv = i.uv - 0.5;            // centre origin
+                float rad = _Rotation * 0.0174532925; // degrees → radians
+                float s, c;
+                sincos(rad, s, c);
+                uv = float2(uv.x * c - uv.y * s, uv.x * s + uv.y * c);
+                uv += 0.5;                          // back to 0-1 space
+
                 float t = _Time.y * _Speed;
 
                 // 4 blobs — fully unrolled, no arrays, no loops

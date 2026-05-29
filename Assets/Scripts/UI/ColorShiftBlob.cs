@@ -22,6 +22,12 @@ public class ColorShiftBlob : MonoBehaviour
     [Tooltip("Seconds to crossfade between colour sets when the turn changes.")]
     public float transitionDuration = 1f;
 
+    [Header("Spin")]
+    [Tooltip("Enable continuous rotation of the blob pattern.")]
+    public bool enableSpin = false;
+    [Tooltip("Rotation speed in degrees per second.")]
+    public float spinSpeed = 15f;
+
     // ── Internals ──────────────────────────────────────────────
 
     Image _image;
@@ -29,11 +35,13 @@ public class ColorShiftBlob : MonoBehaviour
     Owner? _lastOwner;
     float _transition;
     float _transitionVelocity;
+    float _spinAngle;
 
     static Shader _shader;
 
     static readonly int _Speed = Shader.PropertyToID("_Speed");
     static readonly int _BlobScale = Shader.PropertyToID("_BlobScale");
+    static readonly int _Rotation = Shader.PropertyToID("_Rotation");
     static readonly int _Transition = Shader.PropertyToID("_Transition");
 
     void Awake()
@@ -93,6 +101,13 @@ public class ColorShiftBlob : MonoBehaviour
         }
 
         _mat.SetFloat(_Transition, _transition);
+
+        // Spin rotation
+        if (enableSpin)
+        {
+            _spinAngle += spinSpeed * Time.deltaTime;
+            _mat.SetFloat(_Rotation, _spinAngle);
+        }
     }
 
     static Owner? ResolveCurrentOwner()

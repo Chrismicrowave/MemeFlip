@@ -3636,8 +3636,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e52d120f45e76945958dc86318fb585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorShiftBlob
-  speed: 2
-  blobScale: 5
+  speed: 1
+  blobScale: 2
   transitionDuration: 1
 --- !u!1001 &926802103
 PrefabInstance:
@@ -6192,13 +6192,14 @@ Material:
     - _Transition: 0
     - _UseUIAlphaClip: 0
     m_Colors:
+    - _BgColor: {r: 1, g: 1, b: 1, a: 1}
     - _ColorA1: {r: 1, g: 0.5254902, b: 0.7882353, a: 1}
     - _ColorA2: {r: 0.6239866, g: 0.3238992, b: 1, a: 1}
-    - _ColorA3: {r: 1, g: 0.40538275, b: 0, a: 0}
+    - _ColorA3: {r: 1, g: 0.8401566, b: 0.75157225, a: 1}
     - _ColorA4: {r: 0, g: 0, b: 0, a: 0}
     - _ColorB1: {r: 0.5254902, g: 1, b: 0.99215686, a: 1}
     - _ColorB2: {r: 0.34509805, g: 0.49803922, b: 0.95686275, a: 1}
-    - _ColorB3: {r: 1, g: 0.40392157, b: 0, a: 0}
+    - _ColorB3: {r: 1, g: 0.8392157, b: 0.7529412, a: 1}
     - _ColorB4: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
