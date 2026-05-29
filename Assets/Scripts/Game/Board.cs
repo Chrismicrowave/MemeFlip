@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -12,6 +14,12 @@ public class Board : MonoBehaviour
     public float dynamicScaleRadius = 3f;
     [Tooltip("Higher = sharper falloff near cursor, more distinction between closest reels")]
     public float dynamicScaleCurve = 2f;
+
+    [Header("Shuffle Animation")]
+    [Tooltip("Duration of the shuffle move animation in seconds")]
+    public float shuffleDuration = 0.4f;
+    [Tooltip("Easing curve for the shuffle movement")]
+    public Ease shuffleEase = Ease.InOutQuad;
 
     [Header("Memes")]
     public MemeLibrary memeLibrary;
@@ -161,6 +169,43 @@ public class Board : MonoBehaviour
             _positionMap[newPos] = reel;
             reel.transform.position = GridToWorld(newPos);
         }
+    }
+
+    /// <summary>Animated version — shuffles all face-down reels with DOTween movement.</summary>
+    public IEnumerator AnimatedShuffleAllFaceDown()
+    {
+        List<Reel> shufflable = AllReels.FindAll(r => !r.isDestroyed && r.isFaceDown);
+        if (shufflable.Count < 1) yield break;
+
+        List<Vector2Int> allPositions = new();
+        for (int row = 0; row < gridSize.x; row++)
+        for (int col = 0; col < gridSize.y; col++)
+            allPositions.Add(new Vector2Int(row, col));
+
+        // Shuffle all positions
+        for (int i = allPositions.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (allPositions[i], allPositions[j]) = (allPositions[j], allPositions[i]);
+        }
+
+        // Clear old position map entries
+        foreach (var reel in shufflable)
+            if (_positionMap.ContainsKey(reel.boardPosition))
+                _positionMap[reel.boardPosition] = null;
+
+        // Animate all reels simultaneously
+        Sequence seq = DOTween.Sequence();
+        for (int i = 0; i < shufflable.Count; i++)
+        {
+            Reel reel = shufflable[i];
+            Vector2Int newPos = allPositions[i];
+            reel.boardPosition = newPos;
+            _positionMap[newPos] = reel;
+            seq.Join(reel.transform.DOMove(GridToWorld(newPos), shuffleDuration).SetEase(shuffleEase));
+        }
+
+        yield return seq.WaitForCompletion();
     }
 
     public List<Reel> GetAliveFaceDown(Owner owner)

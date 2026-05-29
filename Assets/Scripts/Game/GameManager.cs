@@ -291,15 +291,8 @@ public class GameManager : MonoBehaviour
                 _firstSelected.FlipDown();
             _firstSelected = null;
 
-            board.ShuffleAllFaceDown();
-            RefreshUI();
             HideAllShuffleButtons();
-
-            // Switch to next player
-            _currentPlayer = Opponent;
-            currentPhase = TurnPhase.PlayerSelectFirst;
-            actionPanel.SetMessageText($"Shuffle! {charges - 1} charges left\n" + actionPanel.instructionPickReel);
-            ShowCurrentPlayerButtons();
+            StartCoroutine(AnimatedShuffleThen(charges));
             return;
         }
 
@@ -312,11 +305,25 @@ public class GameManager : MonoBehaviour
             _firstSelected.FlipDown();
         _firstSelected = null;
 
-        board.ShuffleAllFaceDown();
+        HideAllShuffleButtons();
+        StartCoroutine(AnimatedShuffleThenNPC());
+    }
+
+    IEnumerator AnimatedShuffleThen(int charges)
+    {
+        yield return board.AnimatedShuffleAllFaceDown();
+        RefreshUI();
+        _currentPlayer = Opponent;
+        currentPhase = TurnPhase.PlayerSelectFirst;
+        actionPanel.SetMessageText($"Shuffle! {charges - 1} charges left\n" + actionPanel.instructionPickReel);
+        ShowCurrentPlayerButtons();
+    }
+
+    IEnumerator AnimatedShuffleThenNPC()
+    {
+        yield return board.AnimatedShuffleAllFaceDown();
         RefreshUI();
         actionPanel.SetMessageText($"Shuffle! {_playerShuffleCharges} charges left");
-        HideAllShuffleButtons();
-
         StartNPCTurn();
     }
 
