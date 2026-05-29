@@ -462,11 +462,12 @@ public class GameManager : MonoBehaviour
 
     void StartNPCTurn()
     {
+        _currentPlayer = Opponent;
         currentPhase = TurnPhase.NPCTurn;
         actionPanel.ShowTurnPanelP2NPC(actionPanel.turnLabelNPCTurn);
         actionPanel.ShowAttackButton(false);
         HideAllShuffleButtons();
-        actionPanel.UpdateSlotLabels(Opponent);
+        actionPanel.UpdateSlotLabels(_currentPlayer);
         Invoke(nameof(ExecuteNPCTurn), 0.8f);
     }
 
