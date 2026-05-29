@@ -14,40 +14,50 @@ public class ColorShiftBlob : MonoBehaviour
     const int MAX_COLORS = 4;
     const string SHADER_NAME = "UI/ColorShiftBlob";
 
-    [Header("Colour Sets")]
-    [Tooltip("Colours shown during Player 1's turn. Add/remove freely.")]
+    // ── Colour Sets ────────────────────────────────────────────
+    // Shown in the inspector as expandable lists.
+    // Add / remove entries freely.  Alpha > 0.5 = active blob.
+    // Each entry becomes one drifting blob on screen.
+
+    [Header("Set A — Player's Turn")]
+    [Tooltip("Colours shown during Player 1's turn.  Add or remove entries.")]
     public List<Color> colorSetA = new()
     {
-        new Color(0.30f, 0.60f, 1.00f), // blue
-        new Color(0.10f, 0.80f, 0.60f), // teal
+        new Color(0.30f, 0.60f, 1.00f),
+        new Color(0.10f, 0.80f, 0.60f),
     };
 
-    [Tooltip("Colours shown during Player 2 / NPC turn. Add/remove freely.")]
+    [Header("Set B — NPC / Player 2's Turn")]
+    [Tooltip("Colours shown during NPC / Player 2's turn.  Add or remove entries.")]
     public List<Color> colorSetB = new()
     {
-        new Color(0.90f, 0.30f, 0.30f), // red
-        new Color(0.90f, 0.70f, 0.10f), // orange
+        new Color(0.90f, 0.30f, 0.30f),
+        new Color(0.90f, 0.70f, 0.10f),
     };
 
+    // ── Blob Motion ───────────────────────────────────────────
+
     [Header("Blob Motion")]
-    [Tooltip("How fast the blobs drift.")]
     public float speed = 0.2f;
-    [Tooltip("Scale of each blob. Higher = smaller, tighter blobs.")]
     public float blobScale = 4f;
 
+    // ── Turn Transition ────────────────────────────────────────
+
     [Header("Turn Transition")]
-    [Tooltip("Duration (seconds) to crossfade between colour sets on turn change.")]
+    [Tooltip("Seconds to crossfade between colour sets when the turn changes.")]
     public float transitionDuration = 1f;
 
-    // --- internals ---
+    // ── Internals ──────────────────────────────────────────────
+
     Image _image;
     Material _mat;
     Owner? _lastOwner;
     float _transition;
-    float _transitionVelocity; // for smooth damp
+    float _transitionVelocity;
+
     static Shader _shader;
 
-    // Property IDs (cached once)
+    // Cached property IDs
     static readonly int _ColorA1 = Shader.PropertyToID("_ColorA1");
     static readonly int _ColorA2 = Shader.PropertyToID("_ColorA2");
     static readonly int _ColorA3 = Shader.PropertyToID("_ColorA3");
@@ -64,30 +74,27 @@ public class ColorShiftBlob : MonoBehaviour
     {
         _image = GetComponent<Image>();
 
-        // Load shader once
         if (_shader == null)
             _shader = Shader.Find(SHADER_NAME);
 
         if (_shader == null || !_shader.isSupported)
         {
-            Debug.LogError($"[ColorShiftBlob] Shader \"{SHADER_NAME}\" not found — disabling.");
+            Debug.LogError("[ColorShiftBlob] Shader \"" + SHADER_NAME + "\" not found – disabling.");
             enabled = false;
             return;
         }
 
-        // Instance the material so we don't modify the asset
         _mat = new Material(_shader);
         _image.material = _mat;
     }
 
     void Start()
     {
-        PushColorsToShader();
+        SyncListsToMaterial();
         _mat.SetFloat(_Speed, speed);
         _mat.SetFloat(_BlobScale, blobScale);
 
-        // Determine initial owner from GameManager
-        _lastOwner = GetCurrentOwner();
+        _lastOwner = ResolveCurrentOwner();
         _transition = _lastOwner == Owner.Player ? 0f : 1f;
         _mat.SetFloat(_Transition, _transition);
     }
@@ -99,45 +106,43 @@ public class ColorShiftBlob : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null) return;
 
-        // Sync anim params (cheap enough to do every frame)
         _mat.SetFloat(_Speed, speed);
         _mat.SetFloat(_BlobScale, blobScale);
 
-        // Detect owner change
-        Owner? current = GetCurrentOwner();
+        Owner? current = ResolveCurrentOwner();
         if (current.HasValue && current != _lastOwner)
         {
             _lastOwner = current;
-            _transitionVelocity = 0f; // reset smooth-damp velocity on direction change
+            _transitionVelocity = 0f;
         }
 
-        // Animate transition
         float target = _lastOwner == Owner.Player ? 0f : 1f;
 
         if (transitionDuration <= 0f)
-        {
             _transition = target;
-        }
         else
         {
-            // SmoothDamp for an ease-in-out feel without overshoot
-            float smoothTime = transitionDuration * 0.32f; // tune so 85% of journey fits in duration
+            float smoothTime = transitionDuration * 0.32f;
             _transition = Mathf.SmoothDamp(_transition, target, ref _transitionVelocity, smoothTime);
         }
 
         _mat.SetFloat(_Transition, _transition);
     }
 
+    // ── Public helpers ─────────────────────────────────────────
+
     /// <summary>Call after editing colour lists in the inspector at runtime.</summary>
     public void RefreshColors()
     {
-        if (_mat != null) PushColorsToShader();
+        if (_mat != null) SyncListsToMaterial();
     }
 
-    void PushColorsToShader()
+    // ── Internals ──────────────────────────────────────────────
+
+    void SyncListsToMaterial()
     {
-        var cA = ToArray4(colorSetA);
-        var cB = ToArray4(colorSetB);
+        var cA = PadTo4(colorSetA);
+        var cB = PadTo4(colorSetB);
 
         _mat.SetColor(_ColorA1, cA[0]);
         _mat.SetColor(_ColorA2, cA[1]);
@@ -150,59 +155,54 @@ public class ColorShiftBlob : MonoBehaviour
         _mat.SetColor(_ColorB4, cB[3]);
     }
 
-    /// <summary>Pad/slice list to exactly 4 entries. Alpha = 0 means inactive.</summary>
-    static Color[] ToArray4(List<Color> list)
+    static Color[] PadTo4(List<Color> list)
     {
         var result = new Color[MAX_COLORS];
         for (int i = 0; i < MAX_COLORS; i++)
-        {
-            if (i < list.Count)
-                result[i] = list[i];
-            else
-                result[i] = new Color(0, 0, 0, 0); // alpha 0 = inactive in shader
-        }
+            result[i] = i < list.Count ? list[i] : Color.clear; // alpha 0 → inactive in shader
         return result;
     }
 
-    static Owner? GetCurrentOwner()
+    static Owner? ResolveCurrentOwner()
     {
-        // Use reflection on the phase as a fallback — we just need to know
-        // whose turn's visual to show.
         var gm = GameManager.Instance;
         if (gm == null) return null;
 
-        // In PlayerSelectFirst the current player is the one whose turn it is.
-        // In NPCTurn it's the NPC.
-        // At game start before any turn, default to Player.
         switch (gm.currentPhase)
         {
             case TurnPhase.PlayerSelectFirst:
             case TurnPhase.PlayerSelectSecond:
             case TurnPhase.Resolving:
-                // Those phases mean we're mid-turn — show the owner of the current turn.
-                // We use a public accessor exposed on GameManager.
                 return gm.CurrentPlayer;
 
             case TurnPhase.NPCTurn:
                 return Owner.NPC;
 
-            case TurnPhase.ShowResult:
-                // While showing result, keep the colour of whoever just acted.
-                // gm.CurrentPlayer is stale (already flipped), so hold last value.
-                return null; // null → no change, keep existing
-
-            case TurnPhase.GameOver:
-                return null;
-
             default:
-                return null;
+                return null; // ShowResult / GameOver → keep existing colours
         }
     }
 
-    // Rebuild shader colours if the inspector is edited at runtime
     void OnValidate()
     {
-        if (Application.isPlaying && _mat != null)
-            PushColorsToShader();
+        // Fire-and-forget: push colours to material asset so they're visible in-editor.
+        // In edit mode _mat may be null; we find the material via the Image instead.
+        if (Application.isPlaying) return;
+        if (_image == null) _image = GetComponent<Image>();
+        if (_image == null) return;
+        var mat = _image.material;
+        if (mat == null || mat.shader == null) return;
+
+        var cA = PadTo4(colorSetA);
+        var cB = PadTo4(colorSetB);
+
+        mat.SetColor(_ColorA1, cA[0]);
+        mat.SetColor(_ColorA2, cA[1]);
+        mat.SetColor(_ColorA3, cA[2]);
+        mat.SetColor(_ColorA4, cA[3]);
+        mat.SetColor(_ColorB1, cB[0]);
+        mat.SetColor(_ColorB2, cB[1]);
+        mat.SetColor(_ColorB3, cB[2]);
+        mat.SetColor(_ColorB4, cB[3]);
     }
 }
