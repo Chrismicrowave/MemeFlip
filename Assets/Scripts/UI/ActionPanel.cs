@@ -77,7 +77,6 @@ public class ActionPanel : MonoBehaviour
     void Awake()
     {
         Transform c = transform;
-        CacheHandleColors();
 
         if (turnText == null) turnText = c.Find("TurnText")?.GetComponent<TextMeshProUGUI>();
         if (messagePanel == null) messagePanel = c.Find("MessagePanel/MessageText")?.GetComponent<TextMeshProUGUI>();
@@ -116,6 +115,8 @@ public class ActionPanel : MonoBehaviour
 
         if (slot1Label == null) slot1Label = c.Find("Slot1Box/Slot1Label")?.GetComponent<TextMeshProUGUI>();
         if (slot2Label == null) slot2Label = c.Find("Slot2Box/Slot2Label")?.GetComponent<TextMeshProUGUI>();
+
+        CacheHandleColors();
     }
 
     void Start()
