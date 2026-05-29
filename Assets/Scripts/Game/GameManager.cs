@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour
 
         if (_firstSelected.owner != _secondSelected.owner)
         {
-            // Opposite teams — first pick attacks second pick
+            // Opposite teams — current turn's player attacks (resolved in PlayerAttackSequence)
             currentPhase = TurnPhase.Resolving;
             HideAllShuffleButtons();
             StartCoroutine(PlayerAttackSequence());
