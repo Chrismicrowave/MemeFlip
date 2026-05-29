@@ -77,6 +77,7 @@ public class ActionPanel : MonoBehaviour
     void Awake()
     {
         Transform c = transform;
+        CacheHandleColors();
 
         if (turnText == null) turnText = c.Find("TurnText")?.GetComponent<TextMeshProUGUI>();
         if (messagePanel == null) messagePanel = c.Find("MessagePanel/MessageText")?.GetComponent<TextMeshProUGUI>();
@@ -119,7 +120,6 @@ public class ActionPanel : MonoBehaviour
 
     void Start()
     {
-        CacheHandleColors();
         ClearSlots();
         ShowAttackButton(false);
         // Shuffle visibility managed by GameManager
