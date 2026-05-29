@@ -276,11 +276,14 @@ public class ActionPanel : MonoBehaviour
     }
 
     Color _handleOrgColor1, _handleOrgColor2;
+    Color _barBgColor1, _barBgColor2;
 
     void CacheHandleColors()
     {
         _handleOrgColor1 = GetHandleColor(playerSlot1HPBar);
         _handleOrgColor2 = GetHandleColor(playerSlot2HPBar);
+        _barBgColor1 = GetBarBgColor(playerSlot1HPBar);
+        _barBgColor2 = GetBarBgColor(playerSlot2HPBar);
     }
 
     static Color GetHandleColor(Scrollbar bar)
@@ -288,6 +291,13 @@ public class ActionPanel : MonoBehaviour
         if (bar == null || bar.handleRect == null) return Color.white;
         var img = bar.handleRect.GetComponent<Image>();
         return img != null ? img.color : Color.white;
+    }
+
+    static Color GetBarBgColor(Scrollbar bar)
+    {
+        if (bar == null) return Color.gray;
+        var bg = bar.transform.Find("Background")?.GetComponent<Image>();
+        return bg != null ? bg.color : Color.gray;
     }
 
     static void SetHandleColor(Scrollbar bar, Color c)
@@ -303,7 +313,8 @@ public class ActionPanel : MonoBehaviour
         {
             if (bar != null) bar.size = 0f;
             if (hpLabel != null) hpLabel.text = reel != null ? $"0/{reel.stats.maxHP}" : "0/0";
-            SetHandleColor(bar, Color.gray);
+            // Match handle colour to HP bar background
+            SetHandleColor(bar, GetBarBgColor(bar));
             return;
         }
         if (bar != null) bar.size = (float)reel.stats.currentHP / reel.stats.maxHP;
